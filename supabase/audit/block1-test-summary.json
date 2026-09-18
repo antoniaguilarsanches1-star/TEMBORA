@@ -1,0 +1,22 @@
+{
+  "preDeployment": {
+    "total": 82,
+    "passed": 82,
+    "failed": 0,
+    "method": "Real PostgreSQL transaction, synthetic identities and Storage metadata, SET LOCAL ROLE with claims, ROLLBACK; no actual file uploads"
+  },
+  "postDeployment": {
+    "repeat": "Rejected by tool permission control: user rejected MCP tool call",
+    "readOnlyChecks": {
+      "migrationApplied": "20260916023953",
+      "profilesUnchanged": true,
+      "authFunctionsUnchanged": true,
+      "profilePrivilegesUnchanged": true,
+      "plantillas": 0,
+      "imagenes": 0,
+      "storageObjects": 0,
+      "zipPrivate": true,
+      "imagesPrivate": true
+    }
+  }
+}

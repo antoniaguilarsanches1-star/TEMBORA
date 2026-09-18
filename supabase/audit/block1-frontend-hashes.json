@@ -1,0 +1,34 @@
+[
+  {
+    "Path": "D:\\plantillaspe\\js\\app.js",
+    "Hash": "4FAF84FBEA3550598BB7D1DFF3BD6DEEAB7EB6AF12E6F964D30C3063C11DBED3"
+  },
+  {
+    "Path": "D:\\plantillaspe\\js\\supabase.js",
+    "Hash": "ED53856B227FB0E250DEC83E68F669C1A68DCAF8FDF1DAB3D0365343555F3464"
+  },
+  {
+    "Path": "D:\\plantillaspe\\login.html",
+    "Hash": "9B8D194EE85BE0728DEDEF30ED3F1A971C35221F69CCD7E590E77F05E1B4B24C"
+  },
+  {
+    "Path": "D:\\plantillaspe\\registro.html",
+    "Hash": "E8685A007633058BDF692499B51247F0B1E631F9C86F6724E3C8176ACBA099FA"
+  },
+  {
+    "Path": "D:\\plantillaspe\\panel-comprador.html",
+    "Hash": "A267F6B7869F662A9C9279D4AA4FF963FEC0A4D6F077A7D1342E1EE6B40BA693"
+  },
+  {
+    "Path": "D:\\plantillaspe\\panel-vendedor.html",
+    "Hash": "30E0D250BB5E9F7721C797E4F33E757D49D9EE71469AE7A4A8081DA42948F714"
+  },
+  {
+    "Path": "D:\\plantillaspe\\admin.html",
+    "Hash": "BC165C2201D6F634E7317DDB47E648841ED1E9B8C21390C845A2CD8E60C1E3CA"
+  },
+  {
+    "Path": "D:\\plantillaspe\\vender.html",
+    "Hash": "60BFC506E5D31632E06ACFC5C73E171E04216C31EA546D76D511CBE3A06D9B88"
+  }
+]

@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contacto - PlantillaPE</title>
+    <meta name="description" content="Contacta con PlantillaPE para soporte y consultas.">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- CSS -->
+    <link rel="stylesheet" href="css/styles.css?v=20260916-2">
+    
+    <!-- Supabase JS -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container header-content">
+            <a href="index.html" class="logo">
+                <i class="fas fa-code"></i>
+                PlantillaPE
+            </a>
+            
+            <nav class="nav-menu">
+                <a href="index.html" class="nav-link">Inicio</a>
+                <a href="catalogo.html" class="nav-link">Plantillas</a>
+                <a href="catalogo.html" class="nav-link">Categorías</a>
+                <a href="vender.html" class="nav-link">Vender</a>
+                <a href="pagina-personalizada.html" class="nav-link">Creamos tu página</a>
+                <a href="como-funciona.html" class="nav-link">Cómo funciona</a>
+                <a href="contacto.html" class="nav-link">Contacto</a>
+            </nav>
+            
+            <div class="auth-buttons">
+                <a href="login.html" class="btn btn-outline btn-sm">Iniciar sesión</a>
+                <a href="registro.html" class="btn btn-primary btn-sm">Registrarse</a>
+            </div>
+            
+            <div class="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Page Header -->
+    <section class="section" style="background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-light) 100%); color: var(--text-white); padding: 4rem 0;">
+        <div class="container text-center">
+            <h1 style="font-size: 2.5rem; font-weight: 700; margin-bottom: 1rem;">Contacto</h1>
+            <p style="font-size: 1.25rem; opacity: 0.9;">Estamos aquí para ayudarte</p>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section class="section">
+        <div class="container">
+            <div class="contact-grid">
+                <!-- Información de contacto -->
+                <div class="contact-info">
+                    <h3 style="font-size: 1.5rem; font-weight: 700; margin-bottom: 1.5rem;">Información de Contacto</h3>
+                    
+                    <div class="contact-item">
+                        <i class="fab fa-whatsapp"></i>
+                        <div>
+                            <h4>WhatsApp</h4>
+                            <p>+51 993 498 739</p>
+                        </div>
+                    </div>
+                    
+                    <div class="contact-item">
+                        <i class="fas fa-envelope"></i>
+                        <div>
+                            <h4>Soporte de pedidos</h4>
+                            <p>Indica la referencia de tu pedido al contactarnos por WhatsApp.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="contact-item">
+                        <i class="fas fa-clock"></i>
+                        <div>
+                            <h4>Horario de atención</h4>
+                            <p>Consulta la disponibilidad por WhatsApp.</p>
+                            
+                        </div>
+                    </div>
+                    
+                    <div class="contact-item">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <div>
+                            <h4>Ubicación</h4>
+                            <p>Lima, Perú</p>
+                        </div>
+                    </div>
+                    
+                    <div style="margin-top: 2rem;">
+                        <h4 style="margin-bottom: 1rem;">Síguenos</h4>
+                        <div style="display: flex; gap: 1rem;">
+                            <a href="#" class="btn btn-outline btn-sm">
+                                <i class="fab fa-facebook"></i>
+                            </a>
+                            <a href="#" class="btn btn-outline btn-sm">
+                                <i class="fab fa-instagram"></i>
+                            </a>
+                            <a href="#" class="btn btn-outline btn-sm">
+                                <i class="fab fa-twitter"></i>
+                            </a>
+                            <a href="#" class="btn btn-outline btn-sm">
+                                <i class="fab fa-linkedin"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Formulario de contacto -->
+                <div class="form-container">
+                    <h3 style="font-size: 1.5rem; font-weight: 700; margin-bottom: 1.5rem;">Envíanos un mensaje</h3>
+                    
+                    <form id="contact-form">
+                        <div class="form-group">
+                            <label for="name">Nombre *</label>
+                            <input type="text" id="name" name="name" required placeholder="Tu nombre">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="email">Correo electrónico *</label>
+                            <input type="email" id="email" name="email" required placeholder="tu@email.com">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="subject">Asunto *</label>
+                            <select id="subject" name="subject" required>
+                                <option value="">Selecciona un asunto</option>
+                                <option value="Soporte técnico">Soporte técnico</option>
+                                <option value="Consulta general">Consulta general</option>
+                                <option value="Problema con compra">Problema con compra</option>
+                                <option value="Sugerencia">Sugerencia</option>
+                                <option value="Otro">Otro</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="message">Mensaje *</label>
+                            <textarea id="message" name="message" required placeholder="Escribe tu mensaje aquí..." rows="5"></textarea>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-primary" style="width: 100%;">
+                            <i class="fas fa-paper-plane"></i> Enviar mensaje
+                        </button>
+                    </form>
+                    
+                    <div style="text-align: center; margin-top: 1rem;">
+                        <p style="color: var(--text-light); font-size: 0.875rem;">
+                            O contáctanos directamente por 
+                            <a href="#" onclick="openWhatsApp('Hola, quiero hacer una consulta sobre PlantillaPE')" style="color: var(--primary-color);">
+                                <i class="fab fa-whatsapp"></i> WhatsApp
+                            </a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ -->
+    <section class="section" style="background-color: var(--bg-white);">
+        <div class="container">
+            <div class="section-title">
+                <h2>Preguntas Frecuentes</h2>
+                <p>Respuestas rápidas a las dudas más comunes</p>
+            </div>
+            
+            <div class="faq-section">
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>¿Cuánto tardan en responder?</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Puedes consultar el estado de tu solicitud por WhatsApp. Para urgencias, te recomendamos contactarnos por WhatsApp.</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>¿Cómo puedo solicitar un reembolso?</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Para solicitar un reembolso, contáctanos a través del formulario o WhatsApp indicando tu número de orden y el motivo. Revisaremos tu solicitud y te indicaremos los pasos aplicables.</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>¿Ofrecen soporte para personalizar plantillas?</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>El soporte básico para instalación es incluido. Para personalizaciones avanzadas, puedes contratar nuestros servicios de desarrollo personalizado en la sección "Creamos tu página".</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>¿Puedo cambiar mi cuenta de comprador a vendedor?</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Sí, puedes cambiar el tipo de cuenta desde tu panel de control o contactándonos para que lo hagamos por ti.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="section" style="background: linear-gradient(135deg, var(--secondary-color) 0%, #34d399 100%); color: var(--text-white);">
+        <div class="container text-center">
+            <h2 style="font-size: 2rem; font-weight: 700; margin-bottom: 1rem;">¿No encontraste lo que buscabas?</h2>
+            <p style="font-size: 1.125rem; margin-bottom: 2rem; opacity: 0.9;">Explora nuestras secciones de ayuda</p>
+            <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+                <a href="como-funciona.html" class="btn btn-accent btn-lg">
+                    <i class="fas fa-question-circle"></i> Cómo funciona
+                </a>
+                <a href="catalogo.html" class="btn btn-primary btn-lg">
+                    <i class="fas fa-th-large"></i> Ver plantillas
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>PlantillaPE</h3>
+                    <p>Marketplace peruano de plantillas y servicios web. Conectamos a diseñadores y desarrolladores con negocios que necesitan presencia online.</p>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Enlaces</h3>
+                    <div class="footer-links">
+                        <a href="catalogo.html">Plantillas</a>
+                        <a href="vender.html">Vender</a>
+                        <a href="pagina-personalizada.html">Creamos tu página</a>
+                        <a href="como-funciona.html">Cómo funciona</a>
+                        <a href="contacto.html">Contacto</a>
+                    </div>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Legal</h3>
+                    <div class="footer-links">
+                        <a href="terminos.html">Términos y condiciones</a>
+                        <a href="privacidad.html">Política de privacidad</a>
+                        <a href="licencias.html">Licencias</a>
+                        <a href="contacto.html">Soporte</a>
+                    </div>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Contacto</h3>
+                    <div class="footer-links">
+                        <a href="https://wa.me/51993498739" target="_blank" rel="noopener noreferrer"><i class="fab fa-whatsapp"></i> WhatsApp</a>
+                        <a href="#"><i class="fas fa-envelope"></i> Email</a>
+                        <a href="#"><i class="fab fa-facebook"></i> Facebook</a>
+                        <a href="#"><i class="fab fa-instagram"></i> Instagram</a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2024 PlantillaPE. Todos los derechos reservados.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- WhatsApp Float Button -->
+    <div class="whatsapp-float">
+        <i class="fab fa-whatsapp"></i>
+    </div>
+
+    <!-- JavaScript -->
+    <script src="js/app.js"></script>
+    <script src="js/supabase.js"></script>
+    <script>
+        // Verificar sesión al cargar la página
+        document.addEventListener('DOMContentLoaded', async function() {
+            const sesion = await verificarSesion();
+            
+            const authButtons = document.querySelector('.auth-buttons');
+            
+            if (sesion.success && sesion.session) {
+                // Usuario tiene sesión activa
+                authButtons.innerHTML = `
+                    <a href="#" id="user-panel-btn" class="btn btn-primary btn-sm">
+                        <i class="fas fa-user"></i> Mi Panel
+                    </a>
+                    <a href="#" id="logout-btn" class="btn btn-outline btn-sm">
+                        <i class="fas fa-sign-out-alt"></i> Salir
+                    </a>
+                `;
+                
+                // Redirigir al panel correspondiente según el rol
+                document.getElementById('user-panel-btn').addEventListener('click', function(e) {
+                    e.preventDefault();
+                    redirigirSegunRol(sesion.rol);
+                });
+                
+                // Cerrar sesión
+                document.getElementById('logout-btn').addEventListener('click', async function(e) {
+                    e.preventDefault();
+                    
+                    const resultado = await cerrarSesion();
+                    
+                    if (resultado.success) {
+                        showNotification(resultado.message, 'success');
+                        setTimeout(() => {
+                            window.location.reload();
+                        }, 1000);
+                    } else {
+                        showNotification(resultado.error || 'Error al cerrar sesión', 'error');
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>

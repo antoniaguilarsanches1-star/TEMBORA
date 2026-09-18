@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Creamos tu Página Web - PlantillaPE</title>
+    <meta name="description" content="Solicita una página web personalizada en PlantillaPE.">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- CSS -->
+    <link rel="stylesheet" href="css/styles.css?v=20260916-2">
+    
+    <!-- Supabase JS -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container header-content">
+            <a href="index.html" class="logo">
+                <i class="fas fa-code"></i>
+                PlantillaPE
+            </a>
+            
+            <nav class="nav-menu">
+                <a href="index.html" class="nav-link">Inicio</a>
+                <a href="catalogo.html" class="nav-link">Plantillas</a>
+                <a href="catalogo.html" class="nav-link">Categorías</a>
+                <a href="vender.html" class="nav-link">Vender</a>
+                <a href="pagina-personalizada.html" class="nav-link">Creamos tu página</a>
+                <a href="como-funciona.html" class="nav-link">Cómo funciona</a>
+                <a href="contacto.html" class="nav-link">Contacto</a>
+            </nav>
+            
+            <div class="auth-buttons">
+                <a href="login.html" class="btn btn-outline btn-sm">Iniciar sesión</a>
+                <a href="registro.html" class="btn btn-primary btn-sm">Registrarse</a>
+            </div>
+            
+            <div class="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="custom-page-hero">
+        <div class="container">
+            <h1>Creamos tu Página Web</h1>
+            <p>Cuéntanos qué necesitas y recibe una cotización personalizada</p>
+        </div>
+    </section>
+
+    <!-- Servicios -->
+    <section class="section">
+        <div class="container">
+            <div class="section-title">
+                <h2>Nuestros Servicios</h2>
+                <p>Tipos de páginas web que podemos crear para ti</p>
+            </div>
+            
+            <div class="services-grid">
+                <div class="service-card">
+                    <i class="fas fa-building"></i>
+                    <h3>Página para Negocio</h3>
+                    <p>Presencia profesional para tu empresa o negocio local</p>
+                </div>
+                
+                <div class="service-card">
+                    <i class="fas fa-utensils"></i>
+                    <h3>Página para Restaurante</h3>
+                    <p>Menú digital, reservaciones y galería de fotos</p>
+                </div>
+                
+                <div class="service-card">
+                    <i class="fas fa-shopping-cart"></i>
+                    <h3>Página para Tienda</h3>
+                    <p>E-commerce completo con carrito de compras</p>
+                </div>
+                
+                <div class="service-card">
+                    <i class="fas fa-rocket"></i>
+                    <h3>Landing Page</h3>
+                    <p>Páginas de aterrizaje para campañas y productos</p>
+                </div>
+                
+                <div class="service-card">
+                    <i class="fas fa-user"></i>
+                    <h3>Portafolio</h3>
+                    <p>Muestra tu trabajo y habilidades profesionales</p>
+                </div>
+                
+                <div class="service-card">
+                    <i class="fas fa-briefcase"></i>
+                    <h3>Página Profesional</h3>
+                    <p>Sitio web para servicios profesionales y freelancers</p>
+                </div>
+                
+                <div class="service-card">
+                    <i class="fas fa-book"></i>
+                    <h3>Catálogo Digital</h3>
+                    <p>Muestra tus productos de forma organizada</p>
+                </div>
+                
+                <div class="service-card">
+                    <i class="fas fa-graduation-cap"></i>
+                    <h3>Página Educativa</h3>
+                    <p>Sitios web para colegios, academias y cursos</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Formulario de cotización -->
+    <section class="section" style="background-color: var(--bg-white);">
+        <div class="container">
+            <div class="section-title">
+                <h2>Solicitar Cotización</h2>
+                <p>Completa el formulario y te enviaremos una propuesta personalizada</p>
+            </div>
+            
+            <div class="form-container" style="max-width: 800px;">
+                <form id="custom-page-form">
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                        <div class="form-group">
+                            <label for="name">Nombre *</label>
+                            <input type="text" id="name" name="name" required placeholder="Tu nombre">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="whatsapp">WhatsApp *</label>
+                            <input type="tel" id="whatsapp" name="whatsapp" required placeholder="987 654 321">
+                        </div>
+                    </div>
+                    
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                        <div class="form-group">
+                            <label for="business-type">Tipo de negocio *</label>
+                            <select id="business-type" name="business-type" required>
+                                <option value="">Selecciona una opción</option>
+                                <option value="Restaurante">Restaurante</option>
+                                <option value="Tienda">Tienda</option>
+                                <option value="Servicio">Servicio profesional</option>
+                                <option value="Educación">Educación</option>
+                                <option value="Salud">Salud</option>
+                                <option value="Tecnología">Tecnología</option>
+                                <option value="Otro">Otro</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="page-type">Tipo de página *</label>
+                            <select id="page-type" name="page-type" required>
+                                <option value="">Selecciona una opción</option>
+                                <option value="Negocio">Página para negocio</option>
+                                <option value="Restaurante">Página para restaurante</option>
+                                <option value="Tienda">Página para tienda</option>
+                                <option value="Landing Page">Landing Page</option>
+                                <option value="Portafolio">Portafolio</option>
+                                <option value="Profesional">Página profesional</option>
+                                <option value="Catálogo">Catálogo digital</option>
+                                <option value="Otro">Otro</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="sections">Cantidad aproximada de secciones *</label>
+                        <select id="sections" name="sections" required>
+                            <option value="">Selecciona una opción</option>
+                            <option value="1-3">1-3 secciones</option>
+                            <option value="4-6">4-6 secciones</option>
+                            <option value="7-10">7-10 secciones</option>
+                            <option value="Más de 10">Más de 10 secciones</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Funcionalidades adicionales</label>
+                        <div class="checkbox-group">
+                            <label class="checkbox-item">
+                                <input type="checkbox" id="needs-catalog" name="needs-catalog">
+                                <span>Necesito catálogo de productos</span>
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" id="needs-whatsapp" name="needs-whatsapp">
+                                <span>Necesito botón de WhatsApp</span>
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" id="needs-form" name="needs-form">
+                                <span>Necesito formulario de contacto</span>
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" id="needs-reservation" name="needs-reservation">
+                                <span>Necesito sistema de reservaciones</span>
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" id="needs-payment" name="needs-payment">
+                                <span>Necesito pasarela de pagos</span>
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="budget">Presupuesto aproximado (S/) *</label>
+                        <select id="budget" name="budget" required>
+                            <option value="">Selecciona tu presupuesto</option>
+                            <option value="200-500">S/ 200 - S/ 500</option>
+                            <option value="500-1000">S/ 500 - S/ 1,000</option>
+                            <option value="1000-2000">S/ 1,000 - S/ 2,000</option>
+                            <option value="2000-5000">S/ 2,000 - S/ 5,000</option>
+                            <option value="Más de 5000">Más de S/ 5,000</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="description">Descripción del proyecto *</label>
+                        <textarea id="description" name="description" required placeholder="Describe en detalle qué necesitas, los objetivos de tu página, colores preferidos, referencias, etc..." rows="5"></textarea>
+                        <small>Cuanta más información nos des, mejor será nuestra propuesta</small>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="deadline">Fecha límite (opcional)</label>
+                        <input type="date" id="deadline" name="deadline">
+                        <small>¿Cuándo necesitas que esté lista tu página?</small>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary btn-lg" style="width: 100%;">
+                        <i class="fab fa-whatsapp"></i> Solicitar cotización por WhatsApp
+                    </button>
+                    
+                    <p style="text-align: center; margin-top: 1rem; color: var(--text-light); font-size: 0.875rem;">
+                        Al hacer clic, se abrirá WhatsApp con toda la información lista para enviar
+                    </p>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Proceso -->
+    <section class="section">
+        <div class="container">
+            <div class="section-title">
+                <h2>Nuestro Proceso</h2>
+                <p>Así trabajamos contigo</p>
+            </div>
+            
+            <div class="steps-container">
+                <div class="step-card">
+                    <div class="step-number">1</div>
+                    <h3>Envías tu solicitud</h3>
+                    <p>Completas el formulario con tus necesidades</p>
+                </div>
+                
+                <div class="step-card">
+                    <div class="step-number">2</div>
+                    <h3>Te enviamos cotización</h3>
+                    <p>Recibes una propuesta personalizada en 24-48 horas</p>
+                </div>
+                
+                <div class="step-card">
+                    <div class="step-number">3</div>
+                    <h3>Aprobación y pago</h3>
+                    <p>Aceptas la propuesta y realizas el pago</p>
+                </div>
+                
+                <div class="step-card">
+                    <div class="step-number">4</div>
+                    <h3>Desarrollo</h3>
+                    <p>Creamos tu página web según tus requerimientos</p>
+                </div>
+                
+                <div class="step-card">
+                    <div class="step-number">5</div>
+                    <h3>Entrega</h3>
+                    <p>Recibes tu página web lista para usar</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="section" style="background: linear-gradient(135deg, var(--secondary-color) 0%, #34d399 100%); color: var(--text-white);">
+        <div class="container text-center">
+            <h2 style="font-size: 2rem; font-weight: 700; margin-bottom: 1rem;">¿Prefieres comprar una plantilla?</h2>
+            <p style="font-size: 1.125rem; margin-bottom: 2rem; opacity: 0.9;">Explora nuestro catálogo de plantillas listas para usar</p>
+            <a href="catalogo.html" class="btn btn-accent btn-lg">
+                <i class="fas fa-th-large"></i> Ver catálogo de plantillas
+            </a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>PlantillaPE</h3>
+                    <p>Marketplace peruano de plantillas y servicios web. Conectamos a diseñadores y desarrolladores con negocios que necesitan presencia online.</p>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Enlaces</h3>
+                    <div class="footer-links">
+                        <a href="catalogo.html">Plantillas</a>
+                        <a href="vender.html">Vender</a>
+                        <a href="pagina-personalizada.html">Creamos tu página</a>
+                        <a href="como-funciona.html">Cómo funciona</a>
+                        <a href="contacto.html">Contacto</a>
+                    </div>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Legal</h3>
+                    <div class="footer-links">
+                        <a href="terminos.html">Términos y condiciones</a>
+                        <a href="privacidad.html">Política de privacidad</a>
+                        <a href="licencias.html">Licencias</a>
+                        <a href="contacto.html">Soporte</a>
+                    </div>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Contacto</h3>
+                    <div class="footer-links">
+                        <a href="https://wa.me/51993498739" target="_blank" rel="noopener noreferrer"><i class="fab fa-whatsapp"></i> WhatsApp</a>
+                        <a href="#"><i class="fas fa-envelope"></i> Email</a>
+                        <a href="#"><i class="fab fa-facebook"></i> Facebook</a>
+                        <a href="#"><i class="fab fa-instagram"></i> Instagram</a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2024 PlantillaPE. Todos los derechos reservados.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- WhatsApp Float Button -->
+    <div class="whatsapp-float">
+        <i class="fab fa-whatsapp"></i>
+    </div>
+
+    <!-- JavaScript -->
+    <script src="js/app.js"></script>
+    <script src="js/supabase.js"></script>
+    <script>
+        // Verificar sesión al cargar la página
+        document.addEventListener('DOMContentLoaded', async function() {
+            const sesion = await verificarSesion();
+            
+            const authButtons = document.querySelector('.auth-buttons');
+            
+            if (sesion.success && sesion.session) {
+                // Usuario tiene sesión activa
+                authButtons.innerHTML = `
+                    <a href="#" id="user-panel-btn" class="btn btn-primary btn-sm">
+                        <i class="fas fa-user"></i> Mi Panel
+                    </a>
+                    <a href="#" id="logout-btn" class="btn btn-outline btn-sm">
+                        <i class="fas fa-sign-out-alt"></i> Salir
+                    </a>
+                `;
+                
+                // Redirigir al panel correspondiente según el rol
+                document.getElementById('user-panel-btn').addEventListener('click', function(e) {
+                    e.preventDefault();
+                    redirigirSegunRol(sesion.rol);
+                });
+                
+                // Cerrar sesión
+                document.getElementById('logout-btn').addEventListener('click', async function(e) {
+                    e.preventDefault();
+                    
+                    const resultado = await cerrarSesion();
+                    
+                    if (resultado.success) {
+                        showNotification(resultado.message, 'success');
+                        setTimeout(() => {
+                            window.location.reload();
+                        }, 1000);
+                    } else {
+                        showNotification(resultado.error || 'Error al cerrar sesión', 'error');
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>

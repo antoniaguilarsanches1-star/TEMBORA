@@ -1,0 +1,664 @@
+{
+  "counts": {
+    "objects": 0,
+    "imagenes": 0,
+    "plantillas": 0
+  },
+  "buckets": [
+    {
+      "id": "imagenes-plantillas",
+      "public": true,
+      "file_size_limit": 5242880,
+      "allowed_mime_types": [
+        "image/jpeg",
+        "image/png",
+        "image/webp"
+      ]
+    },
+    {
+      "id": "avatares",
+      "public": true,
+      "file_size_limit": 3145728,
+      "allowed_mime_types": [
+        "image/jpeg",
+        "image/png",
+        "image/webp"
+      ]
+    },
+    {
+      "id": "comprobantes",
+      "public": false,
+      "file_size_limit": 5242880,
+      "allowed_mime_types": [
+        "image/jpeg",
+        "image/png",
+        "image/webp"
+      ]
+    },
+    {
+      "id": "plantillas-zip",
+      "public": false,
+      "file_size_limit": 52428800,
+      "allowed_mime_types": [
+        "application/zip"
+      ]
+    }
+  ],
+  "policies": [
+    {
+      "cmd": "DELETE",
+      "qual": "((bucket_id = 'comprobantes'::text) AND (((storage.foldername(name))[1] = (auth.uid())::text) OR es_admin()))",
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "objects",
+      "permissive": "PERMISSIVE",
+      "policyname": "usuario elimina su comprobante",
+      "schemaname": "storage",
+      "with_check": null
+    },
+    {
+      "cmd": "INSERT",
+      "qual": null,
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "objects",
+      "permissive": "PERMISSIVE",
+      "policyname": "usuario sube su comprobante",
+      "schemaname": "storage",
+      "with_check": "((bucket_id = 'comprobantes'::text) AND ((storage.foldername(name))[1] = (auth.uid())::text))"
+    },
+    {
+      "cmd": "SELECT",
+      "qual": "((bucket_id = 'comprobantes'::text) AND (((storage.foldername(name))[1] = (auth.uid())::text) OR es_admin()))",
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "objects",
+      "permissive": "PERMISSIVE",
+      "policyname": "usuario ve su comprobante",
+      "schemaname": "storage",
+      "with_check": null
+    },
+    {
+      "cmd": "UPDATE",
+      "qual": "((bucket_id = ANY (ARRAY['imagenes-plantillas'::text, 'avatares'::text])) AND (((storage.foldername(name))[1] = (auth.uid())::text) OR es_admin()))",
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "objects",
+      "permissive": "PERMISSIVE",
+      "policyname": "usuarios actualizan imagenes propias",
+      "schemaname": "storage",
+      "with_check": null
+    },
+    {
+      "cmd": "DELETE",
+      "qual": "((bucket_id = ANY (ARRAY['imagenes-plantillas'::text, 'avatares'::text])) AND (((storage.foldername(name))[1] = (auth.uid())::text) OR es_admin()))",
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "objects",
+      "permissive": "PERMISSIVE",
+      "policyname": "usuarios eliminan imagenes propias",
+      "schemaname": "storage",
+      "with_check": null
+    },
+    {
+      "cmd": "INSERT",
+      "qual": null,
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "objects",
+      "permissive": "PERMISSIVE",
+      "policyname": "usuarios suben imagenes propias",
+      "schemaname": "storage",
+      "with_check": "((bucket_id = ANY (ARRAY['imagenes-plantillas'::text, 'avatares'::text])) AND ((storage.foldername(name))[1] = (auth.uid())::text))"
+    },
+    {
+      "cmd": "UPDATE",
+      "qual": "((bucket_id = 'plantillas-zip'::text) AND ((((storage.foldername(name))[1] = (auth.uid())::text) AND es_vendedor()) OR es_admin()))",
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "objects",
+      "permissive": "PERMISSIVE",
+      "policyname": "vendedor actualiza sus zip",
+      "schemaname": "storage",
+      "with_check": null
+    },
+    {
+      "cmd": "DELETE",
+      "qual": "((bucket_id = 'plantillas-zip'::text) AND ((((storage.foldername(name))[1] = (auth.uid())::text) AND es_vendedor()) OR es_admin()))",
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "objects",
+      "permissive": "PERMISSIVE",
+      "policyname": "vendedor elimina sus zip",
+      "schemaname": "storage",
+      "with_check": null
+    },
+    {
+      "cmd": "INSERT",
+      "qual": null,
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "objects",
+      "permissive": "PERMISSIVE",
+      "policyname": "vendedor sube sus plantillas zip",
+      "schemaname": "storage",
+      "with_check": "((bucket_id = 'plantillas-zip'::text) AND ((storage.foldername(name))[1] = (auth.uid())::text) AND es_vendedor())"
+    },
+    {
+      "cmd": "SELECT",
+      "qual": "((bucket_id = 'plantillas-zip'::text) AND ((((storage.foldername(name))[1] = (auth.uid())::text) AND es_vendedor()) OR es_admin()))",
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "objects",
+      "permissive": "PERMISSIVE",
+      "policyname": "vendedor ve sus propios zip",
+      "schemaname": "storage",
+      "with_check": null
+    },
+    {
+      "cmd": "SELECT",
+      "qual": "true",
+      "roles": [
+        "public"
+      ],
+      "tablename": "categorias",
+      "permissive": "PERMISSIVE",
+      "policyname": "categorias_ver",
+      "schemaname": "public",
+      "with_check": null
+    },
+    {
+      "cmd": "INSERT",
+      "qual": null,
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "imagenes_plantilla",
+      "permissive": "PERMISSIVE",
+      "policyname": "imagenes_crear",
+      "schemaname": "public",
+      "with_check": "(EXISTS ( SELECT 1\n   FROM plantillas p\n  WHERE ((p.id = imagenes_plantilla.plantilla_id) AND ((p.vendedor_id = auth.uid()) OR es_admin()))))"
+    },
+    {
+      "cmd": "SELECT",
+      "qual": "(EXISTS ( SELECT 1\n   FROM plantillas p\n  WHERE ((p.id = imagenes_plantilla.plantilla_id) AND ((p.estado = 'publicada'::text) OR (p.vendedor_id = auth.uid()) OR es_admin()))))",
+      "roles": [
+        "public"
+      ],
+      "tablename": "imagenes_plantilla",
+      "permissive": "PERMISSIVE",
+      "policyname": "imagenes_ver",
+      "schemaname": "public",
+      "with_check": null
+    },
+    {
+      "cmd": "INSERT",
+      "qual": null,
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "favoritos",
+      "permissive": "PERMISSIVE",
+      "policyname": "favoritos_crear",
+      "schemaname": "public",
+      "with_check": "(usuario_id = auth.uid())"
+    },
+    {
+      "cmd": "DELETE",
+      "qual": "(usuario_id = auth.uid())",
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "favoritos",
+      "permissive": "PERMISSIVE",
+      "policyname": "favoritos_eliminar",
+      "schemaname": "public",
+      "with_check": null
+    },
+    {
+      "cmd": "SELECT",
+      "qual": "(usuario_id = auth.uid())",
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "favoritos",
+      "permissive": "PERMISSIVE",
+      "policyname": "favoritos_ver",
+      "schemaname": "public",
+      "with_check": null
+    },
+    {
+      "cmd": "UPDATE",
+      "qual": "es_admin()",
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "pedidos",
+      "permissive": "PERMISSIVE",
+      "policyname": "pedidos_admin_editar",
+      "schemaname": "public",
+      "with_check": "es_admin()"
+    },
+    {
+      "cmd": "INSERT",
+      "qual": null,
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "pedidos",
+      "permissive": "PERMISSIVE",
+      "policyname": "pedidos_crear",
+      "schemaname": "public",
+      "with_check": "(comprador_id = auth.uid())"
+    },
+    {
+      "cmd": "SELECT",
+      "qual": "((comprador_id = auth.uid()) OR (vendedor_id = auth.uid()) OR es_admin())",
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "pedidos",
+      "permissive": "PERMISSIVE",
+      "policyname": "pedidos_ver",
+      "schemaname": "public",
+      "with_check": null
+    },
+    {
+      "cmd": "UPDATE",
+      "qual": "es_admin()",
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "retiros",
+      "permissive": "PERMISSIVE",
+      "policyname": "retiros_admin",
+      "schemaname": "public",
+      "with_check": "es_admin()"
+    },
+    {
+      "cmd": "INSERT",
+      "qual": null,
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "retiros",
+      "permissive": "PERMISSIVE",
+      "policyname": "retiros_crear",
+      "schemaname": "public",
+      "with_check": "((vendedor_id = auth.uid()) AND es_vendedor() AND (estado = 'pendiente'::text))"
+    },
+    {
+      "cmd": "SELECT",
+      "qual": "((vendedor_id = auth.uid()) OR es_admin())",
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "retiros",
+      "permissive": "PERMISSIVE",
+      "policyname": "retiros_ver",
+      "schemaname": "public",
+      "with_check": null
+    },
+    {
+      "cmd": "INSERT",
+      "qual": null,
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "resenas",
+      "permissive": "PERMISSIVE",
+      "policyname": "resenas_crear",
+      "schemaname": "public",
+      "with_check": "((usuario_id = auth.uid()) AND (EXISTS ( SELECT 1\n   FROM pedidos p\n  WHERE ((p.comprador_id = auth.uid()) AND (p.plantilla_id = resenas.plantilla_id) AND (p.estado_pago = 'verificado'::text)))))"
+    },
+    {
+      "cmd": "UPDATE",
+      "qual": "(usuario_id = auth.uid())",
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "resenas",
+      "permissive": "PERMISSIVE",
+      "policyname": "resenas_editar",
+      "schemaname": "public",
+      "with_check": "(usuario_id = auth.uid())"
+    },
+    {
+      "cmd": "DELETE",
+      "qual": "((usuario_id = auth.uid()) OR es_admin())",
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "resenas",
+      "permissive": "PERMISSIVE",
+      "policyname": "resenas_eliminar",
+      "schemaname": "public",
+      "with_check": null
+    },
+    {
+      "cmd": "SELECT",
+      "qual": "true",
+      "roles": [
+        "public"
+      ],
+      "tablename": "resenas",
+      "permissive": "PERMISSIVE",
+      "policyname": "resenas_ver",
+      "schemaname": "public",
+      "with_check": null
+    },
+    {
+      "cmd": "INSERT",
+      "qual": null,
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "plantillas",
+      "permissive": "PERMISSIVE",
+      "policyname": "plantillas_crear",
+      "schemaname": "public",
+      "with_check": "((vendedor_id = auth.uid()) AND es_vendedor())"
+    },
+    {
+      "cmd": "UPDATE",
+      "qual": "((vendedor_id = auth.uid()) OR es_admin())",
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "plantillas",
+      "permissive": "PERMISSIVE",
+      "policyname": "plantillas_editar",
+      "schemaname": "public",
+      "with_check": "((vendedor_id = auth.uid()) OR es_admin())"
+    },
+    {
+      "cmd": "DELETE",
+      "qual": "((vendedor_id = auth.uid()) OR es_admin())",
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "plantillas",
+      "permissive": "PERMISSIVE",
+      "policyname": "plantillas_eliminar",
+      "schemaname": "public",
+      "with_check": null
+    },
+    {
+      "cmd": "SELECT",
+      "qual": "((estado = 'publicada'::text) OR (vendedor_id = auth.uid()) OR es_admin())",
+      "roles": [
+        "public"
+      ],
+      "tablename": "plantillas",
+      "permissive": "PERMISSIVE",
+      "policyname": "plantillas_ver",
+      "schemaname": "public",
+      "with_check": null
+    },
+    {
+      "cmd": "UPDATE",
+      "qual": "((auth.uid() = id) OR es_admin())",
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "perfiles",
+      "permissive": "PERMISSIVE",
+      "policyname": "perfiles_editar",
+      "schemaname": "public",
+      "with_check": "((auth.uid() = id) OR es_admin())"
+    },
+    {
+      "cmd": "SELECT",
+      "qual": "true",
+      "roles": [
+        "public"
+      ],
+      "tablename": "perfiles",
+      "permissive": "PERMISSIVE",
+      "policyname": "perfiles_ver",
+      "schemaname": "public",
+      "with_check": null
+    }
+  ],
+  "triggers": [
+    {
+      "table": "perfiles",
+      "definition": "CREATE TRIGGER actualizar_perfiles_fecha BEFORE UPDATE ON public.perfiles FOR EACH ROW EXECUTE FUNCTION actualizar_fecha()"
+    },
+    {
+      "table": "plantillas",
+      "definition": "CREATE TRIGGER actualizar_plantillas_fecha BEFORE UPDATE ON public.plantillas FOR EACH ROW EXECUTE FUNCTION actualizar_fecha()"
+    },
+    {
+      "table": "users",
+      "definition": "CREATE TRIGGER nuevo_usuario_crear_perfil AFTER INSERT ON auth.users FOR EACH ROW EXECUTE FUNCTION crear_perfil_usuario()"
+    },
+    {
+      "table": "plantillas",
+      "definition": "CREATE TRIGGER proteger_estado BEFORE INSERT OR UPDATE ON public.plantillas FOR EACH ROW EXECUTE FUNCTION proteger_estado_plantilla()"
+    }
+  ],
+  "functions": [
+    {
+      "acl": null,
+      "name": "actualizar_fecha()",
+      "definition": "CREATE OR REPLACE FUNCTION public.actualizar_fecha()\n RETURNS trigger\n LANGUAGE plpgsql\nAS $function$\r\nbegin\r\n    new.updated_at = now();\r\n    return new;\r\nend;\r\n$function$\n"
+    },
+    {
+      "acl": null,
+      "name": "es_vendedor()",
+      "definition": "CREATE OR REPLACE FUNCTION public.es_vendedor()\n RETURNS boolean\n LANGUAGE sql\n STABLE SECURITY DEFINER\n SET search_path TO 'public'\nAS $function$\r\n    select exists (\r\n        select 1\r\n        from public.perfiles\r\n        where id = auth.uid()\r\n        and rol in ('vendedor', 'admin')\r\n    );\r\n$function$\n"
+    },
+    {
+      "acl": null,
+      "name": "proteger_estado_plantilla()",
+      "definition": "CREATE OR REPLACE FUNCTION public.proteger_estado_plantilla()\n RETURNS trigger\n LANGUAGE plpgsql\n SECURITY DEFINER\n SET search_path TO 'public'\nAS $function$\r\nbegin\r\n\r\n    if auth.uid() is not null\r\n       and not public.es_admin() then\r\n\r\n        if TG_OP = 'INSERT' then\r\n            new.estado := 'pendiente';\r\n        else\r\n            new.estado := old.estado;\r\n        end if;\r\n\r\n    end if;\r\n\r\n    return new;\r\nend;\r\n$function$\n"
+    },
+    {
+      "acl": null,
+      "name": "crear_perfil_usuario()",
+      "definition": "CREATE OR REPLACE FUNCTION public.crear_perfil_usuario()\n RETURNS trigger\n LANGUAGE plpgsql\n SECURITY DEFINER\n SET search_path TO 'pg_catalog', 'public', 'pg_temp'\nAS $function$\r\ndeclare\r\n    rol_elegido text;\r\nbegin\r\n\r\n    rol_elegido :=\r\n        coalesce(new.raw_user_meta_data ->> 'rol', 'comprador');\r\n\r\n    if rol_elegido not in ('comprador', 'vendedor') then\r\n        rol_elegido := 'comprador';\r\n    end if;\r\n\r\n    insert into public.perfiles (\r\n        id,\r\n        nombre_completo,\r\n        rol\r\n    )\r\n    values (\r\n        new.id,\r\n        coalesce(\r\n            new.raw_user_meta_data ->> 'nombre_completo',\r\n            ''\r\n        ),\r\n        rol_elegido\r\n    );\r\n\r\n    return new;\r\nend;\r\n$function$\n"
+    },
+    {
+      "acl": null,
+      "name": "es_admin()",
+      "definition": "CREATE OR REPLACE FUNCTION public.es_admin()\n RETURNS boolean\n LANGUAGE sql\n STABLE SECURITY DEFINER\n SET search_path TO 'pg_catalog', 'public', 'pg_temp'\nAS $function$\r\n    select exists (\r\n        select 1\r\n        from public.perfiles\r\n        where id = auth.uid()\r\n        and rol = 'admin'\r\n    );\r\n$function$\n"
+    },
+    {
+      "acl": null,
+      "name": "rls_auto_enable()",
+      "definition": "CREATE OR REPLACE FUNCTION public.rls_auto_enable()\n RETURNS event_trigger\n LANGUAGE plpgsql\n SECURITY DEFINER\n SET search_path TO 'pg_catalog'\nAS $function$\nDECLARE\n  cmd record;\nBEGIN\n  FOR cmd IN\n    SELECT *\n    FROM pg_event_trigger_ddl_commands()\n    WHERE command_tag IN ('CREATE TABLE', 'CREATE TABLE AS', 'SELECT INTO')\n      AND object_type IN ('table','partitioned table')\n  LOOP\n     IF cmd.schema_name IS NOT NULL AND cmd.schema_name IN ('public') AND cmd.schema_name NOT IN ('pg_catalog','information_schema') AND cmd.schema_name NOT LIKE 'pg_toast%' AND cmd.schema_name NOT LIKE 'pg_temp%' THEN\n      BEGIN\n        EXECUTE format('alter table if exists %s enable row level security', cmd.object_identity);\n        RAISE LOG 'rls_auto_enable: enabled RLS on %', cmd.object_identity;\n      EXCEPTION\n        WHEN OTHERS THEN\n          RAISE LOG 'rls_auto_enable: failed to enable RLS on %', cmd.object_identity;\n      END;\n     ELSE\n        RAISE LOG 'rls_auto_enable: skip % (either system schema or not in enforced list: %.)', cmd.object_identity, cmd.schema_name;\n     END IF;\n  END LOOP;\nEND;\n$function$\n"
+    },
+    {
+      "acl": [
+        "postgres=X/postgres",
+        "authenticated=X/postgres"
+      ],
+      "name": "tembora_admin_cambiar_rol(uuid,text)",
+      "definition": "CREATE OR REPLACE FUNCTION public.tembora_admin_cambiar_rol(p_usuario_id uuid, p_nuevo_rol text)\n RETURNS void\n LANGUAGE plpgsql\n SECURITY DEFINER\n SET search_path TO ''\nAS $function$\r\nDECLARE\r\n  actor_id uuid := auth.uid();\r\n  actor_rol text;\r\nBEGIN\r\n  IF actor_id IS NULL THEN\r\n    RAISE EXCEPTION 'Debes iniciar sesión'\r\n      USING ERRCODE = '42501';\r\n  END IF;\r\n\r\n  -- Leer la autoridad real del llamante desde perfiles.\r\n  -- El bloqueo impide que su rol cambie concurrentemente\r\n  -- mientras se realiza esta operación.\r\n  SELECT p.rol\r\n  INTO actor_rol\r\n  FROM public.perfiles AS p\r\n  WHERE p.id = actor_id\r\n  FOR UPDATE;\r\n\r\n  IF actor_rol IS DISTINCT FROM 'admin' THEN\r\n    RAISE EXCEPTION 'Solo un administrador puede gestionar roles'\r\n      USING ERRCODE = '42501';\r\n  END IF;\r\n\r\n  IF p_usuario_id IS NULL\r\n     OR p_nuevo_rol IS NULL\r\n     OR p_nuevo_rol NOT IN ('comprador', 'vendedor', 'admin')\r\n  THEN\r\n    RAISE EXCEPTION 'Usuario o rol inválido'\r\n      USING ERRCODE = '22023';\r\n  END IF;\r\n\r\n  -- La gestión administrativa se aplica a otras cuentas.\r\n  IF p_usuario_id = actor_id THEN\r\n    RAISE EXCEPTION 'No puedes modificar tu propio rol'\r\n      USING ERRCODE = '42501';\r\n  END IF;\r\n\r\n  UPDATE public.perfiles\r\n  SET rol = p_nuevo_rol\r\n  WHERE id = p_usuario_id;\r\n\r\n  IF NOT FOUND THEN\r\n    RAISE EXCEPTION 'El perfil de destino no existe'\r\n      USING ERRCODE = 'P0002';\r\n  END IF;\r\nEND;\r\n$function$\n"
+    }
+  ],
+  "profile_privileges": [
+    {
+      "grantee": "anon",
+      "grantor": "postgres",
+      "table_name": "perfiles",
+      "column_name": "avatar_url",
+      "is_grantable": "NO",
+      "table_schema": "public",
+      "table_catalog": "postgres",
+      "privilege_type": "SELECT"
+    },
+    {
+      "grantee": "anon",
+      "grantor": "postgres",
+      "table_name": "perfiles",
+      "column_name": "bio",
+      "is_grantable": "NO",
+      "table_schema": "public",
+      "table_catalog": "postgres",
+      "privilege_type": "SELECT"
+    },
+    {
+      "grantee": "anon",
+      "grantor": "postgres",
+      "table_name": "perfiles",
+      "column_name": "created_at",
+      "is_grantable": "NO",
+      "table_schema": "public",
+      "table_catalog": "postgres",
+      "privilege_type": "SELECT"
+    },
+    {
+      "grantee": "anon",
+      "grantor": "postgres",
+      "table_name": "perfiles",
+      "column_name": "id",
+      "is_grantable": "NO",
+      "table_schema": "public",
+      "table_catalog": "postgres",
+      "privilege_type": "SELECT"
+    },
+    {
+      "grantee": "anon",
+      "grantor": "postgres",
+      "table_name": "perfiles",
+      "column_name": "nombre_completo",
+      "is_grantable": "NO",
+      "table_schema": "public",
+      "table_catalog": "postgres",
+      "privilege_type": "SELECT"
+    },
+    {
+      "grantee": "anon",
+      "grantor": "postgres",
+      "table_name": "perfiles",
+      "column_name": "rol",
+      "is_grantable": "NO",
+      "table_schema": "public",
+      "table_catalog": "postgres",
+      "privilege_type": "SELECT"
+    },
+    {
+      "grantee": "anon",
+      "grantor": "postgres",
+      "table_name": "perfiles",
+      "column_name": "updated_at",
+      "is_grantable": "NO",
+      "table_schema": "public",
+      "table_catalog": "postgres",
+      "privilege_type": "SELECT"
+    },
+    {
+      "grantee": "authenticated",
+      "grantor": "postgres",
+      "table_name": "perfiles",
+      "column_name": "avatar_url",
+      "is_grantable": "NO",
+      "table_schema": "public",
+      "table_catalog": "postgres",
+      "privilege_type": "SELECT"
+    },
+    {
+      "grantee": "authenticated",
+      "grantor": "postgres",
+      "table_name": "perfiles",
+      "column_name": "avatar_url",
+      "is_grantable": "NO",
+      "table_schema": "public",
+      "table_catalog": "postgres",
+      "privilege_type": "UPDATE"
+    },
+    {
+      "grantee": "authenticated",
+      "grantor": "postgres",
+      "table_name": "perfiles",
+      "column_name": "bio",
+      "is_grantable": "NO",
+      "table_schema": "public",
+      "table_catalog": "postgres",
+      "privilege_type": "SELECT"
+    },
+    {
+      "grantee": "authenticated",
+      "grantor": "postgres",
+      "table_name": "perfiles",
+      "column_name": "bio",
+      "is_grantable": "NO",
+      "table_schema": "public",
+      "table_catalog": "postgres",
+      "privilege_type": "UPDATE"
+    },
+    {
+      "grantee": "authenticated",
+      "grantor": "postgres",
+      "table_name": "perfiles",
+      "column_name": "created_at",
+      "is_grantable": "NO",
+      "table_schema": "public",
+      "table_catalog": "postgres",
+      "privilege_type": "SELECT"
+    },
+    {
+      "grantee": "authenticated",
+      "grantor": "postgres",
+      "table_name": "perfiles",
+      "column_name": "id",
+      "is_grantable": "NO",
+      "table_schema": "public",
+      "table_catalog": "postgres",
+      "privilege_type": "SELECT"
+    },
+    {
+      "grantee": "authenticated",
+      "grantor": "postgres",
+      "table_name": "perfiles",
+      "column_name": "nombre_completo",
+      "is_grantable": "NO",
+      "table_schema": "public",
+      "table_catalog": "postgres",
+      "privilege_type": "SELECT"
+    },
+    {
+      "grantee": "authenticated",
+      "grantor": "postgres",
+      "table_name": "perfiles",
+      "column_name": "nombre_completo",
+      "is_grantable": "NO",
+      "table_schema": "public",
+      "table_catalog": "postgres",
+      "privilege_type": "UPDATE"
+    },
+    {
+      "grantee": "authenticated",
+      "grantor": "postgres",
+      "table_name": "perfiles",
+      "column_name": "rol",
+      "is_grantable": "NO",
+      "table_schema": "public",
+      "table_catalog": "postgres",
+      "privilege_type": "SELECT"
+    },
+    {
+      "grantee": "authenticated",
+      "grantor": "postgres",
+      "table_name": "perfiles",
+      "column_name": "updated_at",
+      "is_grantable": "NO",
+      "table_schema": "public",
+      "table_catalog": "postgres",
+      "privilege_type": "SELECT"
+    }
+  ],
+  "profile_role_fingerprint": "935f408145872374b64b20e98022cb88"
+}

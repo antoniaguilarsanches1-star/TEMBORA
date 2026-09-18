@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Catálogo de Plantillas - PlantillaPE</title>
+    <meta name="description" content="Explora nuestro catálogo de plantillas web profesionales. Encuentra la perfecta para tu proyecto.">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- CSS -->
+    <link rel="stylesheet" href="css/styles.css?v=20260916-2">
+    
+    <!-- Supabase JS -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body data-market="catalogo">
+    <!-- Header -->
+    <header class="header">
+        <div class="container header-content">
+            <a href="index.html" class="logo">
+                <i class="fas fa-code"></i>
+                PlantillaPE
+            </a>
+            
+            <nav class="nav-menu">
+                <a href="index.html" class="nav-link">Inicio</a>
+                <a href="catalogo.html" class="nav-link">Plantillas</a>
+                <a href="catalogo.html" class="nav-link">Categorías</a>
+                <a href="vender.html" class="nav-link">Vender</a>
+                <a href="pagina-personalizada.html" class="nav-link">Creamos tu página</a>
+                <a href="como-funciona.html" class="nav-link">Cómo funciona</a>
+                <a href="contacto.html" class="nav-link">Contacto</a>
+            </nav>
+            
+            <div class="auth-buttons">
+                <a href="login.html" class="btn btn-outline btn-sm">Iniciar sesión</a>
+                <a href="registro.html" class="btn btn-primary btn-sm">Registrarse</a>
+            </div>
+            
+            <div class="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Page Header -->
+    <section class="section" style="background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-light) 100%); color: var(--text-white); padding: 3rem 0;">
+        <div class="container text-center">
+            <h1 style="font-size: 2.5rem; font-weight: 700; margin-bottom: 0.5rem;">Catálogo de Plantillas</h1>
+            <p style="font-size: 1.125rem; opacity: 0.9;">Explora nuestra colección de plantillas web profesionales</p>
+        </div>
+    </section>
+
+    <!-- Filtros y Búsqueda -->
+    <section class="section">
+        <div class="container">
+            <div class="filters-section">
+                <div class="filters-grid">
+                    <div class="filter-group">
+                        <label for="category-filter">Categoría</label>
+                        <select id="category-filter">
+                            <option value="">Todas las categorías</option>
+                            <option value="Negocios">Negocios</option>
+                            <option value="Restaurantes">Restaurantes</option>
+                            <option value="Barberías">Barberías</option>
+                            <option value="Tiendas">Tiendas</option>
+                            <option value="Portafolios">Portafolios</option>
+                            <option value="Hoteles">Hoteles</option>
+                            <option value="Turismo">Turismo</option>
+                            <option value="Servicios Profesionales">Servicios Profesionales</option>
+                            <option value="Landing Pages">Landing Pages</option>
+                            <option value="Educación">Educación</option>
+                            <option value="Salud">Salud</option>
+                            <option value="Tecnología">Tecnología</option>
+                        </select>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <label for="price-min">Precio mínimo (S/)</label>
+                        <input type="number" id="price-min" placeholder="0" min="0">
+                    </div>
+                    
+                    <div class="filter-group">
+                        <label for="price-max">Precio máximo (S/)</label>
+                        <input type="number" id="price-max" placeholder="1000" min="0">
+                    </div>
+                    
+                    <div class="filter-group">
+                        <label for="sort-filter">Ordenar por</label>
+                        <select id="sort-filter">
+                            <option value="featured">Destacados</option>
+                            <option value="price-low">Precio: Menor a mayor</option>
+                            <option value="price-high">Precio: Mayor a menor</option>
+                            <option value="newest">Más recientes</option>
+                        </select>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <label>&nbsp;</label>
+                        <button id="apply-filters" class="btn btn-primary">
+                            <i class="fas fa-filter"></i> Aplicar filtros
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="filter-group mt-3">
+                    <label for="search-catalog">Buscar</label>
+                    <input type="text" id="search-catalog" class="search-input" placeholder="Buscar plantillas por nombre...">
+                </div>
+            </div>
+            
+            <div id="market-root"><p id="market-status" role="status" aria-live="polite">Cargando…</p><button id="market-reload" type="button" class="btn btn-outline btn-sm">Actualizar</button></div>
+            <div id="market-content" class="templates-grid">
+                <!-- Las plantillas se cargarán con JavaScript -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>PlantillaPE</h3>
+                    <p>Marketplace peruano de plantillas y servicios web. Conectamos a diseñadores y desarrolladores con negocios que necesitan presencia online.</p>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Enlaces</h3>
+                    <div class="footer-links">
+                        <a href="catalogo.html">Plantillas</a>
+                        <a href="vender.html">Vender</a>
+                        <a href="pagina-personalizada.html">Creamos tu página</a>
+                        <a href="como-funciona.html">Cómo funciona</a>
+                        <a href="contacto.html">Contacto</a>
+                    </div>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Legal</h3>
+                    <div class="footer-links">
+                        <a href="terminos.html">Términos y condiciones</a>
+                        <a href="privacidad.html">Política de privacidad</a>
+                        <a href="licencias.html">Licencias</a>
+                        <a href="contacto.html">Soporte</a>
+                    </div>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Contacto</h3>
+                    <div class="footer-links">
+                        <a href="https://wa.me/51993498739" target="_blank" rel="noopener noreferrer"><i class="fab fa-whatsapp"></i> WhatsApp</a>
+                        <a href="#"><i class="fas fa-envelope"></i> Email</a>
+                        <a href="#"><i class="fab fa-facebook"></i> Facebook</a>
+                        <a href="#"><i class="fab fa-instagram"></i> Instagram</a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2024 PlantillaPE. Todos los derechos reservados.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- WhatsApp Float Button -->
+    <div class="whatsapp-float">
+        <i class="fab fa-whatsapp"></i>
+    </div>
+
+    <!-- JavaScript -->
+    <script src="js/app.js"></script>
+    <script src="js/supabase.js"></script>
+    <script src="js/mercado-api.js"></script>
+    <script src="js/pagos-api.js"></script>
+    <script src="js/mercado-ui.js"></script>
+    <script>
+        // Cargar filtros desde URL y verificar sesión
+        document.addEventListener('DOMContentLoaded', async () => {
+            loadFiltersFromURL();
+            
+            const sesion = await verificarSesion();
+            
+            const authButtons = document.querySelector('.auth-buttons');
+            
+            if (sesion.success && sesion.session) {
+                // Usuario tiene sesión activa
+                authButtons.innerHTML = `
+                    <a href="#" id="user-panel-btn" class="btn btn-primary btn-sm">
+                        <i class="fas fa-user"></i> Mi Panel
+                    </a>
+                    <a href="#" id="logout-btn" class="btn btn-outline btn-sm">
+                        <i class="fas fa-sign-out-alt"></i> Salir
+                    </a>
+                `;
+                
+                // Redirigir al panel correspondiente según el rol
+                document.getElementById('user-panel-btn').addEventListener('click', function(e) {
+                    e.preventDefault();
+                    redirigirSegunRol(sesion.rol);
+                });
+                
+                // Cerrar sesión
+                document.getElementById('logout-btn').addEventListener('click', async function(e) {
+                    e.preventDefault();
+                    
+                    const resultado = await cerrarSesion();
+                    
+                    if (resultado.success) {
+                        showNotification(resultado.message, 'success');
+                        setTimeout(() => {
+                            window.location.reload();
+                        }, 1000);
+                    } else {
+                        showNotification(resultado.error || 'Error al cerrar sesión', 'error');
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>

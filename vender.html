@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="es" data-auth-pending>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vender Plantillas - PlantillaPE</title>
+    <meta name="description" content="Vende tus plantillas web en PlantillaPE y gana dinero.">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- CSS -->
+    <link rel="stylesheet" href="css/styles.css?v=20260916-2">
+    
+    <!-- Ocultar el contenido protegido antes de cargar JavaScript o Supabase. -->
+    <style>
+        #auth-status { display: none; }
+        html[data-auth-pending] body > :not(#auth-status) { display: none !important; }
+        html[data-auth-pending] #auth-status { display: block; }
+    </style>
+
+    <!-- Supabase JS -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+    <section id="auth-status" class="section">
+        <div class="container" role="status" aria-live="polite">
+            <p id="auth-message">Comprobando sesión y permisos… Si no continúa, comprueba tu conexión y reintenta.</p>
+            <a href="" class="btn btn-outline btn-sm">Reintentar</a>
+            <button type="button" data-auth-logout class="btn btn-outline btn-sm">Cerrar sesión</button>
+            <a href="login.html" class="btn btn-outline btn-sm">Ir a iniciar sesión</a>
+            <noscript>Necesitas activar JavaScript para acceder a esta página.</noscript>
+        </div>
+    </section>
+    <!-- Header -->
+    <header class="header">
+        <div class="container header-content">
+            <a href="index.html" class="logo">
+                <i class="fas fa-code"></i>
+                PlantillaPE
+            </a>
+            
+            <nav class="nav-menu">
+                <a href="index.html" class="nav-link">Inicio</a>
+                <a href="catalogo.html" class="nav-link">Plantillas</a>
+                <a href="catalogo.html" class="nav-link">Categorías</a>
+                <a href="vender.html" class="nav-link">Vender</a>
+                <a href="pagina-personalizada.html" class="nav-link">Creamos tu página</a>
+                <a href="como-funciona.html" class="nav-link">Cómo funciona</a>
+                <a href="contacto.html" class="nav-link">Contacto</a>
+            </nav>
+            
+            <div class="auth-buttons">
+                <a href="login.html" class="btn btn-outline btn-sm">Iniciar sesión</a>
+                <a href="registro.html" class="btn btn-primary btn-sm">Registrarse</a>
+            </div>
+            
+            <div class="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Page Header -->
+    <section class="section" style="background: linear-gradient(135deg, var(--accent-color) 0%, #fbbf24 100%); color: var(--text-white); padding: 4rem 0;">
+        <div class="container text-center">
+            <h1 style="font-size: 2.5rem; font-weight: 700; margin-bottom: 1rem;">Vende tus Plantillas Web</h1>
+            <p style="font-size: 1.25rem; opacity: 0.9;">Gana dinero vendiendo tus creaciones en el marketplace peruano más grande</p>
+        </div>
+    </section>
+
+    <!-- Cómo funciona para vendedores -->
+    <section class="section">
+        <div class="container">
+            <div class="section-title">
+                <h2>Cómo funciona</h2>
+                <p>En 5 simples pasos empieza a vender tus plantillas</p>
+            </div>
+            
+            <div class="steps-container">
+                <div class="step-card">
+                    <div class="step-number">1</div>
+                    <h3>Crea tu cuenta</h3>
+                    <p>Regístrate como vendedor de forma gratuita</p>
+                </div>
+                
+                <div class="step-card">
+                    <div class="step-number">2</div>
+                    <h3>Publica tu plantilla</h3>
+                    <p>Sube tu plantilla con toda la información</p>
+                </div>
+                
+                <div class="step-card">
+                    <div class="step-number">3</div>
+                    <h3>Espera aprobación</h3>
+                    <p>Nuestro equipo revisa tu plantilla</p>
+                </div>
+                
+                <div class="step-card">
+                    <div class="step-number">4</div>
+                    <h3>Empieza a vender</h3>
+                    <p>Tu plantilla se publica en el marketplace</p>
+                </div>
+                
+                <div class="step-card">
+                    <div class="step-number">5</div>
+                    <h3>Obtén ganancias</h3>
+                    <p>Recibe el 80% de cada venta verificada</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Beneficios -->
+    <section class="section" style="background-color: var(--bg-white);">
+        <div class="container">
+            <div class="section-title">
+                <h2>Beneficios de vender en PlantillaPE</h2>
+                <p>Descubre las ventajas de ser parte de nuestra comunidad</p>
+            </div>
+            
+            <div class="templates-grid">
+                <div class="service-card">
+                    <i class="fas fa-percentage"></i>
+                    <h3>80% para ti</h3>
+                    <p>Recibes el 80% de cada venta verificada. La comisión de la plataforma es del 20%.</p>
+                </div>
+                
+                <div class="service-card">
+                    <i class="fas fa-users"></i>
+                    <h3>Gran audiencia</h3>
+                    <p>Acceso a miles de compradores peruanos buscando plantillas web.</p>
+                </div>
+                
+                <div class="service-card">
+                    <i class="fas fa-shield-alt"></i>
+                    <h3>Protección</h3>
+                    <p>Tu contenido está protegido. Solo los compradores autorizados pueden descargar.</p>
+                </div>
+                
+                <div class="service-card">
+                    <i class="fas fa-chart-line"></i>
+                    <h3>Estadísticas</h3>
+                    <p>Panel de control con estadísticas detalladas de tus ventas y ganancias.</p>
+                </div>
+                
+                <div class="service-card">
+                    <i class="fas fa-money-bill-wave"></i>
+                    <h3>Pagos rápidos</h3>
+                    <p>Solicita retiros de tus ganancias de forma sencilla y rápida.</p>
+                </div>
+                
+                <div class="service-card">
+                    <i class="fas fa-headset"></i>
+                    <h3>Soporte dedicado</h3>
+                    <p>Equipo de soporte disponible para ayudarte en todo momento.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Formulario para publicar -->
+    <section class="section">
+        <div class="container">
+            <div class="section-title">
+                <h2>Publicar una Plantilla</h2>
+                <p>Completa el formulario para publicar tu plantilla</p>
+            </div>
+            
+            <div class="form-container" style="max-width: 800px;">
+                <form id="sell-form">
+                    <fieldset id="sell-fields" disabled style="border: 0; padding: 0; margin: 0; min-width: 0;">
+                    <legend>Datos de la plantilla</legend>
+                    <div class="form-group">
+                        <label for="template-name">Nombre de la plantilla *</label>
+                        <input type="text" id="template-name" name="template-name" required placeholder="Ej: Restaurante Gourmet">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="category">Categoría *</label>
+                        <select id="category" name="category" required>
+                            <option value="">Cargando categorías…</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="price">Precio (S/) *</label>
+                        <input type="number" id="price" name="price" required min="20" step="0.01" placeholder="Ej: 89.00">
+                        <small>El precio mínimo es S/ 20.00</small>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="technologies">Tecnologías utilizadas *</label>
+                        <input type="text" id="technologies" name="technologies" required placeholder="Ej: HTML5, CSS3, JavaScript">
+                        <small>Separa las tecnologías con comas</small>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="description">Descripción *</label>
+                        <textarea id="description" name="description" required minlength="100" placeholder="Describe tu plantilla, sus características y para quién es ideal..."></textarea>
+                        <small>Mínimo 100 caracteres</small>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="main-image">Imagen principal *</label>
+                        <input type="file" id="main-image" name="main-image" accept=".jpg,.jpeg,.png,.webp" required>
+                        <small>Formatos: JPG, PNG o WebP. Tamaño máximo: 5 MB</small>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="additional-images">Imágenes adicionales</label>
+                        <input type="file" id="additional-images" name="additional-images" accept=".jpg,.jpeg,.png,.webp" multiple>
+                        <small>Hasta 5 imágenes adicionales, de 5 MB como máximo cada una</small>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="zip-file">Archivo ZIP *</label>
+                        <input type="file" id="zip-file" name="zip-file" accept=".zip" required>
+                        <small>Incluye el código fuente en un ZIP de hasta 50 MB. El archivo permanecerá privado.</small>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="demo-url">URL de demo (opcional)</label>
+                        <input type="url" id="demo-url" name="demo-url" placeholder="https://ejemplo.com/demo">
+                        <small>URL donde los clientes pueden ver la demo en vivo</small>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>
+                            <input type="checkbox" required>
+                            Acepto los términos y condiciones de PlantillaPE
+                        </label>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>
+                            <input type="checkbox" required>
+                            Confirmo que soy el propietario de los derechos de esta plantilla
+                        </label>
+                    </div>
+                    
+                    <div style="background-color: #fef3c7; padding: 1rem; border-radius: var(--radius-md); margin-bottom: 1.5rem; border-left: 4px solid var(--accent-color);">
+                        <p style="color: #92400e; font-size: 0.875rem;">
+                            <i class="fas fa-info-circle"></i> 
+                            <strong>Importante:</strong> Tu plantilla será revisada por nuestro equipo antes de ser publicada. 
+                            Al enviarla quedará pendiente de aprobación y sus datos y archivos quedarán bloqueados durante la revisión.
+                        </p>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary btn-lg" style="width: 100%;">
+                        <i class="fas fa-upload"></i> Enviar plantilla para revisión
+                    </button>
+                    </fieldset>
+                </form>
+                <p id="sell-status" role="status" aria-live="polite" aria-atomic="true">Comprobando acceso al envío…</p>
+                <p id="sell-reference" hidden></p>
+                <button id="sell-retry" type="button" class="btn btn-outline btn-sm" hidden>Reintentar carga</button>
+                <button id="sell-check" type="button" class="btn btn-outline btn-sm" hidden>Comprobar estado</button>
+                <button id="sell-discard" type="button" class="btn btn-outline btn-sm" hidden>Retirar preparación incompleta</button>
+                <button id="sell-new" type="button" class="btn btn-primary btn-sm" hidden>Preparar otra plantilla</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="section" style="background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-light) 100%); color: var(--text-white);">
+        <div class="container text-center">
+            <h2 style="font-size: 2rem; font-weight: 700; margin-bottom: 1rem;">¿Listo para empezar a vender?</h2>
+            <p style="font-size: 1.125rem; margin-bottom: 2rem; opacity: 0.9;">Crea tu cuenta de vendedor y comienza a ganar dinero hoy mismo</p>
+            <a href="registro.html" class="btn btn-secondary btn-lg">
+                <i class="fas fa-user-plus"></i> Crear cuenta de vendedor
+            </a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>PlantillaPE</h3>
+                    <p>Marketplace peruano de plantillas y servicios web. Conectamos a diseñadores y desarrolladores con negocios que necesitan presencia online.</p>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Enlaces</h3>
+                    <div class="footer-links">
+                        <a href="catalogo.html">Plantillas</a>
+                        <a href="vender.html">Vender</a>
+                        <a href="pagina-personalizada.html">Creamos tu página</a>
+                        <a href="como-funciona.html">Cómo funciona</a>
+                        <a href="contacto.html">Contacto</a>
+                    </div>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Legal</h3>
+                    <div class="footer-links">
+                        <a href="terminos.html">Términos y condiciones</a>
+                        <a href="privacidad.html">Política de privacidad</a>
+                        <a href="licencias.html">Licencias</a>
+                        <a href="contacto.html">Soporte</a>
+                    </div>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Contacto</h3>
+                    <div class="footer-links">
+                        <a href="https://wa.me/51993498739" target="_blank" rel="noopener noreferrer"><i class="fab fa-whatsapp"></i> WhatsApp</a>
+                        <a href="#"><i class="fas fa-envelope"></i> Email</a>
+                        <a href="#"><i class="fab fa-facebook"></i> Facebook</a>
+                        <a href="#"><i class="fab fa-instagram"></i> Instagram</a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2024 PlantillaPE. Todos los derechos reservados.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- WhatsApp Float Button -->
+    <div class="whatsapp-float">
+        <i class="fab fa-whatsapp"></i>
+    </div>
+
+    <!-- JavaScript -->
+    <script src="js/app.js"></script>
+    <script src="js/supabase.js"></script>
+    <script src="js/plantillas-envio.js"></script>
+    <script src="js/vender.js"></script>
+    <script>
+        // Verificar sesión al cargar la página
+        document.addEventListener('DOMContentLoaded', async function() {
+            if (!await window.accesoPagina) return;
+            const sesion = await verificarSesion();
+            
+            const authButtons = document.querySelector('.auth-buttons');
+            
+            if (sesion.success && sesion.session) {
+                // Usuario tiene sesión activa
+                authButtons.innerHTML = `
+                    <a href="#" id="user-panel-btn" class="btn btn-primary btn-sm">
+                        <i class="fas fa-user"></i> Mi Panel
+                    </a>
+                    <a href="#" id="logout-btn" data-auth-logout class="btn btn-outline btn-sm">
+                        <i class="fas fa-sign-out-alt"></i> Salir
+                    </a>
+                `;
+                
+                // Redirigir al panel correspondiente según el rol
+                document.getElementById('user-panel-btn').addEventListener('click', function(e) {
+                    e.preventDefault();
+                    redirigirSegunRol(sesion.rol);
+                });
+                
+
+            }
+        });
+    </script>
+</body>
+</html>
