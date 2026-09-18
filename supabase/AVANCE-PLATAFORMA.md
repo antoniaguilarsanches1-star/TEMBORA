@@ -1,4 +1,4 @@
-# TEMBORA / PlantillaPE — estado funcional
+# TAVIKU — estado funcional
 
 Actualizado el 16 de septiembre de 2026. Sustituye el informe anterior a la integración de Yape.
 
@@ -127,6 +127,6 @@ Resultado confirmado: estado rechazado y mensaje de corrección disponible para 
 6. **Limpieza final de datos temporales**:
    - Preparado el script `sql/limpieza-prueba-temp.sql` que remueve exclusivamente la plantilla `TEMP_PRUEBA_TEMBORA_20260916`, su pedido de S/20, sus eventos de auditoría y sus archivos en Storage.
    - Cuentas reales, roles, políticas RLS, RPCs y configuraciones de pago permanecen 100% intactas.
-   - **Plataforma TEMBORA / PlantillaPE completamente limpia y lista para su publicación y uso con usuarios reales.**
+   - **Plataforma TEMBORA / TAVIKU completamente limpia y lista para su publicación y uso con usuarios reales.**
 
 

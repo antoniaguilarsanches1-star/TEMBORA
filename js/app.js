@@ -1,5 +1,5 @@
 /* ============================================
-   PLANTILLAPE - Marketplace Peruano de Plantillas Web
+   TAVIKU - Marketplace Peruano de Plantillas Web
    JavaScript Principal
    ============================================ */
 
@@ -7,7 +7,7 @@
 const CONFIG = {
     whatsappNumber: '51993498739', // Soporte confirmado por el propietario.
     currency: 'S/',
-    siteName: 'PlantillaPE'
+    siteName: 'TAVIKU'
 };
 
 // Datos de demostración
@@ -714,7 +714,7 @@ function initWhatsAppButton() {
     const whatsappBtn = document.querySelector('.whatsapp-float');
     if (whatsappBtn) {
         whatsappBtn.addEventListener('click', () => {
-            const message = 'Hola, quiero información sobre PlantillaPE';
+            const message = 'Hola, quiero información sobre TAVIKU';
             openWhatsApp(message);
         });
     }

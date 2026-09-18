@@ -1,6 +1,6 @@
 # TEMBORA — Fase 2, Bloque 1
 ## Resultado y alcance
-Aplicada en el proyecto PlantillaPE (`fhowcuxyokkrbttgyrwy`) la migración
+Aplicada en el proyecto TAVIKU (`fhowcuxyokkrbttgyrwy`) la migración
 `20260916023953_tembora_fase2_bloque1_modelo_permisos`.
 No se cambió ningún archivo del frontend, cuenta real, rol real ni función de autenticación.
 No se habilitó el formulario ni se implementaron paneles, catálogo, pagos o descargas.

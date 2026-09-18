@@ -1,10 +1,10 @@
-# PlantillaPE
+# TAVIKU
 
 Marketplace peruano de plantillas web donde las personas pueden comprar y vender plantillas, y además solicitar páginas web personalizadas.
 
 ## 📋 Descripción
 
-PlantillaPE es una plataforma completa que permite:
+TAVIKU es una plataforma completa que permite:
 
 - **Marketplace de Plantillas**: Compra y venta de plantillas web profesionales
 - **Creación Personalizada**: Servicio de desarrollo web a medida
@@ -122,7 +122,7 @@ Edita el archivo `js/app.js`:
 const CONFIG = {
     whatsappNumber: '51987654321', // Cambia este número
     currency: 'S/',
-    siteName: 'PlantillaPE'
+    siteName: 'TAVIKU'
 };
 ```
 
@@ -233,7 +233,7 @@ Desarrollado para el mercado peruano de plantillas web.
 
 Para consultas o soporte:
 - WhatsApp: +51 987 654 321
-- Email: contacto@plantillape.com
+- Email: contacto@TAVIKU.com
 
 ## 🙏 Agradecimientos
 
