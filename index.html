@@ -4,7 +4,20 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TAVIKU - Marketplace Peruano de Plantillas Web</title>
-    <meta name="description" content="Compra y vende plantillas web profesionales en Perú. Encuentra la plantilla perfecta para tu próximo proyecto.">
+    <meta name="description" content="TAVIKU es el marketplace peruano de plantillas web profesionales. Compra y vende diseños HTML5, CSS3 e e-commerce listos para usar con pago por Yape.">
+    <meta name="keywords" content="plantillas web peru, comprar plantilla web, vender plantillas web, yape plantillas, ecommerce peru, landing page peru">
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+    
+    <!-- URL Canónica para Google Search Console -->
+    <link rel="canonical" href="https://antoniaguilarsanches1-star.github.io/TEMBORA/">
+    
+    <!-- Open Graph / Meta de Redes Sociales -->
+    <meta property="og:locale" content="es_PE">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="TAVIKU - Marketplace Peruano de Plantillas Web">
+    <meta property="og:description" content="Compra y vende plantillas web profesionales en Perú. Diseños HTML5, CSS3 e e-commerce listos para usar con pago seguro por Yape.">
+    <meta property="og:url" content="https://antoniaguilarsanches1-star.github.io/TEMBORA/">
+    <meta property="og:site_name" content="TAVIKU">
     
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -17,10 +30,42 @@
     <!-- CSS -->
     <link rel="stylesheet" href="css/styles.css?v=20260916-2">
     
+    <!-- Datos Estructurados JSON-LD para Googlebot -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "name": "TAVIKU",
+      "alternateName": "TAVIKU Marketplace",
+      "url": "https://antoniaguilarsanches1-star.github.io/TEMBORA/",
+      "description": "Marketplace peruano de plantillas web profesionales para negocios, e-commerce, restaurantes y portafolios.",
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": "https://antoniaguilarsanches1-star.github.io/TEMBORA/catalogo.html?search={search_term_string}",
+        "query-input": "required name=search_term_string"
+      }
+    }
+    </script>
+    
     <!-- Supabase JS -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body data-market="inicio">
+    <noscript>
+        <div style="padding: 2rem; text-align: center; max-width: 800px; margin: 0 auto;">
+            <h1 style="color: var(--primary-color); margin-bottom: 1rem;">TAVIKU - Marketplace Peruano de Plantillas Web</h1>
+            <p style="font-size: 1.1rem; margin-bottom: 1.5rem; color: var(--text-dark);">
+                Bienvenido a TAVIKU, el marketplace peruano donde puedes comprar y vender plantillas web profesionales.
+                Encuentra diseños HTML5, CSS3 y e-commerce listos para usar con pago seguro por Yape.
+            </p>
+            <p style="margin-bottom: 1rem; color: var(--text-light);">
+                Para ver el catálogo completo y todas las funcionalidades, por favor habilita JavaScript en tu navegador.
+            </p>
+            <a href="catalogo.html" style="display: inline-block; padding: 0.75rem 1.5rem; background: var(--primary-color); color: white; text-decoration: none; border-radius: 4px; margin-top: 1rem;">
+                Ir al catálogo de plantillas
+            </a>
+        </div>
+    </noscript>
     <!-- Header -->
     <header class="header">
         <div class="container header-content">
@@ -68,23 +113,169 @@
             </div>
             
             <div class="search-container">
-                <div class="search-box">
-                    <input type="text" class="search-input" placeholder="Buscar plantillas...">
-                    <button class="search-btn">
+                <form action="catalogo.html" method="GET" class="search-box">
+                    <input type="text" name="search" class="search-input" placeholder="Buscar plantillas por nombre o tecnología (ej. Restaurante, HTML5)...">
+                    <button type="submit" class="search-btn">
                         <i class="fas fa-search"></i> Buscar
                     </button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Sección de Categorías Destacadas (Indexable para Googlebot) -->
+    <section class="section" style="background-color: var(--bg-white);">
+        <div class="container">
+            <div class="section-title">
+                <h2>Categorías de Plantillas Web</h2>
+                <p>Encuentra la solución web ideal diseñada para la industria o necesidad de tu negocio.</p>
+            </div>
+            
+            <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.5rem;">
+                <a href="catalogo.html?category=restaurantes" class="template-card" style="padding: 1.5rem; display: flex; align-items: center; gap: 1rem;">
+                    <div style="font-size: 2.5rem; color: var(--primary-color);"><i class="fas fa-utensils"></i></div>
+                    <div>
+                        <h3 style="font-size: 1.15rem; font-weight: 700; margin-bottom: 0.25rem;">Restaurantes y Menús</h3>
+                        <p style="font-size: 0.875rem; color: var(--text-light);">Cartas digitales, reservas y pedidos en línea.</p>
+                    </div>
+                </a>
+                
+                <a href="catalogo.html?category=tiendas" class="template-card" style="padding: 1.5rem; display: flex; align-items: center; gap: 1rem;">
+                    <div style="font-size: 2.5rem; color: var(--secondary-color);"><i class="fas fa-shopping-bag"></i></div>
+                    <div>
+                        <h3 style="font-size: 1.15rem; font-weight: 700; margin-bottom: 0.25rem;">Tiendas Online E-Commerce</h3>
+                        <p style="font-size: 0.875rem; color: var(--text-light);">Catálogo de productos y pasarelas de compra.</p>
+                    </div>
+                </a>
+                
+                <a href="catalogo.html?category=portafolios" class="template-card" style="padding: 1.5rem; display: flex; align-items: center; gap: 1rem;">
+                    <div style="font-size: 2.5rem; color: var(--accent-color);"><i class="fas fa-paint-brush"></i></div>
+                    <div>
+                        <h3 style="font-size: 1.15rem; font-weight: 700; margin-bottom: 0.25rem;">Portafolios Creativos</h3>
+                        <p style="font-size: 0.875rem; color: var(--text-light);">Vitrina elegante para diseñadores y desarrolladores.</p>
+                    </div>
+                </a>
+                
+                <a href="catalogo.html?category=landing-pages" class="template-card" style="padding: 1.5rem; display: flex; align-items: center; gap: 1rem;">
+                    <div style="font-size: 2.5rem; color: #8b5cf6;"><i class="fas fa-rocket"></i></div>
+                    <div>
+                        <h3 style="font-size: 1.15rem; font-weight: 700; margin-bottom: 0.25rem;">Landing Pages & Startups</h3>
+                        <p style="font-size: 0.875rem; color: var(--text-light);">Páginas de alto impacto para captación de clientes.</p>
+                    </div>
+                </a>
+                
+                <a href="catalogo.html?category=salud" class="template-card" style="padding: 1.5rem; display: flex; align-items: center; gap: 1rem;">
+                    <div style="font-size: 2.5rem; color: #ec4899;"><i class="fas fa-user-md"></i></div>
+                    <div>
+                        <h3 style="font-size: 1.15rem; font-weight: 700; margin-bottom: 0.25rem;">Salud y Consultorios</h3>
+                        <p style="font-size: 0.875rem; color: var(--text-light);">Clínicas, citas médicas y servicios profesionales.</p>
+                    </div>
+                </a>
+                
+                <a href="catalogo.html?category=hoteles" class="template-card" style="padding: 1.5rem; display: flex; align-items: center; gap: 1rem;">
+                    <div style="font-size: 2.5rem; color: #06b6d4;"><i class="fas fa-hotel"></i></div>
+                    <div>
+                        <h3 style="font-size: 1.15rem; font-weight: 700; margin-bottom: 0.25rem;">Hoteles y Turismo</h3>
+                        <p style="font-size: 0.875rem; color: var(--text-light);">Reservas de hospedaje, tours y viajes.</p>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Dynamic Section (Plantillas Publicadas) -->
+    <main id="market-root" class="section">
+        <div class="container">
+            <div class="section-title">
+                <h2>Plantillas Web Publicadas</h2>
+                <p>Diseños y código fuente optimizados para ofrecer alta velocidad y excelente experiencia visual.</p>
+            </div>
+            
+            <p id="market-status" role="status" aria-live="polite" style="display: none;">Cargando catálogo…</p>
+            <button id="market-reload" type="button" class="btn btn-outline btn-sm" style="display: none;">Actualizar</button>
+            
+            <!-- ÁREA DINÁMICA DE MARKETPLACE CON CONTENIDO ESTÁTICO DE MUESTRA PARA RASTREO SEO -->
+            <div id="market-content" class="templates-grid">
+                <article class="template-card">
+                    <div class="template-content">
+                        <h3 class="template-title">Restaurante Gourmet &amp; Menú</h3>
+                        <p class="template-price">S/ 89.00</p>
+                        <p class="template-category">Restaurantes</p>
+                        <p style="font-size: 0.875rem; color: var(--text-light); margin-bottom: 1rem;">Plantilla elegante para restaurantes con carta interactiva, reservaciones y galería.</p>
+                        <a href="catalogo.html" class="btn btn-outline btn-sm" style="width: 100%;">Explorar catálogo</a>
+                    </div>
+                </article>
+
+                <article class="template-card">
+                    <div class="template-content">
+                        <h3 class="template-title">Tienda Online E-Commerce</h3>
+                        <p class="template-price">S/ 120.00</p>
+                        <p class="template-category">Tiendas</p>
+                        <p style="font-size: 0.875rem; color: var(--text-light); margin-bottom: 1rem;">Diseño completo para tiendas online con catálogo de productos y pasarela rápida.</p>
+                        <a href="catalogo.html" class="btn btn-outline btn-sm" style="width: 100%;">Explorar catálogo</a>
+                    </div>
+                </article>
+
+                <article class="template-card">
+                    <div class="template-content">
+                        <h3 class="template-title">Portafolio Creativo UX/UI</h3>
+                        <p class="template-price">S/ 45.00</p>
+                        <p class="template-category">Portafolios</p>
+                        <p style="font-size: 0.875rem; color: var(--text-light); margin-bottom: 1rem;">Portafolio minimalista para diseñadores y creadores de contenido digital.</p>
+                        <a href="catalogo.html" class="btn btn-outline btn-sm" style="width: 100%;">Explorar catálogo</a>
+                    </div>
+                </article>
+            </div>
+        </div>
+    </main>
+
+    <!-- Sección ¿Por qué elegir TAVIKU? (Contenido Estático Indexable) -->
+    <section class="section" style="background-color: var(--bg-white);">
+        <div class="container">
+            <div class="section-title">
+                <h2>¿Por qué elegir TAVIKU?</h2>
+                <p>La plataforma confiable para adquirir y monetizar plantillas web en el mercado peruano.</p>
+            </div>
+            
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem;">
+                <div class="form-container text-center" style="padding: 2rem;">
+                    <div style="font-size: 2.5rem; color: var(--primary-color); margin-bottom: 1rem;"><i class="fas fa-money-bill-wave"></i></div>
+                    <h3 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 0.5rem;">Pagos Directos con Yape</h3>
+                    <p style="color: var(--text-light); font-size: 0.95rem;">Compras sencillas y seguras en moneda nacional sin necesidad de tarjetas internacionales.</p>
+                </div>
+                
+                <div class="form-container text-center" style="padding: 2rem;">
+                    <div style="font-size: 2.5rem; color: var(--secondary-color); margin-bottom: 1rem;"><i class="fas fa-file-archive"></i></div>
+                    <h3 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 0.5rem;">Descarga Privada e Inmediata</h3>
+                    <p style="color: var(--text-light); font-size: 0.95rem;">Acceso directo al archivo ejecutable ZIP privado tras la verificación del abono.</p>
+                </div>
+
+                <div class="form-container text-center" style="padding: 2rem;">
+                    <div style="font-size: 2.5rem; color: var(--accent-color); margin-bottom: 1rem;"><i class="fas fa-shield-alt"></i></div>
+                    <h3 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 0.5rem;">Calidad y Revisión Previa</h3>
+                    <p style="color: var(--text-light); font-size: 0.95rem;">Toda plantilla publicada pasa por una validación cuidadosa de código, demo e imágenes.</p>
+                </div>
+
+                <div class="form-container text-center" style="padding: 2rem;">
+                    <div style="font-size: 2.5rem; color: #8b5cf6; margin-bottom: 1rem;"><i class="fas fa-hand-holding-usd"></i></div>
+                    <h3 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 0.5rem;">80% de Ingreso para Creadores</h3>
+                    <p style="color: var(--text-light); font-size: 0.95rem;">Los desarrolladores conservan el 80% del valor de cada venta de sus proyectos.</p>
                 </div>
             </div>
         </div>
     </section>
 
+    <!-- Banner CTA para Desarrolladores -->
+    <section class="section" style="background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-color) 100%); color: var(--text-white); text-align: center;">
+        <div class="container" style="max-width: 800px;">
+            <h2 style="font-size: 2.25rem; font-weight: 800; margin-bottom: 1rem;">¿Eres desarrollador o diseñador web?</h2>
+            <p style="font-size: 1.15rem; margin-bottom: 2rem; opacity: 0.9;">Publica tus plantillas en TAVIKU y convierte tu código en ingresos recurrentes abonados directamente por Yape.</p>
+            <a href="vender.html" class="btn btn-secondary btn-lg">
+                <i class="fas fa-rocket"></i> Empezar a Vender Mis Plantillas
+            </a>
+        </div>
+    </section>
 
-    <main id="market-root" class="section"><div class="container">
-        <h1>Plantillas publicadas</h1>
-        <p id="market-status" role="status" aria-live="polite">Cargando…</p>
-        <button id="market-reload" type="button" class="btn btn-outline btn-sm">Actualizar</button>
-        <div id="market-content"></div>
-    </div></main>
     <!-- Footer -->
     <footer class="footer">
         <div class="container">
@@ -119,23 +310,21 @@
                     <h3>Contacto</h3>
                     <div class="footer-links">
                         <a href="https://wa.me/51993498739" target="_blank" rel="noopener noreferrer"><i class="fab fa-whatsapp"></i> WhatsApp</a>
-                        <a href="#"><i class="fas fa-envelope"></i> Email</a>
-                        <a href="#"><i class="fab fa-facebook"></i> Facebook</a>
-                        <a href="#"><i class="fab fa-instagram"></i> Instagram</a>
+                        <a href="contacto.html"><i class="fas fa-envelope"></i> Soporte</a>
                     </div>
                 </div>
             </div>
             
             <div class="footer-bottom">
-                <p>&copy; 2024 TAVIKU. Todos los derechos reservados.</p>
+                <p>&copy; 2026 TAVIKU. Todos los derechos reservados.</p>
             </div>
         </div>
     </footer>
 
     <!-- WhatsApp Float Button -->
-    <div class="whatsapp-float">
+    <a href="https://wa.me/51993498739" target="_blank" rel="noopener noreferrer" class="whatsapp-float">
         <i class="fab fa-whatsapp"></i>
-    </div>
+    </a>
 
     <!-- JavaScript -->
     <script src="js/app.js"></script>
@@ -147,11 +336,9 @@
         // Verificar sesión al cargar la página
         document.addEventListener('DOMContentLoaded', async function() {
             const sesion = await verificarSesion();
-            
             const authButtons = document.querySelector('.auth-buttons');
             
             if (sesion.success && sesion.session) {
-                // Usuario tiene sesión activa
                 authButtons.innerHTML = `
                     <a href="#" id="user-panel-btn" class="btn btn-primary btn-sm">
                         <i class="fas fa-user"></i> Mi Panel
@@ -161,25 +348,16 @@
                     </a>
                 `;
                 
-                // Redirigir al panel correspondiente según el rol
-                document.getElementById('user-panel-btn').addEventListener('click', function(e) {
+                document.getElementById('user-panel-btn')?.addEventListener('click', function(e) {
                     e.preventDefault();
                     redirigirSegunRol(sesion.rol);
                 });
                 
-                // Cerrar sesión
-                document.getElementById('logout-btn').addEventListener('click', async function(e) {
+                document.getElementById('logout-btn')?.addEventListener('click', async function(e) {
                     e.preventDefault();
-                    
                     const resultado = await cerrarSesion();
-                    
                     if (resultado.success) {
-                        showNotification(resultado.message, 'success');
-                        setTimeout(() => {
-                            window.location.reload();
-                        }, 1000);
-                    } else {
-                        showNotification(resultado.error || 'Error al cerrar sesión', 'error');
+                        window.location.reload();
                     }
                 });
             }
