@@ -275,7 +275,9 @@ document.addEventListener('DOMContentLoaded', function() {
     const login = document.getElementById('login-form');
     const formulario = registro || login;
     if (!formulario) return;
-    formulario.addEventListener('submit', async function(event) {
+
+    // Guardar referencia al handler para poder removerlo después
+    const formSubmitHandler = async function(event) {
         event.preventDefault();
         const boton = formulario.querySelector('button[type="submit"]');
         if (boton.disabled) return;
@@ -306,7 +308,12 @@ document.addEventListener('DOMContentLoaded', function() {
             boton.disabled = false;
             boton.innerHTML = textoOriginal;
         }
-    });
+    };
+
+    formulario.addEventListener('submit', formSubmitHandler);
+
+    // Guardar referencia global para poder removerla
+    window.loginFormHandler = formSubmitHandler;
 
     const forgotBtn = document.getElementById('forgot-password-link');
     if (forgotBtn) {
@@ -342,10 +349,20 @@ function mostrarFormularioRecuperacion() {
     // Eliminar cualquier formulario previo de recuperación/restablecimiento
     limpiarFormulariosAuth();
 
-    // Ocultar formulario de login normal
+    // Deshabilitar completamente el formulario de login para evitar validación y submit
     const loginForm = document.getElementById('login-form');
     const forgotLink = document.getElementById('forgot-password-link');
-    if (loginForm) loginForm.style.display = 'none';
+    if (loginForm) {
+        loginForm.style.display = 'none';
+        // Remover listener de submit para evitar procesamiento del login
+        if (window.loginFormHandler) {
+            loginForm.removeEventListener('submit', window.loginFormHandler);
+        }
+        // Remover atributos required para evitar validación del navegador
+        loginForm.querySelectorAll('[required]').forEach(el => el.removeAttribute('required'));
+        // Deshabilitar el formulario
+        loginForm.disabled = true;
+    }
     if (forgotLink) forgotLink.style.display = 'none';
 
     // Crear formulario de recuperación
@@ -379,6 +396,7 @@ function mostrarFormularioRecuperacion() {
     // Manejar envío del formulario
     recoverForm.addEventListener('submit', async (e) => {
         e.preventDefault();
+        e.stopPropagation();
         const email = document.getElementById('recover-email').value.trim();
         const submitBtn = recoverForm.querySelector('button[type="submit"]');
 
@@ -537,7 +555,19 @@ function restaurarLoginNormal() {
     const forgotLink = document.getElementById('forgot-password-link');
     const container = document.querySelector('.form-container');
 
-    if (loginForm) loginForm.style.display = 'block';
+    if (loginForm) {
+        loginForm.style.display = 'block';
+        loginForm.disabled = false;
+        // Restaurar listener de submit
+        if (window.loginFormHandler) {
+            loginForm.addEventListener('submit', window.loginFormHandler);
+        }
+        // Restaurar atributos required
+        const emailInput = document.getElementById('email');
+        const passwordInput = document.getElementById('password');
+        if (emailInput) emailInput.setAttribute('required', '');
+        if (passwordInput) passwordInput.setAttribute('required', '');
+    }
     if (forgotLink) forgotLink.style.display = 'inline-block';
 
     const title = container?.querySelector('h2');
