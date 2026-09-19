@@ -143,10 +143,18 @@
         return result;
     }
     async function catalog() {
-        const rows=filtered(await api.publicadas()); clear(); area.className='templates-grid';
-        if(!rows.length) area.append(el('p','No hay plantillas publicadas que coincidan con tu búsqueda.'));
-        for(const p of rows) { const c=card(p); c.append(link('Ver detalles','plantilla.html?id='+encodeURIComponent(p.id))); photo(p.imagen_principal,c); }
-        notice(rows.length+' plantilla(s) publicada(s).');
+        const rows=filtered(await api.publicadas());
+        if(rows.length) {
+            clear(); area.className='templates-grid';
+            for(const p of rows) { const c=card(p); c.append(link('Ver detalles','plantilla.html?id='+encodeURIComponent(p.id))); photo(p.imagen_principal,c); }
+            notice(rows.length+' plantilla(s) publicada(s).');
+        } else if(mode==='inicio') {
+            notice('Explora el catálogo de plantillas web en TAVIKU.');
+        } else {
+            clear(); area.className='templates-grid';
+            area.append(el('p','No hay plantillas publicadas que coincidan con tu búsqueda.'));
+            notice('0 plantillas publicadas.');
+        }
     }
     async function detail() {
         const p=await api.detalle(new URLSearchParams(location.search).get('id')); clear();

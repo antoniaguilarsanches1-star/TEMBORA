@@ -244,6 +244,9 @@ if (supabaseClient) supabaseClient.auth.onAuthStateChange((event, session) => {
         if (!rolesDePagina) return;
         bloquearContenido('La sesión ha finalizado.');
         if (!cierreEnCurso) window.location.replace('login.html');
+    } else if (event === 'PASSWORD_RECOVERY') {
+        // Usuario accedió desde enlace de recuperación de contraseña
+        mostrarFormularioRestablecimiento();
     } else if (rolesDePagina && paginaInicializada && ['SIGNED_IN', 'USER_UPDATED', 'TOKEN_REFRESHED'].includes(event)) {
         // Nunca esperar llamadas a Auth dentro de este callback.
         if (event === 'SIGNED_IN' && session?.user.id === usuarioVisible) return;
@@ -309,21 +312,7 @@ document.addEventListener('DOMContentLoaded', function() {
     if (forgotBtn) {
         forgotBtn.addEventListener('click', async function(e) {
             e.preventDefault();
-            const emailInput = document.getElementById('email');
-            const email = emailInput ? emailInput.value.trim() : '';
-            if (!email) {
-                if (emailInput) emailInput.focus();
-                return mostrarErrorAuth('Por favor, ingresa tu correo electrónico arriba y vuelve a hacer clic en ¿Olvidaste tu contraseña?.');
-            }
-            forgotBtn.style.pointerEvents = 'none';
-            forgotBtn.style.opacity = '0.6';
-            try {
-                const res = await restablecerContrasena(email);
-                mostrarErrorAuth(res.success ? res.message : res.error);
-            } finally {
-                forgotBtn.style.pointerEvents = '';
-                forgotBtn.style.opacity = '';
-            }
+            mostrarFormularioRecuperacion();
         });
     }
 });
@@ -332,12 +321,254 @@ async function restablecerContrasena(email) {
     try {
         if (!supabaseClient) throw new Error('Supabase no está disponible. Recarga la página.');
         const correo = String(email || '').trim();
-        if (!correo) return { success: false, error: 'Ingresa tu correo electrónico en el campo de inicio de sesión.' };
+        if (!correo) return { success: false, error: 'Ingresa tu correo electrónico.' };
         const { error } = await supabaseClient.auth.resetPasswordForEmail(correo, {
-            redirectTo: window.location.origin + '/login.html'
+            redirectTo: window.location.origin + window.location.pathname.replace(/\/[^/]*$/, '/login.html')
         });
+        if (error) {
+            // Manejo de errores específicos con mensajes amigables
+            if (error.message.includes('rate limit') || error.message.includes('rate')) {
+                return { success: false, error: 'Has solicitado varios correos en poco tiempo. Espera unos minutos antes de intentarlo nuevamente.' };
+            }
+            return { success: false, error: error.message };
+        }
+        return { success: true, message: 'Te enviamos un enlace para restablecer tu contraseña. Revisa tu correo.' };
+    } catch (error) {
+        return { success: false, error: error.message };
+    }
+}
+
+function mostrarFormularioRecuperacion() {
+    // Eliminar cualquier formulario previo de recuperación/restablecimiento
+    limpiarFormulariosAuth();
+
+    // Ocultar formulario de login normal
+    const loginForm = document.getElementById('login-form');
+    const forgotLink = document.getElementById('forgot-password-link');
+    if (loginForm) loginForm.style.display = 'none';
+    if (forgotLink) forgotLink.style.display = 'none';
+
+    // Crear formulario de recuperación
+    const container = document.querySelector('.form-container');
+    if (!container) return;
+
+    const title = container.querySelector('h2');
+    const subtitle = container.querySelector('p');
+    if (title) title.textContent = 'Recuperar contraseña';
+    if (subtitle) subtitle.textContent = 'Te enviaremos un enlace para restablecer tu contraseña al correo electrónico que indiques.';
+
+    const recoverForm = document.createElement('form');
+    recoverForm.id = 'recover-password-form';
+    recoverForm.innerHTML = `
+        <div class="form-group">
+            <label for="recover-email">Correo electrónico *</label>
+            <input type="email" id="recover-email" name="recover-email" required placeholder="tu@email.com">
+        </div>
+        <button type="submit" class="btn btn-primary btn-lg" style="width: 100%;">
+            <i class="fas fa-paper-plane"></i> Enviar enlace de recuperación
+        </button>
+        <div class="text-center mt-3">
+            <a href="#" id="back-to-login" style="color: var(--primary-color); font-size: 0.875rem;">
+                <i class="fas fa-arrow-left"></i> Volver a iniciar sesión
+            </a>
+        </div>
+    `;
+
+    container.insertBefore(recoverForm, container.querySelector('.text-center.mt-3'));
+
+    // Manejar envío del formulario
+    recoverForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const email = document.getElementById('recover-email').value.trim();
+        const submitBtn = recoverForm.querySelector('button[type="submit"]');
+
+        if (!email) {
+            mostrarMensajeAuth('Por favor, ingresa tu correo electrónico.');
+            return;
+        }
+
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Enviando...';
+
+        try {
+            const result = await restablecerContrasena(email);
+            mostrarMensajeAuth(result.success ? result.message : result.error);
+        } finally {
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Enviar enlace de recuperación';
+        }
+    });
+
+    // Manejar vuelta al login
+    const backBtn = document.getElementById('back-to-login');
+    if (backBtn) {
+        backBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            restaurarLoginNormal();
+        });
+    }
+}
+
+function mostrarFormularioRestablecimiento() {
+    // Eliminar cualquier formulario previo de recuperación/restablecimiento
+    limpiarFormulariosAuth();
+
+    // Ocultar formulario de login normal
+    const loginForm = document.getElementById('login-form');
+    const forgotLink = document.getElementById('forgot-password-link');
+    if (loginForm) loginForm.style.display = 'none';
+    if (forgotLink) forgotLink.style.display = 'none';
+
+    // Crear formulario de restablecimiento
+    const container = document.querySelector('.form-container');
+    if (!container) return;
+
+    const title = container.querySelector('h2');
+    const subtitle = container.querySelector('p');
+    if (title) title.textContent = 'Establecer nueva contraseña';
+    if (subtitle) subtitle.textContent = 'Ingresa y confirma tu nueva contraseña';
+
+    const resetForm = document.createElement('form');
+    resetForm.id = 'reset-password-form';
+    resetForm.innerHTML = `
+        <div class="form-group">
+            <label for="new-password">Nueva contraseña *</label>
+            <div class="password-container">
+                <input type="password" id="new-password" name="new-password" required placeholder="••••••••" minlength="6">
+                <button type="button" class="password-toggle">
+                    <i class="fas fa-eye"></i>
+                </button>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="confirm-password">Confirmar contraseña *</label>
+            <div class="password-container">
+                <input type="password" id="confirm-password" name="confirm-password" required placeholder="••••••••" minlength="6">
+                <button type="button" class="password-toggle">
+                    <i class="fas fa-eye"></i>
+                </button>
+            </div>
+        </div>
+        <button type="submit" class="btn btn-primary btn-lg" style="width: 100%;">
+            <i class="fas fa-key"></i> Actualizar contraseña
+        </button>
+        <div class="text-center mt-3">
+            <a href="#" id="back-to-login-reset" style="color: var(--primary-color); font-size: 0.875rem;">
+                <i class="fas fa-arrow-left"></i> Volver a iniciar sesión
+            </a>
+        </div>
+    `;
+
+    container.insertBefore(resetForm, container.querySelector('.text-center.mt-3'));
+
+    // Manejar envío del formulario
+    resetForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const newPassword = document.getElementById('new-password').value;
+        const confirmPassword = document.getElementById('confirm-password').value;
+        const submitBtn = resetForm.querySelector('button[type="submit"]');
+
+        if (newPassword !== confirmPassword) {
+            mostrarMensajeAuth('Las contraseñas no coinciden.');
+            return;
+        }
+
+        if (newPassword.length < 6) {
+            mostrarMensajeAuth('La contraseña debe tener al menos 6 caracteres.');
+            return;
+        }
+
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Actualizando...';
+
+        const result = await actualizarContrasena(newPassword);
+        if (result.success) {
+            mostrarMensajeAuth('Contraseña actualizada correctamente. Serás redirigido al inicio de sesión.');
+            setTimeout(() => {
+                window.location.replace('login.html');
+            }, 2000);
+        } else {
+            mostrarMensajeAuth(result.error);
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = '<i class="fas fa-key"></i> Actualizar contraseña';
+        }
+    });
+
+    // Configurar toggles de visibilidad de contraseña
+    resetForm.querySelectorAll('.password-toggle').forEach(toggle => {
+        toggle.addEventListener('click', function() {
+            const input = this.previousElementSibling;
+            const icon = this.querySelector('i');
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.classList.replace('fa-eye', 'fa-eye-slash');
+            } else {
+                input.type = 'password';
+                icon.classList.replace('fa-eye-slash', 'fa-eye');
+            }
+        });
+    });
+
+    // Manejar vuelta al login
+    const backBtn = document.getElementById('back-to-login-reset');
+    if (backBtn) {
+        backBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            window.location.replace('login.html');
+        });
+    }
+}
+
+function limpiarFormulariosAuth() {
+    // Eliminar formularios de recuperación/restablecimiento previos
+    const recoverForm = document.getElementById('recover-password-form');
+    const resetForm = document.getElementById('reset-password-form');
+    const authFeedback = document.getElementById('auth-feedback');
+
+    if (recoverForm) recoverForm.remove();
+    if (resetForm) resetForm.remove();
+    if (authFeedback) authFeedback.remove();
+}
+
+function restaurarLoginNormal() {
+    limpiarFormulariosAuth();
+
+    const loginForm = document.getElementById('login-form');
+    const forgotLink = document.getElementById('forgot-password-link');
+    const container = document.querySelector('.form-container');
+
+    if (loginForm) loginForm.style.display = 'block';
+    if (forgotLink) forgotLink.style.display = 'inline-block';
+
+    const title = container?.querySelector('h2');
+    const subtitle = container?.querySelector('p');
+    if (title) title.textContent = 'Iniciar Sesión';
+    if (subtitle) subtitle.textContent = 'Bienvenido de nuevo a TAVIKU';
+}
+
+function mostrarMensajeAuth(mensaje) {
+    // Versión de mostrarErrorAuth sin botón de cerrar sesión
+    let aviso = document.getElementById('auth-feedback');
+    if (!aviso) {
+        aviso = document.createElement('div');
+        aviso.id = 'auth-feedback';
+        aviso.setAttribute('role', 'alert');
+        aviso.style.cssText = 'background: #f8d7da; color: #721c24; padding: 1rem; margin: 1rem 0; border-radius: 4px; border: 1px solid #f5c6cb;';
+        const texto = document.createElement('p');
+        texto.id = 'auth-feedback-text';
+        texto.style.margin = '0';
+        aviso.appendChild(texto);
+        (document.querySelector('.form-container') || document.body).appendChild(aviso);
+    }
+    document.getElementById('auth-feedback-text').textContent = mensaje;
+}
+
+async function actualizarContrasena(newPassword) {
+    try {
+        if (!supabaseClient) throw new Error('Supabase no está disponible. Recarga la página.');
+        const { error } = await supabaseClient.auth.updateUser({ password: newPassword });
         if (error) return { success: false, error: error.message };
-        return { success: true, message: 'Se ha enviado un enlace de restablecimiento a tu correo electrónico.' };
+        return { success: true, message: 'Contraseña actualizada correctamente.' };
     } catch (error) {
         return { success: false, error: error.message };
     }
