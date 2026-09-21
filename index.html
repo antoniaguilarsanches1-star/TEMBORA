@@ -11,6 +11,9 @@
     <!-- URL Canónica para Google Search Console -->
     <link rel="canonical" href="https://antoniaguilarsanches1-star.github.io/TEMBORA/">
     
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    
     <!-- Open Graph / Meta de Redes Sociales -->
     <meta property="og:locale" content="es_PE">
     <meta property="og:type" content="website">
@@ -194,37 +197,9 @@
             <p id="market-status" role="status" aria-live="polite" style="display: none;">Cargando catálogo…</p>
             <button id="market-reload" type="button" class="btn btn-outline btn-sm" style="display: none;">Actualizar</button>
             
-            <!-- ÁREA DINÁMICA DE MARKETPLACE CON CONTENIDO ESTÁTICO DE MUESTRA PARA RASTREO SEO -->
+            <!-- ÁREA DINÁMICA DE MARKETPLACE - CARGA DATOS REALES DE SUPABASE -->
             <div id="market-content" class="templates-grid">
-                <article class="template-card">
-                    <div class="template-content">
-                        <h3 class="template-title">Restaurante Gourmet &amp; Menú</h3>
-                        <p class="template-price">S/ 89.00</p>
-                        <p class="template-category">Restaurantes</p>
-                        <p style="font-size: 0.875rem; color: var(--text-light); margin-bottom: 1rem;">Plantilla elegante para restaurantes con carta interactiva, reservaciones y galería.</p>
-                        <a href="catalogo.html" class="btn btn-outline btn-sm" style="width: 100%;">Explorar catálogo</a>
-                    </div>
-                </article>
-
-                <article class="template-card">
-                    <div class="template-content">
-                        <h3 class="template-title">Tienda Online E-Commerce</h3>
-                        <p class="template-price">S/ 120.00</p>
-                        <p class="template-category">Tiendas</p>
-                        <p style="font-size: 0.875rem; color: var(--text-light); margin-bottom: 1rem;">Diseño completo para tiendas online con catálogo de productos y pasarela rápida.</p>
-                        <a href="catalogo.html" class="btn btn-outline btn-sm" style="width: 100%;">Explorar catálogo</a>
-                    </div>
-                </article>
-
-                <article class="template-card">
-                    <div class="template-content">
-                        <h3 class="template-title">Portafolio Creativo UX/UI</h3>
-                        <p class="template-price">S/ 45.00</p>
-                        <p class="template-category">Portafolios</p>
-                        <p style="font-size: 0.875rem; color: var(--text-light); margin-bottom: 1rem;">Portafolio minimalista para diseñadores y creadores de contenido digital.</p>
-                        <a href="catalogo.html" class="btn btn-outline btn-sm" style="width: 100%;">Explorar catálogo</a>
-                    </div>
-                </article>
+                <p>Cargando plantillas destacadas…</p>
             </div>
         </div>
     </main>
@@ -333,33 +308,56 @@
     <script src="js/pagos-api.js"></script>
     <script src="js/mercado-ui.js"></script>
     <script>
-        // Verificar sesión al cargar la página
+        // Cargar catálogo real de Supabase y verificar sesión
         document.addEventListener('DOMContentLoaded', async function() {
-            const sesion = await verificarSesion();
-            const authButtons = document.querySelector('.auth-buttons');
-            
-            if (sesion.success && sesion.session) {
-                authButtons.innerHTML = `
-                    <a href="#" id="user-panel-btn" class="btn btn-primary btn-sm">
-                        <i class="fas fa-user"></i> Mi Panel
-                    </a>
-                    <a href="#" id="logout-btn" class="btn btn-outline btn-sm">
-                        <i class="fas fa-sign-out-alt"></i> Salir
-                    </a>
-                `;
-                
-                document.getElementById('user-panel-btn')?.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    redirigirSegunRol(sesion.rol);
-                });
-                
-                document.getElementById('logout-btn')?.addEventListener('click', async function(e) {
-                    e.preventDefault();
-                    const resultado = await cerrarSesion();
-                    if (resultado.success) {
-                        window.location.reload();
+            // Cargar plantillas destacadas de Supabase
+            try {
+                if (window.TemboraMercado) {
+                    const plantillas = await window.TemboraMercado.publicadas();
+                    const container = document.getElementById('market-content');
+                    const status = document.getElementById('market-status');
+                    const reloadBtn = document.getElementById('market-reload');
+                    
+                    if (plantillas && plantillas.length > 0) {
+                        // Mostrar las primeras 3 plantillas como destacadas
+                        const destacadas = plantillas.slice(0, 3);
+                        const money = n => new Intl.NumberFormat('es-PE', {style: 'currency', currency: 'PEN'}).format(Number(n));
+                        
+                        container.innerHTML = destacadas.map(p => `
+                            <article class="template-card">
+                                <div class="template-content">
+                                    <h3 class="template-title">${p.nombre}</h3>
+                                    <p class="template-price">${money(p.precio)}</p>
+                                    <p class="template-category">${p.categoria_id || 'General'}</p>
+                                    <p style="font-size: 0.875rem; color: var(--text-light); margin-bottom: 1rem;">${p.descripcion ? p.descripcion.substring(0, 100) + '...' : 'Sin descripción'}</p>
+                                    <a href="catalogo.html" class="btn btn-outline btn-sm" style="width: 100%;">Explorar catálogo</a>
+                                </div>
+                            </article>
+                        `).join('');
+                    } else {
+                        container.innerHTML = '<p>No hay plantillas disponibles en este momento. Explora nuestro catálogo completo.</p>';
                     }
-                });
+                }
+            } catch (error) {
+                console.error('Error al cargar plantillas:', error);
+                const container = document.getElementById('market-content');
+                container.innerHTML = `
+                    <div style="text-align: center; padding: 2rem;">
+                        <p style="color: var(--text-light); margin-bottom: 1rem;">No se pudieron cargar las plantillas. Verifica tu conexión a internet.</p>
+                        <button onclick="location.reload()" class="btn btn-primary btn-sm">Reintentar</button>
+                    </div>
+                `;
+            }
+            
+            // Verificar sesión usando función centralizada
+            try {
+                const sesion = await verificarSesion();
+                if (window.actualizarUIAutenticacion) {
+                    window.actualizarUIAutenticacion(sesion);
+                }
+            } catch (error) {
+                console.error('Error al verificar sesión:', error);
+                // Continuar sin sesión en caso de error de red
             }
         });
     </script>

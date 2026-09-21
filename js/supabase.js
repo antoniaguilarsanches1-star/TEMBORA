@@ -968,3 +968,44 @@ window.calcularGananciasVendedor = calcularGananciasVendedor;
 window.obtenerPlantillasVendedor = obtenerPlantillasVendedor;
 window.obtenerCategorias = obtenerCategorias;
 window.crearPlantilla = crearPlantilla;
+
+// Función centralizada para actualizar UI de autenticación
+function actualizarUIAutenticacion(sesion) {
+    const authButtons = document.querySelector('.auth-buttons');
+    if (!authButtons) return;
+    
+    if (sesion.success && sesion.session) {
+        authButtons.innerHTML = `
+            <a href="#" id="user-panel-btn" class="btn btn-primary btn-sm">
+                <i class="fas fa-user"></i> Mi Panel
+            </a>
+            <a href="#" id="logout-btn" class="btn btn-outline btn-sm">
+                <i class="fas fa-sign-out-alt"></i> Salir
+            </a>
+        `;
+        
+        // Configurar botón de panel
+        const panelBtn = document.getElementById('user-panel-btn');
+        if (panelBtn) {
+            panelBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                redirigirSegunRol(sesion.rol);
+            });
+        }
+        
+        // Configurar botón de logout
+        const logoutBtn = document.getElementById('logout-btn');
+        if (logoutBtn) {
+            logoutBtn.addEventListener('click', async function(e) {
+                e.preventDefault();
+                const resultado = await cerrarSesion();
+                if (resultado.success) {
+                    window.location.reload();
+                }
+            });
+        }
+    }
+}
+
+// Exportar función de UI de autenticación
+window.actualizarUIAutenticacion = actualizarUIAutenticacion;

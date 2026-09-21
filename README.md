@@ -140,9 +140,9 @@ Edita el archivo `css/styles.css` en la sección de variables:
 }
 ```
 
-### Agregar Datos de Demostración
+### Agregar Plantillas
 
-Edita el objeto `DEMO_DATA` en `js/app.js` para agregar más plantillas, categorías o vendedores.
+Las plantillas se gestionan a través de Supabase. Usa el panel de vendedor para crear y publicar plantillas, o gestiónalas directamente en la base de datos de Supabase.
 
 ## 🔮 Integraciones
 

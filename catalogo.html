@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Catálogo de Plantillas - TAVIKU</title>
     <meta name="description" content="Explora nuestro catálogo de plantillas web profesionales. Encuentra la perfecta para tu proyecto.">
+    <link rel="canonical" href="https://antoniaguilarsanches1-star.github.io/TEMBORA/catalogo.html">
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
     
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -159,9 +161,7 @@
                     <h3>Contacto</h3>
                     <div class="footer-links">
                         <a href="https://wa.me/51993498739" target="_blank" rel="noopener noreferrer"><i class="fab fa-whatsapp"></i> WhatsApp</a>
-                        <a href="#"><i class="fas fa-envelope"></i> Email</a>
-                        <a href="#"><i class="fab fa-facebook"></i> Facebook</a>
-                        <a href="#"><i class="fab fa-instagram"></i> Instagram</a>
+                        <a href="contacto.html"><i class="fas fa-envelope"></i> Soporte</a>
                     </div>
                 </div>
             </div>
@@ -184,46 +184,11 @@
     <script src="js/pagos-api.js"></script>
     <script src="js/mercado-ui.js"></script>
     <script>
-        // Cargar filtros desde URL y verificar sesión
+        // Verificar sesión usando función centralizada
         document.addEventListener('DOMContentLoaded', async () => {
-            loadFiltersFromURL();
-            
             const sesion = await verificarSesion();
-            
-            const authButtons = document.querySelector('.auth-buttons');
-            
-            if (sesion.success && sesion.session) {
-                // Usuario tiene sesión activa
-                authButtons.innerHTML = `
-                    <a href="#" id="user-panel-btn" class="btn btn-primary btn-sm">
-                        <i class="fas fa-user"></i> Mi Panel
-                    </a>
-                    <a href="#" id="logout-btn" class="btn btn-outline btn-sm">
-                        <i class="fas fa-sign-out-alt"></i> Salir
-                    </a>
-                `;
-                
-                // Redirigir al panel correspondiente según el rol
-                document.getElementById('user-panel-btn').addEventListener('click', function(e) {
-                    e.preventDefault();
-                    redirigirSegunRol(sesion.rol);
-                });
-                
-                // Cerrar sesión
-                document.getElementById('logout-btn').addEventListener('click', async function(e) {
-                    e.preventDefault();
-                    
-                    const resultado = await cerrarSesion();
-                    
-                    if (resultado.success) {
-                        showNotification(resultado.message, 'success');
-                        setTimeout(() => {
-                            window.location.reload();
-                        }, 1000);
-                    } else {
-                        showNotification(resultado.error || 'Error al cerrar sesión', 'error');
-                    }
-                });
+            if (window.actualizarUIAutenticacion) {
+                window.actualizarUIAutenticacion(sesion);
             }
         });
     </script>

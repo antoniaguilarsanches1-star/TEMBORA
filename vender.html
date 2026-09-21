@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Vender Plantillas - TAVIKU</title>
     <meta name="description" content="Vende tus plantillas web en TAVIKU y gana dinero.">
+    <link rel="canonical" href="https://antoniaguilarsanches1-star.github.io/TEMBORA/vender.html">
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
     
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -314,9 +316,7 @@
                     <h3>Contacto</h3>
                     <div class="footer-links">
                         <a href="https://wa.me/51993498739" target="_blank" rel="noopener noreferrer"><i class="fab fa-whatsapp"></i> WhatsApp</a>
-                        <a href="#"><i class="fas fa-envelope"></i> Email</a>
-                        <a href="#"><i class="fab fa-facebook"></i> Facebook</a>
-                        <a href="#"><i class="fab fa-instagram"></i> Instagram</a>
+                        <a href="contacto.html"><i class="fas fa-envelope"></i> Soporte</a>
                     </div>
                 </div>
             </div>
@@ -338,31 +338,12 @@
     <script src="js/plantillas-envio.js"></script>
     <script src="js/vender.js"></script>
     <script>
-        // Verificar sesión al cargar la página
+        // Verificar sesión usando función centralizada
         document.addEventListener('DOMContentLoaded', async function() {
             if (!await window.accesoPagina) return;
             const sesion = await verificarSesion();
-            
-            const authButtons = document.querySelector('.auth-buttons');
-            
-            if (sesion.success && sesion.session) {
-                // Usuario tiene sesión activa
-                authButtons.innerHTML = `
-                    <a href="#" id="user-panel-btn" class="btn btn-primary btn-sm">
-                        <i class="fas fa-user"></i> Mi Panel
-                    </a>
-                    <a href="#" id="logout-btn" data-auth-logout class="btn btn-outline btn-sm">
-                        <i class="fas fa-sign-out-alt"></i> Salir
-                    </a>
-                `;
-                
-                // Redirigir al panel correspondiente según el rol
-                document.getElementById('user-panel-btn').addEventListener('click', function(e) {
-                    e.preventDefault();
-                    redirigirSegunRol(sesion.rol);
-                });
-                
-
+            if (window.actualizarUIAutenticacion) {
+                window.actualizarUIAutenticacion(sesion);
             }
         });
     </script>

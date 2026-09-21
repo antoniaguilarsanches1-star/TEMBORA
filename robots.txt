@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://antoniaguilarsanches1-star.github.io/TEMBORA/sitemap.xml
