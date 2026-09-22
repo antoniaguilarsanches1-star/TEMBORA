@@ -88,12 +88,30 @@ img {
 }
 
 .logo {
-    font-size: 1.5rem;
-    font-weight: 700;
-    color: var(--primary-color);
     display: flex;
     align-items: center;
-    gap: 0.5rem;
+    gap: 0.6rem;
+    text-decoration: none;
+    line-height: 1;
+}
+
+.logo img,
+.logo .logo-symbol {
+    height: 38px;
+    width: auto;
+    max-width: 100%;
+    object-fit: contain;
+    display: block;
+}
+
+.logo-text {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-size: 1.35rem;
+    font-weight: 800;
+    color: #0d254c;
+    letter-spacing: -0.02em;
+    line-height: 1;
+    display: inline-block;
 }
 
 .logo i {
@@ -1410,6 +1428,20 @@ img {
 
     .hamburger {
         display: flex;
+    }
+
+    .logo {
+        gap: 0.45rem;
+    }
+
+    .logo img,
+    .logo .logo-symbol {
+        height: 30px;
+        max-width: 100%;
+    }
+
+    .logo-text {
+        font-size: 1.15rem;
     }
 
     .hero h1 {
