@@ -221,7 +221,7 @@
         const label=el('p','Estado: '+o.estado_pago),payment=el('div');
         area.append(el('h2',o.plantilla_nombre),el('p','Pedido: '+o.id),el('p','Total: '+money(o.monto)),label,payment);
         renderPayment(o,payment);
-        const signature=p=>JSON.stringify([p.estado_pago,p.enviada_pago_at,p.motivo_rechazo,p.revisado_por]);
+        const signature=p=>JSON.stringify([p.estado_pago,p.enviada_pago_at,p.motivo_rechazo,p.revisado_por,p.revisado_at,p.operacion_yape]);
         let previous=signature(o);
         refreshOrders=async current=>{
             const next=await pay.pedido(id);if(!current() || signature(next)===previous)return;
@@ -233,6 +233,11 @@
     }
     function renderPayment(o,parent) {
         if(o.estado_pago==='verificado') {
+            const fecha=o.revisado_at ? new Date(o.revisado_at) : null;
+            parent.append(el('p','Fecha de verificación: '+(fecha && Number.isFinite(fecha.getTime())
+                ? new Intl.DateTimeFormat('es-PE',{timeZone:'America/Lima',day:'2-digit',month:'2-digit',year:'numeric'}).format(fecha)
+                : 'No registrada')));
+            parent.append(el('p','Operación Yape: '+(o.operacion_yape || 'No registrada')));
             button('Descargar ZIP',async()=>{await saveBlob(await pay.descargar(o.id),'plantilla-'+o.plantilla_id+'.zip');notice('Descarga autorizada por tu compra verificada.');},parent);
         } else if(o.estado_pago==='pendiente' && o.enviada_pago_at) {
             parent.append(el('p','Comprobante recibido. Un administrador verificará el abono. No vuelvas a pagar.'));
