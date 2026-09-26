@@ -263,6 +263,10 @@
     }
     async function pagosAdmin() {
         const rows=await pay.pedidosAdmin();clear();area.append(el('h2','Pagos y ventas'));
+        const fechaPeru=()=>new Intl.DateTimeFormat('es-PE',{timeZone:'America/Lima',day:'2-digit',month:'2-digit',year:'numeric'}).format(new Date());
+        const prefijos=[],revision=generation;
+        const actualizarFechas=()=>prefijos.forEach(p=>{p.textContent=fechaPeru()+' - Operación ';});
+        const reloj=setInterval(()=>{if(revision!==generation)clearInterval(reloj);else actualizarFechas();},1000);
         const approved=rows.filter(o=>o.estado_pago==='verificado');
         area.append(el('p','Ventas verificadas: '+money(approved.reduce((n,o)=>n+Number(o.monto),0))+' · Plataforma: '+money(approved.reduce((n,o)=>n+Number(o.comision_plataforma),0))));
         if(!rows.length)area.append(el('p','No hay pedidos.'));
@@ -273,12 +277,16 @@
             },c);
             if(o.estado_pago==='pendiente' && o.enviada_pago_at) {
                 c.append(el('p','Destino: '+o.yape_numero+' / '+o.yape_titular));
-                const ref=field(c,'Fecha y número único de operación Yape, o motivo para rechazar','ref-'+o.id,'');
+                const prefijo=el('p',fechaPeru()+' - Operación ');prefijos.push(prefijo);c.append(prefijo);
+                const ref=field(c,'Código/número de operación Yape','ref-'+o.id,'');
                 button('Confirmar abono y habilitar descarga',async()=>{
+                    const codigo=ref.value.trim();
+                    if(!codigo)throw new Error('Escribe el código/número de operación Yape.');
                     if(!confirm('¿Comprobaste el ingreso real de '+money(o.monto)+' al Yape indicado? Esta aprobación habilita el ZIP y acredita el 80% al vendedor.'))return;
-                    await pay.revisar(o.id,true,ref.value);paymentChannel?.postMessage('actualizar');await pagosAdmin();notice('Pago aprobado y descarga habilitada.');
+                    await pay.revisar(o.id,true,fechaPeru()+' - Operación '+codigo);paymentChannel?.postMessage('actualizar');await pagosAdmin();notice('Pago aprobado y descarga habilitada.');
                 },c);
-                button('Rechazar comprobante',async()=>{await pay.revisar(o.id,false,ref.value);paymentChannel?.postMessage('actualizar');await pagosAdmin();notice('Comprobante rechazado; el comprador puede corregirlo.');},c);
+                const motivo=field(c,'Motivo para rechazar el comprobante','motivo-'+o.id,'');
+                button('Rechazar comprobante',async()=>{await pay.revisar(o.id,false,motivo.value);paymentChannel?.postMessage('actualizar');await pagosAdmin();notice('Comprobante rechazado; el comprador puede corregirlo.');},c);
             }
         }
         button('Revisión de plantillas',admin);notice('Pedidos consultados. Solo un abono real debe aprobarse.');
