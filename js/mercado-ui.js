@@ -5,13 +5,31 @@
     const pay = window.TemboraPagos;
     let area, status, busy = false, cats = [], urls = [], generation = 0;
     const mode = document.body.dataset.market;
+    let refreshOrders=null, refreshing=false, paymentChannel;
+    try {
+        if(typeof BroadcastChannel!=='undefined') {
+            paymentChannel=new BroadcastChannel('tembora-pagos');
+            paymentChannel.onmessage=()=>syncOrders();
+        }
+    } catch(_) { /* La consulta periódica también funciona sin canal entre pestañas. */ }
+    async function syncOrders() {
+        if(!refreshOrders || refreshing || busy || document.hidden) return;
+        const revision=generation, refresh=refreshOrders;
+        refreshing=true;
+        try { await refresh(()=>revision===generation && !busy); }
+        catch(_) { if(revision===generation) notice('No se pudo actualizar el pedido. Reintentando la consulta…'); }
+        finally { refreshing=false; }
+    }
+    window.addEventListener('focus',syncOrders);
+    document.addEventListener('visibilitychange',()=>{if(!document.hidden)syncOrders();});
+    if(typeof setInterval==='function') setInterval(syncOrders,3000);
     const el = (tag,text,cls) => { const e=document.createElement(tag); if(text !== undefined) e.textContent=text; if(cls) e.className=cls; return e; };
     const money = n => new Intl.NumberFormat('es-PE',{style:'currency',currency:'PEN'}).format(Number(n));
     const state = p => p.estado === 'pendiente' && !p.enviada_revision_at ? 'En preparación' : ({pendiente:'Pendiente de aprobación',publicada:'Publicada',rechazada:'Rechazada'}[p.estado] || p.estado);
     function notice(text) { status.textContent=text; }
     function link(text,href) { const a=el('a',text,'btn btn-outline btn-sm'); a.href=href; return a; }
     function safeURL(value) { try { const u=new URL(value); return ['http:','https:'].includes(u.protocol) && !u.username && !u.password ? u.href : null; } catch (_) { return null; } }
-    function clear() { generation++; urls.forEach(u=>URL.revokeObjectURL(u)); urls=[]; area.replaceChildren(); }
+    function clear() { generation++; refreshOrders=null; urls.forEach(u=>URL.revokeObjectURL(u)); urls=[]; area.replaceChildren(); }
     function button(text,fn,parent=area) {
         const b=el('button',text,'btn btn-outline btn-sm'); b.type='button';
         b.addEventListener('click',()=>action(fn)); parent.append(b); return b;
@@ -168,11 +186,21 @@
     async function buyer() {
         const favs=await api.favoritos(), orders=await pay.compras(); clear();
         area.append(el('h2','Mis compras y pedidos'));
+        const orderViews=new Map();
         if(!orders.length) area.append(el('p','Todavía no tienes pedidos.'));
         for(const o of orders) {
-            const c=el('article',undefined,'form-container'); c.append(el('h3',o.plantilla_nombre),el('p',money(o.monto)+' — '+o.estado_pago));area.append(c);
-            button(o.estado_pago==='verificado'?'Ver compra / descargar':'Ver pedido / pagar',()=>checkout(o.id),c);
+            const c=el('article',undefined,'form-container'),label=el('p',money(o.monto)+' — '+o.estado_pago); c.append(el('h3',o.plantilla_nombre),label);area.append(c);
+            const b=button(o.estado_pago==='verificado'?'Ver compra / descargar':'Ver pedido / pagar',()=>checkout(o.id),c);
+            orderViews.set(o.id,{label,b});
         }
+        refreshOrders=async current=>{
+            const rows=await pay.compras();if(!current())return;
+            for(const o of rows) {
+                const view=orderViews.get(o.id);if(!view)continue;
+                view.label.textContent=money(o.monto)+' — '+o.estado_pago;
+                view.b.textContent=o.estado_pago==='verificado'?'Ver compra / descargar':'Ver pedido / pagar';
+            }
+        };
         button('Historial de movimientos',historial);
         button('Mi perfil',perfil);
         area.append(el('h2','Mis favoritos'));
@@ -189,22 +217,35 @@
         setTimeout(()=>URL.revokeObjectURL(url),60000);
     }
     async function checkout(id) {
-        const o=await pay.pedido(id);clear();area.append(el('h2',o.plantilla_nombre),el('p','Pedido: '+o.id),el('p','Total: '+money(o.monto)),el('p','Estado: '+o.estado_pago));
+        const o=await pay.pedido(id);clear();
+        const label=el('p','Estado: '+o.estado_pago),payment=el('div');
+        area.append(el('h2',o.plantilla_nombre),el('p','Pedido: '+o.id),el('p','Total: '+money(o.monto)),label,payment);
+        renderPayment(o,payment);
+        const signature=p=>JSON.stringify([p.estado_pago,p.enviada_pago_at,p.motivo_rechazo,p.revisado_por]);
+        let previous=signature(o);
+        refreshOrders=async current=>{
+            const next=await pay.pedido(id);if(!current() || signature(next)===previous)return;
+            previous=signature(next);label.textContent='Estado: '+next.estado_pago;
+            payment.replaceChildren();renderPayment(next,payment);
+            notice(next.estado_pago==='verificado'?'Pago aprobado. Tu descarga está disponible.':'Estado del pedido actualizado.');
+        };
+        button('Mis compras',buyer);notice('Pedido actualizado.');
+    }
+    function renderPayment(o,parent) {
         if(o.estado_pago==='verificado') {
-            button('Descargar ZIP',async()=>{await saveBlob(await pay.descargar(o.id),'plantilla-'+o.plantilla_id+'.zip');notice('Descarga autorizada por tu compra verificada.');});
+            button('Descargar ZIP',async()=>{await saveBlob(await pay.descargar(o.id),'plantilla-'+o.plantilla_id+'.zip');notice('Descarga autorizada por tu compra verificada.');},parent);
         } else if(o.estado_pago==='pendiente' && o.enviada_pago_at) {
-            area.append(el('p','Comprobante recibido. Un administrador verificará el abono. No vuelvas a pagar.'));
+            parent.append(el('p','Comprobante recibido. Un administrador verificará el abono. No vuelvas a pagar.'));
         } else {
-            if(o.motivo_rechazo) area.append(el('p','Motivo del rechazo: '+o.motivo_rechazo));
-            area.append(el('h3','Pago por Yape'),el('p','Número: '+o.yape_numero),el('p','Titular: '+o.yape_titular),
+            if(o.motivo_rechazo) parent.append(el('p','Motivo del rechazo: '+o.motivo_rechazo));
+            parent.append(el('h3','Pago por Yape'),el('p','Número: '+o.yape_numero),el('p','Titular: '+o.yape_titular),
                 el('p','Yapea exactamente '+money(o.monto)+' y verifica el titular antes de confirmar. Adjunta la captura de la operación. Si ya pagaste, no repitas el pago: corrige el comprobante.'));
             const form=el('form'),file=field(form,'Comprobante JPG, PNG o WebP (máximo 5 MB)','comprobante',null,'file');file.accept='.jpg,.jpeg,.png,.webp';file.required=true;
-            const send=el('button','Enviar comprobante','btn btn-primary');send.type='submit';form.append(send);area.append(form);
+            const send=el('button','Enviar comprobante','btn btn-primary');send.type='submit';form.append(send);parent.append(form);
             form.addEventListener('submit',e=>{e.preventDefault();if(!form.reportValidity())return;const selected=file.files[0];
                 action(async()=>{await pay.subir(o.id,selected,notice);await checkout(o.id);notice('Comprobante recibido: pendiente de verificación.');});});
-            button('Recuperar último comprobante',async()=>{await pay.recuperar(o.id);await checkout(o.id);});
+            button('Recuperar último comprobante',async()=>{await pay.recuperar(o.id);await checkout(o.id);},parent);
         }
-        button('Mis compras',buyer);notice('Pedido actualizado.');
     }
     async function historial() {
         const rows=await pay.historial();clear();area.append(el('h2','Historial'));
@@ -235,9 +276,9 @@
                 const ref=field(c,'Fecha y número único de operación Yape, o motivo para rechazar','ref-'+o.id,'');
                 button('Confirmar abono y habilitar descarga',async()=>{
                     if(!confirm('¿Comprobaste el ingreso real de '+money(o.monto)+' al Yape indicado? Esta aprobación habilita el ZIP y acredita el 80% al vendedor.'))return;
-                    await pay.revisar(o.id,true,ref.value);await pagosAdmin();notice('Pago aprobado y descarga habilitada.');
+                    await pay.revisar(o.id,true,ref.value);paymentChannel?.postMessage('actualizar');await pagosAdmin();notice('Pago aprobado y descarga habilitada.');
                 },c);
-                button('Rechazar comprobante',async()=>{await pay.revisar(o.id,false,ref.value);await pagosAdmin();notice('Comprobante rechazado; el comprador puede corregirlo.');},c);
+                button('Rechazar comprobante',async()=>{await pay.revisar(o.id,false,ref.value);paymentChannel?.postMessage('actualizar');await pagosAdmin();notice('Comprobante rechazado; el comprador puede corregirlo.');},c);
             }
         }
         button('Revisión de plantillas',admin);notice('Pedidos consultados. Solo un abono real debe aprobarse.');

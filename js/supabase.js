@@ -145,13 +145,11 @@ async function redirigirSegunRol() {
 async function protegerPagina(rolesRequeridos = rolesDePagina, conservarFormulario = false) {
     const revision = ++revisionAcceso;
     // Una revalidación no debe colapsar la página ni desmontar los inputs/files.
-    if (conservarFormulario && paginaActual === 'vender.html' && usuarioVisible &&
-        !document.documentElement.hasAttribute('data-auth-pending')) {
-        document.documentElement.setAttribute('data-auth-rechecking', '');
-    } else bloquearContenido();
+    if (!usuarioVisible || document.documentElement.hasAttribute('data-auth-pending')) bloquearContenido();
     const sesion = await verificarSesion();
     if (revision !== revisionAcceso || cierreEnCurso) return false;
     if (!sesion.success) {
+        bloquearContenido();
         if (sesion.code === 'NEEDS_ROLE') { window.location.replace('elegir-rol.html'); return false; }
         if (sesion.code === 'NO_SESSION' || sesion.code === 'SESSION_ERROR') window.location.replace('login.html');
         else mostrarErrorAuth(sesion.error);
@@ -159,10 +157,12 @@ async function protegerPagina(rolesRequeridos = rolesDePagina, conservarFormular
     }
     const permitidos = Array.isArray(rolesRequeridos) ? rolesRequeridos : [rolesRequeridos];
     if (!permitidos.includes(sesion.rol)) {
+        bloquearContenido();
         irAlPanelVerificado(sesion.rol);
         return false;
     }
     if (usuarioVisible && usuarioVisible !== sesion.user.id) {
+        bloquearContenido();
         // No mostrar datos que quedaron cargados de otra cuenta.
         window.location.reload();
         return false;

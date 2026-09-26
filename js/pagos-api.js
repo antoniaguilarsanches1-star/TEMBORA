@@ -44,7 +44,14 @@
         d.memoria.removeItem(key);return p;
     }
     async function evidencia(path) {await actor('admin');return ok(await d.cliente().storage.from('comprobantes').download(path));}
-    async function revisar(id,aprobar,referencia) {await rpc('tembora_revisar_pago',{p_pedido:id,p_aprobar:aprobar,p_referencia:referencia},'admin');}
+    async function revisar(id,aprobar,referencia) {
+        await rpc('tembora_revisar_pago',{p_pedido:id,p_aprobar:aprobar,p_referencia:referencia},'admin');
+        await actor('admin');
+        const p=ok(await d.cliente().from('pedidos').select('*').eq('id',id).single());
+        if(!p || p.estado_pago!==(aprobar?'verificado':'rechazado') || !p.revisado_por)
+            throw new Error('No se pudo confirmar que la revisión quedó guardada. Actualiza el pedido antes de repetir.');
+        return p;
+    }
     async function descargar(id) {
         const p=await pedido(id);
         if(p.estado_pago!=='verificado' || !p.revisado_por) throw new Error('El pago todavía no está aprobado.');
