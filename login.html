@@ -91,25 +91,16 @@
                     </button>
                 </form>
                 
-                <div class="text-center mt-3">
-                    <a href="#" id="forgot-password-link" style="color: var(--primary-color); font-size: 0.875rem;">
-                        <i class="fas fa-key"></i> ¿Olvidaste tu contraseña?
-                    </a>
+                <div id="oauth-options" hidden>
+                    <p style="text-align: center; margin: 2rem 0;">O continúa con</p>
+                    <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+                        <button type="button" data-oauth-provider="google" class="btn btn-outline" hidden disabled><i class="fab fa-google"></i> Continuar con Google</button>
+                        <button type="button" data-oauth-provider="facebook" class="btn btn-outline" hidden disabled><i class="fab fa-facebook"></i> Continuar con Facebook</button>
+                    </div>
+                    <p>Si tu cuenta social es nueva, podrás elegir comprador o vendedor. Las cuentas existentes conservan su rol.</p>
                 </div>
-                
-                <div style="display: none !important; text-align: center; margin: 2rem 0; color: var(--text-light);">
-                    <span>o continúa con</span>
-                </div>
-                
-                <div style="display: none !important; gap: 1rem; flex-wrap: wrap;">
-                    <button type="button" class="btn btn-outline" style="flex: 1;">
-                        <i class="fab fa-google"></i> Google
-                    </button>
-                    <button type="button" class="btn btn-outline" style="flex: 1;">
-                        <i class="fab fa-facebook"></i> Facebook
-                    </button>
-                </div>
-                
+                <p id="oauth-status" role="status" aria-live="polite"></p>
+
                 <div class="text-center mt-4">
                     <p style="color: var(--text-light);">
                         ¿No tienes una cuenta? 
@@ -174,6 +165,7 @@
 
     <!-- JavaScript -->
     <script src="js/app.js"></script>
-    <script src="js/supabase.js"></script>
+    <script src="js/supabase.js?v=20260924-roles"></script>
+    <script src="js/auth-oauth.js?v=20260924-roles"></script>
 </body>
 </html>

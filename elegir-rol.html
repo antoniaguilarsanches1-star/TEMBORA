@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="es">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Elige tu cuenta - TAVIKU</title>
+    <meta name="robots" content="noindex">
+    <link rel="stylesheet" href="css/styles.css?v=20260916-2">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+    <main class="container section">
+        <div class="form-container">
+            <h1>Elige tu tipo de cuenta</h1>
+            <p>Esta elección se guarda una sola vez.</p>
+            <p id="role-status" role="status" aria-live="polite">Comprobando tu cuenta…</p>
+            <form id="role-form" hidden>
+                <label><input type="radio" name="rol" value="comprador" required> Comprador</label>
+                <label><input type="radio" name="rol" value="vendedor" required> Vendedor</label>
+                <button type="submit" class="btn btn-primary">Continuar</button>
+            </form>
+            <button type="button" id="role-retry" class="btn btn-outline">Comprobar de nuevo</button>
+            <button type="button" data-auth-logout class="btn btn-outline">Cerrar sesión</button>
+        </div>
+    </main>
+    <script src="js/supabase.js?v=20260924-roles"></script>
+    <script src="js/elegir-rol.js?v=20260924-roles"></script>
+</body>
+</html>

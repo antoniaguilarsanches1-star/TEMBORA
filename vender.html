@@ -24,6 +24,7 @@
         #auth-status { display: none; }
         html[data-auth-pending] body > :not(#auth-status) { display: none !important; }
         html[data-auth-pending] #auth-status { display: block; }
+        html[data-auth-rechecking]:not([data-auth-pending]) body { visibility: hidden; }
     </style>
 
     <!-- Supabase JS -->
@@ -334,7 +335,7 @@
 
     <!-- JavaScript -->
     <script src="js/app.js"></script>
-    <script src="js/supabase.js"></script>
+    <script src="js/supabase.js?v=20260924"></script>
     <script src="js/plantillas-envio.js"></script>
     <script src="js/vender.js"></script>
     <script>

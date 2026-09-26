@@ -49,7 +49,8 @@ async function consultarRol(userId) {
     const { data, error } = await conLimite(supabaseClient.from('perfiles')
         .select('rol').eq('id', userId).maybeSingle());
     if (error) return { success: false, code: 'PROFILE_ERROR', error: 'No se pudo consultar tu perfil. Reintenta o contacta con soporte.' };
-    if (!data || !rolValido(data.rol)) {
+    if (!data) return { success: false, code: 'MISSING_PROFILE', error: 'Tu cuenta todavía no tiene perfil.' };
+    if (!rolValido(data.rol)) {
         return { success: false, code: 'INVALID_ROLE', error: 'Tu cuenta no tiene un perfil con rol válido. Contacta con soporte; no se asignará un rol automáticamente.' };
     }
     return { success: true, rol: data.rol };
@@ -71,6 +72,9 @@ async function verificarSesion() {
             return { success: false, code: 'SESSION_ERROR', error: 'La sesión cambió. Vuelve a intentarlo.' };
         }
         const perfil = await consultarRol(identidad.user.id);
+        if (perfil.code === 'MISSING_PROFILE' && ['google', 'facebook'].includes(identidad.user.app_metadata?.provider)) {
+            return { success: false, code: 'NEEDS_ROLE', error: 'Elige comprador o vendedor para continuar.', session, user: identidad.user };
+        }
         return { ...perfil, session, user: identidad.user };
     } catch (error) {
         return { success: false, code: 'CONNECTION_ERROR', error: error.message };
@@ -130,6 +134,7 @@ async function redirigirSegunRol() {
     const sesion = await verificarSesion();
     if (revision !== revisionAcceso || cierreEnCurso) return false;
     if (!sesion.success) {
+        if (sesion.code === 'NEEDS_ROLE') { window.location.replace('elegir-rol.html'); return false; }
         if (sesion.code === 'NO_SESSION') window.location.replace('login.html');
         else mostrarErrorAuth(sesion.error);
         return false;
@@ -137,12 +142,17 @@ async function redirigirSegunRol() {
     return irAlPanelVerificado(sesion.rol);
 }
 
-async function protegerPagina(rolesRequeridos = rolesDePagina) {
+async function protegerPagina(rolesRequeridos = rolesDePagina, conservarFormulario = false) {
     const revision = ++revisionAcceso;
-    bloquearContenido();
+    // Una revalidación no debe colapsar la página ni desmontar los inputs/files.
+    if (conservarFormulario && paginaActual === 'vender.html' && usuarioVisible &&
+        !document.documentElement.hasAttribute('data-auth-pending')) {
+        document.documentElement.setAttribute('data-auth-rechecking', '');
+    } else bloquearContenido();
     const sesion = await verificarSesion();
     if (revision !== revisionAcceso || cierreEnCurso) return false;
     if (!sesion.success) {
+        if (sesion.code === 'NEEDS_ROLE') { window.location.replace('elegir-rol.html'); return false; }
         if (sesion.code === 'NO_SESSION' || sesion.code === 'SESSION_ERROR') window.location.replace('login.html');
         else mostrarErrorAuth(sesion.error);
         return false;
@@ -159,6 +169,7 @@ async function protegerPagina(rolesRequeridos = rolesDePagina) {
     }
     usuarioVisible = sesion.user.id;
     document.documentElement.removeAttribute('data-auth-pending');
+    document.documentElement.removeAttribute('data-auth-rechecking');
     return true;
 }
 
@@ -251,8 +262,8 @@ if (supabaseClient) supabaseClient.auth.onAuthStateChange((event, session) => {
         // Nunca esperar llamadas a Auth dentro de este callback.
         if (event === 'SIGNED_IN' && session?.user.id === usuarioVisible) return;
         ++revisionAcceso;
-        bloquearContenido();
-        setTimeout(() => protegerPagina(), 0);
+        if (session?.user.id !== usuarioVisible) bloquearContenido();
+        setTimeout(() => protegerPagina(rolesDePagina, true), 0);
     }
 });
 
@@ -264,7 +275,7 @@ window.addEventListener('pageshow', event => {
     if (rolesDePagina && event.persisted) window.location.reload();
 });
 window.addEventListener('focus', () => {
-    if (rolesDePagina && paginaInicializada && !cierreEnCurso) protegerPagina();
+    if (rolesDePagina && paginaInicializada && !cierreEnCurso) protegerPagina(rolesDePagina, true);
 });
 
 document.addEventListener('DOMContentLoaded', function() {
