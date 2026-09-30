@@ -53,38 +53,46 @@
         }
     }
     document.addEventListener('DOMContentLoaded', async () => {
-        const query = new URLSearchParams(location.search);
-        const fragmento = new URLSearchParams(location.hash.slice(1));
-        const error = query.get('error') || fragmento.get('error');
-        const callback = query.get('oauth') === '1' || fragmento.has('access_token') || !!error;
-        // El SDK procesa la sesión; no copiamos ni almacenamos tokens del proveedor.
-        if (callback) {
-            try {
-                mensaje('Validando tu sesión y perfil…');
-                const sesion = await verificarSesion();
-                history.replaceState(null, '', location.pathname);
-                if (error) {
-                    mensaje(error === 'access_denied' ? 'Acceso cancelado o no autorizado. Puedes intentarlo de nuevo.' : 'El proveedor no pudo completar el acceso. Reintenta o contacta con soporte.');
-                } else if (sesion.code === 'NEEDS_ROLE') {
-                    location.replace('elegir-rol.html');
-                    return;
-                } else if (!sesion.success) {
-                    mensaje(sesion.code === 'NO_SESSION' ? 'No se completó el acceso social. Vuelve a intentarlo.' : sesion.error);
-                } else {
-                    irAlPanelVerificado(sesion.rol);
-                    return;
-                }
-            } catch (_) { mensaje('No se pudo verificar el acceso social. Reintenta o usa correo y contraseña.'); }
-        }
-        botones().forEach(b => b.addEventListener('click', () => iniciar(b.dataset.oauthProvider)));
+        await window.sesionInicial;
+        let navegando = false;
         try {
-            if (!supabaseClient) throw new Error('No disponible');
-            const habilitados = await proveedores();
-            botones().forEach(b => { b.hidden = !habilitados[b.dataset.oauthProvider]; b.disabled = false; });
-            document.getElementById('oauth-options').hidden = !botones().some(b => !b.hidden);
-            if (!callback && !botones().some(b => !b.hidden)) mensaje('El acceso social aún no está disponible. Puedes usar correo y contraseña.');
-        } catch (_) {
-            if (!callback) mensaje('No se pudo comprobar el acceso social. Puedes usar correo y contraseña o recargar para reintentar.');
+            const query = new URLSearchParams(location.search);
+            const fragmento = new URLSearchParams(location.hash.slice(1));
+            const error = query.get('error') || fragmento.get('error');
+            const callback = query.get('oauth') === '1' || fragmento.has('access_token') || !!error;
+            // El SDK procesa la sesión; no copiamos ni almacenamos tokens del proveedor.
+            if (callback) {
+                try {
+                    mensaje('Validando tu sesión y perfil…');
+                    const sesion = await verificarSesion();
+                    history.replaceState(null, '', location.pathname);
+                    if (error) {
+                        mensaje(error === 'access_denied' ? 'Acceso cancelado o no autorizado. Puedes intentarlo de nuevo.' : 'El proveedor no pudo completar el acceso. Reintenta o contacta con soporte.');
+                    } else if (sesion.code === 'NEEDS_ROLE') {
+                        navegando = true;
+                        location.replace('elegir-rol.html');
+                        return;
+                    } else if (!sesion.success) {
+                        mensaje(sesion.code === 'NO_SESSION' ? 'No se completó el acceso social. Vuelve a intentarlo.' : sesion.error);
+                    } else {
+                        navegando = true;
+                        irAlPanelVerificado(sesion.rol);
+                        return;
+                    }
+                } catch (_) { mensaje('No se pudo verificar el acceso social. Reintenta o usa correo y contraseña.'); }
+            }
+            botones().forEach(b => b.addEventListener('click', () => iniciar(b.dataset.oauthProvider)));
+            try {
+                if (!supabaseClient) throw new Error('No disponible');
+                const habilitados = await proveedores();
+                botones().forEach(b => { b.hidden = !habilitados[b.dataset.oauthProvider]; b.disabled = false; });
+                document.getElementById('oauth-options').hidden = !botones().some(b => !b.hidden);
+                if (!callback && !botones().some(b => !b.hidden)) mensaje('El acceso social aún no está disponible. Puedes usar correo y contraseña.');
+            } catch (_) {
+                if (!callback) mensaje('No se pudo comprobar el acceso social. Puedes usar correo y contraseña o recargar para reintentar.');
+            }
+        } finally {
+            if (!navegando) document.documentElement.removeAttribute('data-auth-form-pending');
         }
     });
 })();

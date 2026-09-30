@@ -1,0 +1,23 @@
+/* Bloqueo previo al primer render; conserva el diseño definitivo. */
+html[data-session-state="loading"] .auth-buttons {
+    visibility: hidden;
+    pointer-events: none;
+}
+html:not([data-session-state="authenticated"]) [data-auth-logout] {
+    display: none !important;
+}
+html[data-auth-form-pending] body > .section,
+html[data-auth-form-pending] body > .footer {
+    visibility: hidden;
+    pointer-events: none;
+}
+#auth-loading { display: none; }
+html[data-auth-form-pending] #auth-loading {
+    display: block;
+    position: fixed;
+    top: 45vh;
+    left: 0;
+    width: 100%;
+    text-align: center;
+    color: #64748b;
+}

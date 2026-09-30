@@ -56,13 +56,41 @@ async function consultarRol(userId) {
     return { success: true, rol: data.rol };
 }
 
-async function verificarSesion() {
+let estadoSesion = { success: false, session: null };
+let consultaSesion = null;
+let versionSesion = 0;
+
+function invalidarSesion() {
+    ++versionSesion;
+    consultaSesion = null;
+    estadoSesion = { success: false, session: null };
+    document.documentElement.setAttribute('data-session-state', 'loading');
+}
+
+// Todas las vistas consumen el mismo resultado; las consultas simultáneas se comparten.
+function verificarSesion() {
+    if (consultaSesion) return consultaSesion;
+    const version = versionSesion;
+    const consulta = consultarSesion().then(resultado => {
+        if (version !== versionSesion) return verificarSesion();
+        estadoSesion = resultado;
+        actualizarUIAutenticacion();
+        document.documentElement.setAttribute('data-session-state', resultado.session ? 'authenticated' : 'anonymous');
+        return resultado;
+    }).finally(() => {
+        if (consultaSesion === consulta) consultaSesion = null;
+    });
+    consultaSesion = consulta;
+    return consulta;
+}
+
+async function consultarSesion() {
     try {
         if (!supabaseClient) throw new Error('No se pudo cargar Supabase. Comprueba tu conexión y recarga la página.');
         const { data, error } = await conLimite(supabaseClient.auth.getSession());
         if (error) throw new Error('No se pudo comprobar la sesión. Reintenta.');
         const session = data?.session;
-        if (!session) return { success: false, code: 'NO_SESSION', session: null, error: 'Inicia sesión para continuar.' };
+        if (!session?.user?.id || !session.access_token) return { success: false, code: 'NO_SESSION', session: null, error: 'Inicia sesión para continuar.' };
         // Verificar la identidad con Auth; no confiar solo en la sesión almacenada.
         const { data: identidad, error: errorUsuario } = await conLimite(supabaseClient.auth.getUser());
         if (errorUsuario || !identidad?.user) {
@@ -116,6 +144,7 @@ function mostrarErrorAuth(mensaje) {
         salir.className = 'btn btn-outline btn-sm';
         salir.setAttribute('data-auth-logout', '');
         salir.textContent = 'Cerrar sesión';
+        salir.hidden = !estadoSesion.session;
         aviso.append(texto, salir);
         (document.querySelector('.form-container') || document.body).appendChild(aviso);
     }
@@ -223,6 +252,8 @@ function cerrarSesion() {
             const { data, error: errorSesion } = await conLimite(supabaseClient.auth.getSession());
             if (errorSesion || data?.session) throw new Error('No se pudo confirmar el cierre de sesión. Reintenta.');
             usuarioVisible = null;
+            invalidarSesion();
+            await verificarSesion();
             return { success: true, message: 'Sesión cerrada correctamente.' };
         } catch (error) {
             mostrarErrorAuth(error.message || 'No se pudo cerrar la sesión. Reintenta.');
@@ -250,6 +281,9 @@ document.addEventListener('click', async function(event) {
 });
 
 if (supabaseClient) supabaseClient.auth.onAuthStateChange((event, session) => {
+    // No llamar a Auth dentro del callback (el SDK mantiene su bloqueo).
+    invalidarSesion();
+    setTimeout(() => verificarSesion(), 0);
     if (event === 'SIGNED_OUT') {
         ++revisionAcceso;
         if (!rolesDePagina) return;
@@ -272,14 +306,16 @@ window.addEventListener('pagehide', () => {
     bloquearContenido();
 });
 window.addEventListener('pageshow', event => {
-    if (rolesDePagina && event.persisted) window.location.reload();
+    if (event.persisted) window.location.reload();
 });
 window.addEventListener('focus', () => {
     if (rolesDePagina && paginaInicializada && !cierreEnCurso) protegerPagina(rolesDePagina, true);
+    else if (paginaInicializada && !cierreEnCurso) verificarSesion();
 });
 
 document.addEventListener('DOMContentLoaded', function() {
-    window.accesoPagina = rolesDePagina ? protegerPagina() : Promise.resolve(true);
+    window.sesionInicial = verificarSesion();
+    window.accesoPagina = rolesDePagina ? protegerPagina() : window.sesionInicial.then(() => true);
     window.accesoPagina.finally(() => { paginaInicializada = true; });
 
     const registro = document.getElementById('register-form');
@@ -981,41 +1017,23 @@ window.obtenerCategorias = obtenerCategorias;
 window.crearPlantilla = crearPlantilla;
 
 // Función centralizada para actualizar UI de autenticación
-function actualizarUIAutenticacion(sesion) {
+function actualizarUIAutenticacion() {
+    // Ignorar resultados pasados por consumidores antiguos: solo el estado compartido manda.
+    const sesion = estadoSesion;
+    document.querySelectorAll('[data-auth-logout]').forEach(b => { b.hidden = !sesion.session; });
     const authButtons = document.querySelector('.auth-buttons');
     if (!authButtons) return;
-    
-    if (sesion.success && sesion.session) {
-        authButtons.innerHTML = `
-            <a href="#" id="user-panel-btn" class="btn btn-primary btn-sm">
-                <i class="fas fa-user"></i> Mi Panel
-            </a>
-            <a href="#" id="logout-btn" class="btn btn-outline btn-sm">
-                <i class="fas fa-sign-out-alt"></i> Salir
-            </a>
-        `;
-        
-        // Configurar botón de panel
-        const panelBtn = document.getElementById('user-panel-btn');
-        if (panelBtn) {
-            panelBtn.addEventListener('click', function(e) {
-                e.preventDefault();
-                redirigirSegunRol(sesion.rol);
-            });
-        }
-        
-        // Configurar botón de logout
-        const logoutBtn = document.getElementById('logout-btn');
-        if (logoutBtn) {
-            logoutBtn.addEventListener('click', async function(e) {
-                e.preventDefault();
-                const resultado = await cerrarSesion();
-                if (resultado.success) {
-                    window.location.reload();
-                }
-            });
-        }
+    if (!sesion.session) {
+        authButtons.innerHTML = '<a href="login.html" class="btn btn-outline btn-sm">Iniciar sesión</a><a href="registro.html" class="btn btn-primary btn-sm">Registrarse</a>';
+        return;
     }
+    authButtons.innerHTML = (sesion.success
+        ? '<a href="#" id="user-panel-btn" class="btn btn-primary btn-sm"><i class="fas fa-user"></i> Mi Panel</a>' : '') +
+        '<a href="#" data-auth-logout class="btn btn-outline btn-sm"><i class="fas fa-sign-out-alt"></i> Salir</a>';
+    document.getElementById('user-panel-btn')?.addEventListener('click', e => {
+        e.preventDefault();
+        redirigirSegunRol();
+    });
 }
 
 // Exportar función de UI de autenticación

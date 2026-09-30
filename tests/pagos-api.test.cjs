@@ -7,6 +7,7 @@ function fixture(role='comprador') {
    async single(){return {data:rows.find(r=>q.filters.every(([k,v])=>r[k]===v))};},async range(){return {data:rows.filter(r=>q.filters.every(([k,v])=>r[k]===v))};}};return q;
  },rpc:async(name,args)=>{calls.push({rpc:name,args});if(fail==='rpc')return {error:{message:'lost response'}};
   if(name==='tembora_enviar_comprobante')Object.assign(rows[0],{comprobante_url:args.p_ruta,enviada_pago_at:'2026-09-16'});
+  if(name==='tembora_revisar_pago' && fail!=='not-saved')Object.assign(rows[0],{estado_pago:args.p_aprobar?'verificado':'rechazado',revisado_por:'admin'});
   return {data:name==='tembora_crear_pedido'?'pedido':'retiro'};
  },storage:{from:bucket=>({upload:async(path,file,opts)=>{calls.push({upload:bucket,path,opts});if(fail==='upload')return {error:{message:'lost upload'}};return {data:{path}};},download:async path=>{calls.push({download:bucket,path});return {data:new Blob(['bytes'])};}})}};
  const api=make({cliente:()=>client,sesion:async()=>({success:!!account,rol:role,user:{id:account}}),uuid:()=> 'unique',
@@ -42,6 +43,11 @@ test('ZIP verificado requiere revisor y usa Storage autenticado',async()=>{
 });
 test('comprador no revisa pagos ni retiros ni configura destinatario',async()=>{
  const f=fixture();await assert.rejects(()=>f.api.revisar('pedido',true,'op'));await assert.rejects(()=>f.api.revisarRetiro('r','pagado','op'));await assert.rejects(()=>f.api.configurar('999999999','test'));assert.equal(f.calls.length,0);
+});
+test('admin comprueba estado persistido antes de confirmar aprobación o rechazo',async()=>{
+ const f=fixture('admin');assert.equal((await f.api.revisar('pedido',true,'TEST')).estado_pago,'verificado');
+ assert.equal((await f.api.revisar('pedido',false,'TEST')).estado_pago,'rechazado');
+ const g=fixture('admin');g.fail('not-saved');await assert.rejects(()=>g.api.revisar('pedido',true,'TEST'),/quedó guardada/);
 });
 test('saldo cuenta solo verificados y reserva pendiente/aprobado, no rechazado',()=>{
  const f=fixture();assert.deepEqual(f.api.balance([{estado_pago:'verificado',ingreso_vendedor:'80.08'},{estado_pago:'pendiente',ingreso_vendedor:99}],

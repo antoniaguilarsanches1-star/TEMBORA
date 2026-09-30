@@ -28,8 +28,24 @@ function setup(mode,extra={},payments={}) {
   Option:class extends Element {constructor(t,v){super('option',t);this.value=v;}},confirm:()=>true,setTimeout:fn=>timers.push(fn),localStorage:{getItem:()=>null},
   redirigirSegunRol:async()=>calls.push({key:'panel'})};
  vm.runInNewContext(source,ctx);
- return {calls,elements,all,init:()=>events.DOMContentLoaded(),click:text=>{const e=all().find(e=>e.tagName==='button'&&e.textContent===text);assert.ok(e,text);return e.click();},session:(...args)=>sessionEvents[0](...args),timers};
+ return {calls,elements,all,events,init:()=>events.DOMContentLoaded(),click:text=>{const e=all().find(e=>e.tagName==='button'&&e.textContent===text);assert.ok(e,text);return e.click();},session:(...args)=>sessionEvents[0](...args),timers};
 }
+test('pedido abierto cambia de pendiente a verificado sin recargar la página',async()=>{
+ let order={id:'p',plantilla_nombre:'Web',monto:49,estado_pago:'pendiente',enviada_pago_at:'hoy'};
+ const f=setup('comprador',{}, {compras:async()=>[order],pedido:async()=>order});await f.init();await f.click('Ver pedido / pagar');
+ const title=f.all().find(e=>e.textContent==='Pedido: p');
+ order={...order,estado_pago:'verificado',revisado_por:'admin'};await f.events.focus();
+ assert.ok(f.all().includes(title));assert.ok(f.all().some(e=>e.textContent==='Descargar ZIP'));
+ assert.ok(!f.all().some(e=>e.textContent.includes('Comprobante recibido')));
+});
+test('consulta sin cambios conserva archivo y formulario; Mis compras refleja aprobación',async()=>{
+ let order={id:'p',plantilla_nombre:'Web',monto:49,estado_pago:'pendiente'};
+ const f=setup('comprador',{}, {compras:async()=>[order],pedido:async()=>order});await f.init();await f.click('Ver pedido / pagar');
+ const file=f.all().find(e=>e.type==='file');file.files=[{name:'pago.png'}];await f.events.focus();
+ assert.ok(f.all().includes(file));assert.equal(file.files[0].name,'pago.png');
+ await f.click('Mis compras');order={...order,estado_pago:'verificado',revisado_por:'admin'};await f.events.focus();
+ assert.ok(f.all().some(e=>e.textContent==='Ver compra / descargar'));
+});
 test('guard denegado no carga filas privadas',async()=>{
  const f=setup('vendedor',{access:false});await f.init();assert.equal(f.calls.length,0);
 });
