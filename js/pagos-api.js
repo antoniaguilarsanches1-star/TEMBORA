@@ -58,14 +58,38 @@
         // Storage checks the verified purchase again, independently of this UI check.
         return ok(await d.cliente().storage.from('plantillas-zip').download(p.zip_path));
     }
+    const solicitudesEnCurso=new Set();
     async function solicitar(monto,numero,titular) {
         const uid=await actor('vendedor'),key='tembora:retiro:'+uid;
-        let pending=d.memoria.getItem(key);
-        if(!pending) {pending=d.uuid();d.memoria.setItem(key,pending);}
-        const id=await rpc('tembora_solicitar_retiro',{p_solicitud:pending,p_monto:monto,p_numero:numero,p_titular:titular},'vendedor');
-        d.memoria.removeItem(key);return id;
+        if(solicitudesEnCurso.has(uid)) throw new Error('Ya se está enviando una solicitud de retiro.');
+        solicitudesEnCurso.add(uid);
+        try {
+            titular=String(titular || '').normalize('NFC').trim();
+            if(!/^[0-9]{9}$/.test(numero)) throw new Error('Yape debe tener exactamente 9 dígitos, solo números.');
+            if(titular.length<2 || !/^[\p{L} ]+$/u.test(titular)) throw new Error('El titular debe tener al menos 2 caracteres, solo letras y espacios.');
+            let pending=d.memoria.getItem(key);
+            const withdrawals=await retiros();
+            // Recuperar una respuesta perdida antes de intentar reservar nuevamente.
+            const anterior=withdrawals.find(r=>r.solicitud_id===pending);
+            if(anterior) { d.memoria.removeItem(key);return anterior.id; }
+            if(withdrawals.some(r=>['pendiente','aprobado'].includes(r.estado))) throw new Error('Ya tienes un retiro pendiente de resolución.');
+            const disponible=balance(await ventas(),withdrawals).disponible;
+            if(!Number.isFinite(disponible) || disponible<50) throw new Error('El saldo disponible debe alcanzar S/50.');
+            if(!Number.isFinite(monto) || monto!==disponible) throw new Error('El saldo cambió. Actualiza y confirma el monto completo.');
+            if(!pending) {pending=d.uuid();d.memoria.setItem(key,pending);}
+            await actor('vendedor',uid);
+            const id=ok(await d.cliente().rpc('tembora_solicitar_retiro',{p_solicitud:pending,p_monto:disponible,p_numero:numero,p_titular:titular}));
+            d.memoria.removeItem(key);return id;
+        } finally { solicitudesEnCurso.delete(uid); }
     }
-    async function revisarRetiro(id,estado,ref) {return rpc('tembora_revisar_retiro',{p_retiro:id,p_estado:estado,p_referencia:ref},'admin');}
+    async function revisarRetiro(id,estado,ref) {
+        await rpc('tembora_revisar_retiro',{p_retiro:id,p_estado:estado,p_referencia:ref},'admin');
+        await actor('admin');
+        const r=ok(await d.cliente().from('retiros').select('*').eq('id',id).single());
+        if(!r || r.estado!==estado || (estado==='pagado' && (!r.pagado_at || !r.referencia_pago)))
+            throw new Error('No se pudo confirmar la revisión del retiro. Actualiza antes de repetir.');
+        return r;
+    }
     async function historial() {const uid=await actor();return todos('movimientos_auditoria',['propietario_id',uid]);}
     function balance(orders,withdrawals) {
         const centavos=n=>Math.round(Number(n)*100);

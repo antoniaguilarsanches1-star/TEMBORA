@@ -4,7 +4,7 @@ function fixture(role='comprador') {
  let fail='',account='buyer';
  const client={from:table=>{
   const q={filters:[],select(){return q;},order(){return q;},eq(k,v){q.filters.push([k,v]);return q;},
-   async single(){return {data:rows.find(r=>q.filters.every(([k,v])=>r[k]===v))};},async range(){return {data:rows.filter(r=>q.filters.every(([k,v])=>r[k]===v))};}};return q;
+   async single(){return {data:rows.find(r=>q.filters.every(([k,v])=>r[k]===v))};},async range(){return {data:table==='retiros'?[]:rows.filter(r=>q.filters.every(([k,v])=>r[k]===v))};}};return q;
  },rpc:async(name,args)=>{calls.push({rpc:name,args});if(fail==='rpc')return {error:{message:'lost response'}};
   if(name==='tembora_enviar_comprobante')Object.assign(rows[0],{comprobante_url:args.p_ruta,enviada_pago_at:'2026-09-16'});
   if(name==='tembora_revisar_pago' && fail!=='not-saved')Object.assign(rows[0],{estado_pago:args.p_aprobar?'verificado':'rechazado',revisado_por:'admin'});
@@ -54,7 +54,7 @@ test('saldo cuenta solo verificados y reserva pendiente/aprobado, no rechazado',
  [{estado:'pendiente',monto:10},{estado:'aprobado',monto:10},{estado:'pagado',monto:20},{estado:'rechazado',monto:100}]),{total:80.08,reservado:20,pagado:20,disponible:40.08});
 });
 test('retiro conserva ID ante respuesta perdida, sin guardar datos de destino',async()=>{
- const f=fixture('vendedor');f.fail('rpc');await assert.rejects(()=>f.api.solicitar(50,'900000000','TEMP'));
+ const f=fixture('vendedor');Object.assign(f.rows[0],{vendedor_id:'buyer',estado_pago:'verificado',ingreso_vendedor:50});f.fail('rpc');await assert.rejects(()=>f.api.solicitar(50,'900000000','TEMP'));
  assert.deepEqual([...f.memory.values()],['unique']);f.fail('');await f.api.solicitar(50,'900000000','TEMP');
  assert.equal(f.calls[0].args.p_solicitud,f.calls[1].args.p_solicitud);assert.equal(f.memory.size,0);
 });

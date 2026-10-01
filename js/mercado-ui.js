@@ -301,13 +301,30 @@
         area.append(el('h2','Ventas y ganancias'),el('p','Ganado (80%): '+money(b.total)+' · Reservado: '+money(b.reservado)+' · Pagado: '+money(b.pagado)+' · Disponible: '+money(b.disponible)));
         for(const o of orders)area.append(el('p',o.plantilla_nombre+' — '+o.estado_pago+' — Venta '+money(o.monto)+' — Tu parte '+money(o.ingreso_vendedor)));
         area.append(el('h3','Solicitar retiro por Yape (mínimo S/50)'));
-        const form=el('form'),amount=field(form,'Monto (S/)','retiro-monto','50','number'),number=field(form,'Tu número Yape','retiro-numero',''),name=field(form,'Titular','retiro-titular','');
-        amount.min=50;amount.step='0.01';amount.required=true;number.pattern='9[0-9]{8}';number.required=true;name.required=true;
-        const send=el('button','Solicitar retiro','btn btn-primary');send.type='submit';form.append(send);area.append(form);
-        form.addEventListener('submit',e=>{e.preventDefault();if(!form.reportValidity())return;const a=Number(amount.value),n=number.value,t=name.value;
-            action(async()=>{await pay.solicitar(a,n,t);await finanzas();notice('Solicitud registrada. El saldo queda reservado hasta su resolución.');});});
+        const pendiente=withdrawals.some(r=>['pendiente','aprobado'].includes(r.estado));
+        const bloqueado=pendiente || !Number.isFinite(b.disponible) || b.disponible<50;
+        area.append(el('p','Disponible para retirar: '+money(b.disponible)));
+        if(b.disponible<50)area.append(el('p','Te faltan '+money((5000-Math.round(b.disponible*100))/100)+' para llegar al mínimo de S/50.'));
+        if(pendiente)area.append(el('p','Tienes un retiro pendiente de resolución. Espera a que sea pagado o rechazado.'));
+        const form=el('form'),group=el('fieldset');group.disabled=bloqueado;group.style.border='0';group.style.padding='0';group.style.margin='0';form.append(group);
+        const amount=field(group,'Monto total a retirar (S/)','retiro-monto',b.disponible.toFixed(2),'number'),number=field(group,'Tu número Yape','retiro-numero',''),name=field(group,'Titular','retiro-titular','');
+        amount.readOnly=true;amount.step='0.01';number.pattern='[0-9]{9}';number.inputMode='numeric';number.maxLength=9;number.minLength=9;number.required=true;
+        name.pattern='[\\p{L} ]+';name.minLength=2;name.required=true;
+        const send=el('button','Solicitar retiro','btn btn-primary');send.type='submit';send.disabled=bloqueado;group.append(send);area.append(form);
+        form.addEventListener('submit',e=>{e.preventDefault();if(bloqueado || busy || !form.reportValidity())return;const n=number.value,t=name.value.normalize('NFC').trim();
+            if(!/^[0-9]{9}$/.test(n) || t.length<2 || !/^[\p{L} ]+$/u.test(t)){notice('Ingresa un Yape de 9 dígitos y un titular de al menos 2 caracteres, solo letras y espacios.');return;}
+            if(!confirm('Confirma tu retiro:\nMonto: '+money(b.disponible)+'\nYape: '+n+'\nTitular: '+t))return;
+            action(async()=>{await pay.solicitar(b.disponible,n,t);await finanzas();notice('Solicitud registrada. El saldo queda reservado hasta su resolución.');});});
         area.append(el('h3','Mis retiros'));
-        for(const r of withdrawals)area.append(el('p',money(r.monto)+' — '+r.estado+' — '+(r.motivo_rechazo||r.referencia_pago||'')));
+        const fecha=value=>value?new Date(value).toLocaleString('es-PE'):'—';
+        for(const r of withdrawals) {
+            const c=el('article');
+            c.append(el('p',money(r.monto)+' — '+({pendiente:'Pendiente',aprobado:'Pendiente',pagado:'Pagado',rechazado:'Rechazado'}[r.estado]||r.estado)),
+                el('p','Yape: '+r.destino_numero+' · Titular: '+r.destino_titular),el('p','Fecha de solicitud: '+fecha(r.created_at)));
+            if(r.estado==='pagado')c.append(el('p','Fecha de pago: '+fecha(r.pagado_at)+' · Código de operación Yape: '+r.referencia_pago));
+            if(r.motivo_rechazo)c.append(el('p','Motivo de rechazo: '+r.motivo_rechazo));
+            area.append(c);
+        }
         button('Historial',historial);button('Mis plantillas',seller);notice('El saldo se calcula con ventas verificadas y retiros reservados o pagados.');
     }
     async function retirosAdmin() {
@@ -316,7 +333,7 @@
         for(const r of rows) {
             const c=el('article',undefined,'form-container');area.append(c);c.append(el('h3',money(r.monto)+' — '+r.estado),el('p','Vendedor: '+r.vendedor_id),el('p','Yape: '+r.destino_numero+' · '+r.destino_titular));
             if(['pendiente','aprobado'].includes(r.estado)) {
-                const ref=field(c,'Motivo de rechazo o referencia de la transferencia realizada','retiro-ref-'+r.id,'');
+                const ref=field(c,'Motivo de rechazo o código de operación Yape de la transferencia realizada','retiro-ref-'+r.id,'');
                 if(r.estado==='pendiente')button('Aprobar solicitud',async()=>{await pay.revisarRetiro(r.id,'aprobado','');await retirosAdmin();},c);
                 button('Rechazar y liberar saldo',async()=>{await pay.revisarRetiro(r.id,'rechazado',ref.value);await retirosAdmin();},c);
                 if(r.estado==='aprobado')button('Registrar transferencia ya realizada',async()=>{
