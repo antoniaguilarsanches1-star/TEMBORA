@@ -120,9 +120,7 @@ plantillaspe/
 Edita el archivo `js/app.js`:
 ```javascript
 const CONFIG = {
-    whatsappNumber: '51987654321', // Cambia este número
-    currency: 'S/',
-    siteName: 'TAVIKU'
+    whatsappNumber: '51993498739' // Cambia este número
 };
 ```
 
@@ -197,19 +195,15 @@ El diseño es completamente responsive y se adapta a:
 ### Estado Actual
 - ✅ Interfaz completa y funcional
 - ✅ Sistema de navegación
-- ✅ Datos de demostración (catálogo de plantillas)
+- ✅ Catálogo conectado a Supabase
 - ✅ Responsive design
 - ✅ Autenticación con Supabase (registro, login, sesión)
 - ✅ Gestión de roles (comprador, vendedor, admin)
 - ✅ Protección de rutas privadas
-- ⏳ Backend de plantillas y ventas (pendiente de implementar)
 - ⏳ Pagos automáticos (pendiente de implementar)
 
 ### Limitaciones Actuales
-- El catálogo de plantillas usa datos de demostración (no conectado a DB)
 - Los pagos son manuales (sin integración API real de Yape)
-- Los archivos no se cargan realmente (interfaz visual)
-- Las ventas y ganancias son datos de demostración en los paneles
 
 ## 🤝 Contribuciones
 
@@ -239,8 +233,5 @@ Para consultas o soporte:
 
 - Font Awesome por los iconos
 - Google Fonts por la tipografía
-- Unsplash por las imágenes de demostración
 
 ---
-
-**Nota**: Este proyecto es una demostración de interfaz. Para un sistema en producción, se requiere implementar un backend real con base de datos y autenticación.

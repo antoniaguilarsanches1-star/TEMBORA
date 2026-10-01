@@ -5,21 +5,12 @@
 
 // Configuración global
 const CONFIG = {
-    whatsappNumber: '51993498739', // Soporte confirmado por el propietario.
-    currency: 'S/',
-    siteName: 'TAVIKU'
+    whatsappNumber: '51993498739' // Soporte confirmado por el propietario.
 };
 
 // ============================================
 // FUNCIONES DE UTILIDAD
 // ============================================
-
-function formatPrice(price) {
-    return new Intl.NumberFormat('es-PE', {
-        style: 'currency',
-        currency: 'PEN'
-    }).format(price);
-}
 
 // Función reutilizable para mostrar/ocultar contraseña
 function initPasswordToggle() {
@@ -124,8 +115,7 @@ function performSearch() {
 // ============================================
 
 function initForms() {
-    // NOTA: Los formularios de login y registro ahora se manejan en Supabase
-    // Los event listeners se agregan directamente en los archivos HTML correspondientes
+    // Login y registro se manejan en js/supabase.js.
     const contactForm = document.getElementById('contact-form');
     const customPageForm = document.getElementById('custom-page-form');
     const sellForm = document.getElementById('sell-form');
@@ -191,74 +181,6 @@ async function handleSell(e) {
 }
 
 // ============================================
-// PAGOS
-// ============================================
-
-function initPayment() {
-    const paymentMethods = document.querySelectorAll('.payment-method');
-    const confirmPaymentBtn = document.getElementById('confirm-payment');
-    const sendReceiptBtn = document.getElementById('send-receipt');
-    
-    paymentMethods.forEach(method => {
-        method.addEventListener('click', () => {
-            paymentMethods.forEach(m => m.classList.remove('selected'));
-            method.classList.add('selected');
-        });
-    });
-    
-    if (confirmPaymentBtn) {
-        confirmPaymentBtn.addEventListener('click', handleConfirmPayment);
-    }
-    
-    if (sendReceiptBtn) {
-        sendReceiptBtn.addEventListener('click', handleSendReceipt);
-    }
-}
-
-function handleConfirmPayment() {
-    showNotification('Sube tu comprobante de pago Yape para continuar con el proceso de verificación.', 'info');
-}
-
-function handleSendReceipt() {
-    const message = 'Hola, ya realicé el pago. Envío el comprobante de la compra.';
-    openWhatsApp(message);
-}
-
-// ============================================
-// MODALES
-// ============================================
-
-function initModals() {
-    const modalTriggers = document.querySelectorAll('[data-modal]');
-    const modals = document.querySelectorAll('.modal');
-    
-    modalTriggers.forEach(trigger => {
-        trigger.addEventListener('click', () => {
-            const modalId = trigger.getAttribute('data-modal');
-            const modal = document.getElementById(modalId);
-            if (modal) {
-                modal.classList.add('active');
-            }
-        });
-    });
-    
-    modals.forEach(modal => {
-        const closeBtn = modal.querySelector('.modal-close');
-        if (closeBtn) {
-            closeBtn.addEventListener('click', () => {
-                modal.classList.remove('active');
-            });
-        }
-        
-        modal.addEventListener('click', (e) => {
-            if (e.target === modal) {
-                modal.classList.remove('active');
-            }
-        });
-    });
-}
-
-// ============================================
 // INICIALIZACIÓN
 // ============================================
 
@@ -266,7 +188,6 @@ document.addEventListener('DOMContentLoaded', function() {
     initNavigation();
     initSearch();
     initPasswordToggle();
-    initModals();
     initForms();
     
     // Inicializar botón de WhatsApp flotante
@@ -282,21 +203,3 @@ function initWhatsAppButton() {
         });
     }
 }
-
-// ============================================
-// FUNCIONES GLOBALES NECESARIAS
-// ============================================
-
-// Función para ver demo (usa demo_url real de Supabase)
-window.viewDemo = function(demoUrl) {
-    if (!demoUrl || demoUrl === '#' || !demoUrl.startsWith('http')) {
-        showNotification('Esta plantilla no tiene demo disponible', 'warning');
-        return;
-    }
-    window.open(demoUrl, '_blank', 'noopener,noreferrer');
-};
-
-// Función placeholder para añadir a favoritos
-window.addToFavorites = function(id) {
-    showNotification('Función de favoritos disponible después de iniciar sesión', 'info');
-};

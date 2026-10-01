@@ -26,6 +26,7 @@ function setup(mode,extra={},payments={}) {
  const ctx={window:win,document,navigator:{},location:{search:'?id=aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa',reload:()=>calls.push({key:'reload'})},
   supabaseClient:{auth:{onAuthStateChange:fn=>sessionEvents.push(fn)}},Intl,URL:Object.assign(URL,{createObjectURL:()=> 'blob:unit',revokeObjectURL:()=>{}}),URLSearchParams,
   Option:class extends Element {constructor(t,v){super('option',t);this.value=v;}},confirm:()=>true,setTimeout:fn=>timers.push(fn),localStorage:{getItem:()=>null},
+  setInterval:fn=>{timers.push(fn);return timers.length;},clearInterval:()=>{},
   redirigirSegunRol:async()=>calls.push({key:'panel'})};
  vm.runInNewContext(source,ctx);
  return {calls,elements,all,events,init:()=>events.DOMContentLoaded(),click:text=>{const e=all().find(e=>e.tagName==='button'&&e.textContent===text);assert.ok(e,text);return e.click();},session:(...args)=>sessionEvents[0](...args),timers};
@@ -103,7 +104,7 @@ test('compra aprobada muestra descarga y no solicita otro pago',async()=>{
 test('fallo de aprobación no anuncia descarga habilitada',async()=>{
  const order={id:'p',plantilla_nombre:'Web',monto:100,estado_pago:'pendiente',enviada_pago_at:'2026-09-16'};
  const f=setup('admin',{}, {pedidosAdmin:async()=>[order],revisar:async()=>{throw Error('Operación duplicada');}});
- await f.init();await f.click('Pagos y ventas');await f.click('Confirmar abono y habilitar descarga');assert.match(f.elements.get('market-status').textContent,/Operación duplicada/);
+ await f.init();await f.click('Pagos y ventas');f.all().find(e=>e.name==='ref-p').value='TEST123';await f.click('Confirmar abono y habilitar descarga');assert.match(f.elements.get('market-status').textContent,/Operación duplicada/);
 });
 
 test('ruta de compra sin acceso no consulta el pedido',async()=>{
