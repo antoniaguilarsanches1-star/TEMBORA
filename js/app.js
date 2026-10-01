@@ -140,7 +140,10 @@ function handleContact(e) {
     const message = document.getElementById('message').value;
     
     const subject = document.getElementById('subject').value;
-    const whatsappMessage = `Hola, soy ${name}. Correo: ${email}. Asunto: ${subject}. ${message}`;
+    const whatsappMessage = `Nombre: ${name.trim()}
+Correo: ${email.trim()}
+Asunto: ${subject}
+Mensaje: ${message.trim()}`;
     openWhatsApp(whatsappMessage);
 }
 
@@ -151,27 +154,24 @@ function handleCustomPage(e) {
     const businessType = document.getElementById('business-type').value;
     const pageType = document.getElementById('page-type').value;
     const sections = document.getElementById('sections').value;
-    const needsCatalog = document.getElementById('needs-catalog').checked;
-    const needsWhatsapp = document.getElementById('needs-whatsapp').checked;
-    const needsForm = document.getElementById('needs-form').checked;
+    const functionality = [...document.querySelectorAll('#custom-page-form .checkbox-item input:checked')]
+        .map(input => input.closest('label').textContent.trim().replace(/^Necesito /, ''));
     const budget = document.getElementById('budget').value;
+    const deadline = document.getElementById('deadline').value;
     const description = document.getElementById('description').value;
-    
-    const whatsappMessage = `
-Hola, quiero solicitar una cotización para una página web personalizada.
+    const whatsappMessage = [
+        'Solicitud de cotización personalizada',
+        'Nombre: ' + name.trim(),
+        'WhatsApp: ' + whatsapp,
+        'Tipo de negocio: ' + businessType,
+        'Tipo de página: ' + pageType,
+        'Cantidad de secciones: ' + sections,
+        'Funcionalidades: ' + (functionality.join(', ') || 'Sin adicionales'),
+        'Presupuesto aproximado (no es precio final): S/ ' + budget,
+        'Fecha deseada: ' + (deadline || 'Por coordinar'),
+        'Descripción: ' + description.trim()
+    ].join('\n');
 
-👤 Nombre: ${name}
-📱 WhatsApp: ${whatsapp}
-🏢 Tipo de negocio: ${businessType}
-🌐 Tipo de página: ${pageType}
-📊 Secciones: ${sections}
-📦 Necesita catálogo: ${needsCatalog ? 'Sí' : 'No'}
-💬 Necesita WhatsApp: ${needsWhatsapp ? 'Sí' : 'No'}
-📝 Necesita formulario: ${needsForm ? 'Sí' : 'No'}
-💰 Presupuesto: ${budget}
-📝 Descripción: ${description}
-    `.trim();
-    
     openWhatsApp(whatsappMessage);
 }
 

@@ -1,0 +1,51 @@
+/* Presentación exclusiva de las páginas públicas. */
+[data-public-page] .nav-link[aria-current="page"] { color: var(--primary-color); }
+[data-public-page] .nav-link[aria-current="page"]::after { width: 100%; }
+[data-public-page] .auth-buttons [aria-current="page"] { box-shadow: 0 3px 0 var(--primary-color); }
+[data-public-page="registro"] .auth-buttons [href="registro.html"] { background: transparent; color: var(--primary-color); }
+[data-public-page] :is(a, button, input, select, textarea):focus-visible { outline: 3px solid var(--primary-light); outline-offset: 3px; }
+[data-public-page="index"] .search-container { max-width: 760px; }
+[data-public-page="index"] .search-input { min-width: 0; flex: 1; }
+[data-public-page="index"] a.template-card { transition: transform .2s ease, box-shadow .2s ease; }
+[data-public-page] .public-template { position: relative; display: flex; flex-direction: column; }
+[data-public-page] .public-template .template-image { display: grid; place-items: center; height: 200px; background: var(--bg-light); }
+[data-public-page] .public-template .template-image img { width: 100%; height: 100%; object-fit: cover; }
+[data-public-page] .public-template .template-content { flex: 1; display: flex; flex-direction: column; align-items: flex-start; gap: .75rem; }
+[data-public-page] .public-template .template-category { margin: 0; }
+[data-public-page] .public-template .template-price { font-size: 1.5rem; font-weight: 700; color: var(--primary-color); }
+[data-public-page] .public-template .public-detail-link { margin-top: auto; width: 100%; text-align: center; }
+[data-public-page] .public-detail-link::after { content: ''; position: absolute; inset: 0; }
+[data-public-page] .public-template :is(button, a:not(.public-detail-link)) { position: relative; z-index: 1; }
+[data-public-page] .public-template:focus-within { outline: 2px solid var(--primary-color); outline-offset: 3px; }
+[data-public-page] .steps-container { display: flex; flex-wrap: wrap; justify-content: center; gap: 1.5rem; }
+[data-public-page] .steps-container > .step-card { flex: 0 1 calc((100% - 6rem) / 5); min-width: 0; }
+[data-public-page] .faq-question { width: 100%; border: 0; background: transparent; color: inherit; font: inherit; font-weight: 600; text-align: left; gap: 1rem; }
+[data-public-page] .faq-question i { transition: transform .2s ease; }
+[data-public-page] .faq-answer:not([hidden]) { display: block; }
+[data-public-page] .faq-answer[hidden] { display: none; }
+[data-public-page] .service-card { color: inherit; display: block; }
+[data-public-page] .service-card[aria-current="true"] { outline: 2px solid var(--primary-color); }
+[data-public-page] #custom-page-form { scroll-margin-top: 10rem; }
+[data-public-page] :is(.choice-label, .radio-item, .checkbox-item) { display: flex; align-items: flex-start; gap: .6rem; }
+[data-public-page] .form-group input:is([type="checkbox"], [type="radio"]) { width: auto; flex: 0 0 auto; margin-top: .3rem; }
+[data-public-page] .choice-label a { color: var(--primary-color); text-decoration: underline; }
+[data-public-page] .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+[data-public-page] .seller-actions { display: flex; justify-content: center; flex-wrap: wrap; gap: 1rem; }
+[data-public-page] #seller-session { max-width: 700px; margin: 2rem auto; }
+@media (max-width: 1100px) {
+    [data-public-page] .nav-menu { display: none; position: absolute; top: 100%; left: 0; right: 0; flex-direction: column; background: var(--bg-white); padding: 1rem; box-shadow: var(--shadow-lg); gap: 1rem; }
+    [data-public-page] .nav-menu.active { display: flex; }
+    [data-public-page] .hamburger { display: flex; }
+    [data-public-page] .steps-container > .step-card { flex-basis: calc((100% - 3rem) / 3); }
+}
+@media (max-width: 700px) {
+    [data-public-page] .steps-container > .step-card { flex-basis: calc((100% - 1.5rem) / 2); }
+    [data-public-page] .form-row { grid-template-columns: 1fr; }
+}
+@media (max-width: 480px) {
+    [data-public-page] .header-content { flex-wrap: wrap; gap: .75rem; }
+    [data-public-page] .auth-buttons { order: 3; width: 100%; justify-content: center; gap: .5rem; }
+    [data-public-page] .steps-container > .step-card { flex-basis: 100%; }
+    [data-public-page] .form-container { padding: 1.25rem; min-width: 0; }
+    [data-public-page] .container { min-width: 0; }
+}

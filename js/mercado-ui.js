@@ -164,7 +164,14 @@
         const rows=filtered(await api.publicadas());
         if(rows.length) {
             clear(); area.className='templates-grid';
-            for(const p of rows) { const c=card(p); c.append(link('Ver detalles','plantilla.html?id='+encodeURIComponent(p.id))); photo(p.imagen_principal,c); }
+            for(const p of rows) {
+                const c=el('article',undefined,'template-card public-template'), image=el('div',undefined,'template-image');
+                const content=el('div',undefined,'template-content'), detail=link('Ver detalles','plantilla.html?id='+encodeURIComponent(p.id));
+                detail.className+=' public-detail-link';
+                content.append(el('h3',p.nombre,'template-title'),el('span',cats.find(x=>String(x.id)===String(p.categoria_id))?.nombre || 'Sin categoría','template-category'),el('p',money(p.precio),'template-price'),detail);
+                c.append(image,content);area.append(c);
+                if(p.imagen_principal)photo(p.imagen_principal,image);else image.append(el('span','Sin imagen'));
+            }
             notice(rows.length+' plantilla(s) publicada(s).');
         } else if(mode==='inicio') {
             notice('Explora el catálogo de plantillas web en TAVIKU.');
@@ -393,9 +400,16 @@
             if(select) {
                 select.replaceChildren(new Option('Todas las categorías','')); cats.forEach(c=>select.add(new Option(c.nombre,String(c.id))));
                 const params=new URLSearchParams(location.search); const cat=params.get('category');
-                select.value=cats.find(c=>String(c.id)===cat || c.nombre===cat)?.id || '';
+                const categoryKey=value=>String(value || '').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/\s+/g,'-');
+                select.value=cats.find(c=>String(c.id)===cat || categoryKey(c.nombre)===categoryKey(cat))?.id || '';
                 document.getElementById('search-catalog').value=params.get('search') || '';
                 document.getElementById('apply-filters').addEventListener('click',()=>action(catalog));
+                document.getElementById('clear-filters')?.addEventListener('click',()=>{
+                    if(busy)return;
+                    for(const id of ['category-filter','search-catalog','price-min','price-max'])document.getElementById(id).value='';
+                    document.getElementById('sort-filter').value='featured';
+                    history.replaceState(null,'',location.pathname);action(catalog);
+                });
                 document.getElementById('search-catalog').addEventListener('keydown',e=>{if(e.key==='Enter') {e.preventDefault(); action(catalog);}});
             }
             await reload();

@@ -22,8 +22,9 @@
     
     <!-- Supabase JS -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <link rel="stylesheet" href="css/public.css?v=20261001">
 </head>
-<body>
+<body data-public-page="contacto">
     <!-- Header -->
     <header class="header">
         <div class="container header-content">
@@ -32,14 +33,13 @@
                 <span class="logo-text">TAVIKU</span>
             </a>
             
-            <nav class="nav-menu">
+            <nav class="nav-menu" aria-label="Navegación principal">
                 <a href="index.html" class="nav-link">Inicio</a>
                 <a href="catalogo.html" class="nav-link">Plantillas</a>
-                <a href="catalogo.html" class="nav-link">Categorías</a>
-                <a href="vender.html" class="nav-link">Vender</a>
-                <a href="pagina-personalizada.html" class="nav-link">Creamos tu página</a>
                 <a href="como-funciona.html" class="nav-link">Cómo funciona</a>
-                <a href="contacto.html" class="nav-link">Contacto</a>
+                <a href="vender-publico.html" class="nav-link">Vender</a>
+                <a href="pagina-personalizada.html" class="nav-link">Creamos tu página</a>
+                <a href="contacto.html" class="nav-link" aria-current="page">Contacto</a>
             </nav>
             
             <div class="auth-buttons">
@@ -96,14 +96,6 @@
                         </div>
                     </div>
                     
-                    <div class="contact-item">
-                        <i class="fas fa-map-marker-alt"></i>
-                        <div>
-                            <h4>Ubicación</h4>
-                            <p>Lima, Perú</p>
-                        </div>
-                    </div>
-                    
                     <div style="margin-top: 2rem;">
                         <h4 style="margin-bottom: 1rem;">Contáctanos directamente</h4>
                         <div style="display: flex; gap: 1rem;">
@@ -128,7 +120,7 @@
                     <form id="contact-form">
                         <div class="form-group">
                             <label for="name">Nombre *</label>
-                            <input type="text" id="name" name="name" required placeholder="Tu nombre">
+                            <input type="text" id="name" name="name" pattern="[\p{L} ]+" required placeholder="Tu nombre">
                         </div>
                         
                         <div class="form-group">
@@ -144,6 +136,9 @@
                                 <option value="Consulta general">Consulta general</option>
                                 <option value="Problema con compra">Problema con compra</option>
                                 <option value="Sugerencia">Sugerencia</option>
+                                <option value="Problema con descarga">Problema con descarga</option>
+                                <option value="Consulta de vendedor">Consulta de vendedor</option>
+                                <option value="Retiro de ganancias">Retiro de ganancias</option>
                                 <option value="Otro">Otro</option>
                             </select>
                         </div>
@@ -181,43 +176,35 @@
             
             <div class="faq-section">
                 <div class="faq-item">
-                    <div class="faq-question">
+                    <button type="button" class="faq-question" id="faq-question-1" aria-expanded="false" aria-controls="faq-answer-1">
                         <span>¿Cuánto tardan en responder?</span>
                         <i class="fas fa-chevron-down"></i>
-                    </div>
-                    <div class="faq-answer">
-                        <p>Puedes consultar el estado de tu solicitud por WhatsApp. Para urgencias, te recomendamos contactarnos por WhatsApp.</p>
-                    </div>
+                    </button>
+                    <div class="faq-answer" id="faq-answer-1" role="region" aria-labelledby="faq-question-1" hidden><p>Normalmente respondemos por WhatsApp lo antes posible. El tiempo puede variar según la cantidad de consultas.</p></div>
                 </div>
                 
                 <div class="faq-item">
-                    <div class="faq-question">
+                    <button type="button" class="faq-question" id="faq-question-2" aria-expanded="false" aria-controls="faq-answer-2">
                         <span>¿Cómo puedo solicitar un reembolso?</span>
                         <i class="fas fa-chevron-down"></i>
-                    </div>
-                    <div class="faq-answer">
-                        <p>Para solicitar un reembolso, contáctanos a través del formulario o WhatsApp indicando tu número de orden y el motivo. Revisaremos tu solicitud y te indicaremos los pasos aplicables.</p>
-                    </div>
+                    </button>
+                    <div class="faq-answer" id="faq-answer-2" role="region" aria-labelledby="faq-question-2" hidden><p>Contáctanos por WhatsApp e indica la referencia de tu pedido y el motivo. Revisaremos el caso antes de confirmar cualquier reembolso.</p></div>
                 </div>
                 
                 <div class="faq-item">
-                    <div class="faq-question">
+                    <button type="button" class="faq-question" id="faq-question-3" aria-expanded="false" aria-controls="faq-answer-3">
                         <span>¿Ofrecen soporte para personalizar plantillas?</span>
                         <i class="fas fa-chevron-down"></i>
-                    </div>
-                    <div class="faq-answer">
-                        <p>El soporte básico para instalación es incluido. Para personalizaciones avanzadas, puedes contratar nuestros servicios de desarrollo personalizado en la sección "Creamos tu página".</p>
-                    </div>
+                    </button>
+                    <div class="faq-answer" id="faq-answer-3" role="region" aria-labelledby="faq-question-3" hidden><p>TAVIKU ofrece soporte sobre compra, pago y descarga. La personalización puede depender del vendedor o contratarse aparte mediante “Creamos tu página”.</p></div>
                 </div>
                 
                 <div class="faq-item">
-                    <div class="faq-question">
+                    <button type="button" class="faq-question" id="faq-question-4" aria-expanded="false" aria-controls="faq-answer-4">
                         <span>¿Puedo cambiar mi cuenta de comprador a vendedor?</span>
                         <i class="fas fa-chevron-down"></i>
-                    </div>
-                    <div class="faq-answer">
-                        <p>Sí, puedes cambiar el tipo de cuenta desde tu panel de control o contactándonos para que lo hagamos por ti.</p>
-                    </div>
+                    </button>
+                    <div class="faq-answer" id="faq-answer-4" role="region" aria-labelledby="faq-question-4" hidden><p>Actualmente no puedes cambiar tu tipo de cuenta desde el panel. La selección inicial de comprador o vendedor no modifica el rol de una cuenta existente. Contacta con soporte si necesitas orientación.</p></div>
                 </div>
             </div>
         </div>
@@ -252,7 +239,7 @@
                     <h3>Enlaces</h3>
                     <div class="footer-links">
                         <a href="catalogo.html">Plantillas</a>
-                        <a href="vender.html">Vender</a>
+                        <a href="vender-publico.html">Vender</a>
                         <a href="pagina-personalizada.html">Creamos tu página</a>
                         <a href="como-funciona.html">Cómo funciona</a>
                         <a href="contacto.html">Contacto</a>
@@ -290,7 +277,7 @@
     </div>
 
     <!-- JavaScript -->
-    <script src="js/app.js"></script>
+    <script src="js/app.js?v=20261001-public"></script>
     <script src="js/supabase.js?v=20260930-auth"></script>
     <script>
         // Verificar sesión usando función centralizada
@@ -301,5 +288,6 @@
             }
         });
     </script>
+    <script src="js/public.js?v=20261001"></script>
 </body>
 </html>
