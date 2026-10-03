@@ -1,6 +1,19 @@
 # TAVIKU
 
-Marketplace peruano de plantillas web donde las personas pueden comprar y vender plantillas, y además solicitar páginas web personalizadas.
+TAVIKU tiene dos pilares principales con el mismo nivel de importancia: un marketplace de plantillas web y la creación de páginas web para negocios.
+
+### Páginas para negocios y webs completas
+
+- `pagina-personalizada.html`: explica el servicio, sus funciones, modalidades y proceso. Conserva la URL anterior.
+- `webs-completas.html`: galería dinámica de modelos publicados. Ver demo → elegir modelo → solicitar por WhatsApp, sin compra automática.
+- `admin.html`: sección independiente para crear y editar modelos, cambiar portada, ordenar y elegir Borrador, Publicada u Oculta.
+- `js/business.js` y `css/pillars.css`: comportamiento y presentación de los dos pilares.
+- `supabase/sql/webs-completas.sql`: instalación de la tabla y del bucket privado dedicado; aplicada en PlantillaPE. No ejecutar de nuevo sobre la misma instalación.
+- `supabase/tests/webs-completas.sql`: pruebas transaccionales con rollback para público, comprador, vendedor, administrador y portadas. Requiere al menos un perfil de cada rol.
+
+Solo Admin puede escribir en `webs_completas` y subir portadas. Los visitantes leen publicaciones; los archivos de portada se sirven con enlaces temporales de 10 minutos. Ocultar un modelo retira su publicación de nuevas consultas, pero un enlace temporal emitido previamente conserva su vigencia hasta caducar. No se publican demos ficticias: el administrador debe cargar los modelos reales.
+
+Los formularios de negocio preparan un mensaje con todos los campos y el modelo elegido, cuando corresponde. El usuario confirma el envío en WhatsApp; no se guardan solicitudes en una nueva base de datos ni se informa falsamente de un envío automático.
 
 ## 📋 Descripción
 

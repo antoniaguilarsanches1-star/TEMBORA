@@ -42,10 +42,10 @@ test('regresión final de la parte pública',async t=>{
  const ready=()=>page.waitForFunction(()=>document.documentElement.dataset.sessionState!=='loading'&&!document.documentElement.hasAttribute('data-auth-form-pending')&&!document.documentElement.hasAttribute('data-register-layout-pending'));
  async function go(file){await page.goto(base+file);await ready();}
  async function shell(current){
-  assert.deepEqual(await page.locator('.nav-menu a').allTextContents(),['Inicio','Plantillas','Cómo funciona','Vender','Creamos tu página','Contacto']);
+  assert.deepEqual(await page.locator('.nav-menu a').allTextContents(),['Inicio','Plantillas','Para negocios','Webs completas','Cómo funciona','Vender','Contacto']);
   if(current)assert.equal(await page.locator('.header [aria-current="page"]').getAttribute('href'),current+'.html');
   const links=await page.locator('.footer a').evaluateAll(nodes=>nodes.map(n=>n.getAttribute('href')));
-  for(const href of links){if(href.startsWith('https:')){assert.ok(href.startsWith('https://wa.me/'));continue;}assert.ok(fs.existsSync(path.join(root,href)),href);}
+  for(const href of links){if(href.startsWith('https:')){assert.ok(href.startsWith('https://wa.me/'));continue;}assert.ok(fs.existsSync(path.join(root,href.split("?")[0])),href);}
  }
  await check('Inicio: tarjetas, categorías, hero y navbar',async()=>{
   await go('index.html');await shell('index');
@@ -74,7 +74,7 @@ test('regresión final de la parte pública',async t=>{
   assert.equal(await page.locator('.faq-answer:visible').count(),1);
   await page.keyboard.press('Space');assert.equal(await page.locator('.faq-answer:visible').count(),0);
  }
- await check('Cómo funciona: seis FAQ accesibles',()=>faq('como-funciona',6));
+ await check('Cómo funciona: FAQ de ambos pilares',()=>faq('como-funciona',14));
  await check('Vender: visitante, comprador, administrador y vendedor',async()=>{
   await go('vender-publico.html');await shell('vender-publico');
   await page.getByText('Crear cuenta de vendedor',{exact:true}).waitFor();
@@ -86,25 +86,23 @@ test('regresión final de la parte pública',async t=>{
   await page.evaluate(()=>localStorage.setItem('test-role','vendedor'));await page.goto(base+'vender-publico.html');await page.waitForURL('**/panel-vendedor.html');
   await page.evaluate(()=>localStorage.removeItem('test-role'));
  });
- await check('Creamos tu página: selección, WhatsApp, fecha futura y mensaje',async()=>{
+ await check('Para negocios: formulario y solicitud completa',async()=>{
   await go('pagina-personalizada.html');await shell('pagina-personalizada');
-  await page.locator('[data-service="Educación"]').click();assert.equal(await page.locator('#page-type').inputValue(),'Educación');
-  await page.locator('#name').fill('Ana Pérez');await page.locator('#business-type').selectOption('Educación');await page.locator('#sections').selectOption('4-6');
-  await page.locator('#budget').selectOption('500-1000');await page.locator('#description').fill('Sitio para clases');
-  await page.locator('#whatsapp').fill('12345678a');assert.equal(await page.locator('#whatsapp').evaluate(e=>e.checkValidity()),false);
-  await page.locator('#whatsapp').fill('123456789');await page.locator('#deadline').fill('2000-01-01');assert.equal(await page.locator('#deadline').evaluate(e=>e.checkValidity()),false);
-  await page.locator('#deadline').fill('2099-01-01');await page.locator('#needs-reservation').check();await page.locator('#needs-payment').check();
-  await page.locator('#custom-page-form button[type="submit"]').click();await page.waitForFunction(()=>window.testWhatsApp);
+  await page.locator('#request-name').fill('Ana Pérez');await page.locator('#business-name').fill('Barbería Ana');
+  await page.locator('#business-type').selectOption('Barbería');await page.locator('#request-description').fill('Quiero reservas');
+  await page.locator('#request-phone').fill('12345678a');assert.equal(await page.locator('#request-phone').evaluate(e=>e.checkValidity()),false);
+  await page.locator('#request-phone').fill('993498739');await page.locator('#request-mode').selectOption('Pago único');
+  await page.locator('#business-request button[type="submit"]').click();await page.waitForFunction(()=>window.testWhatsApp);
   const message=await page.evaluate(()=>new URL(window.testWhatsApp).searchParams.get('text'));
-  for(const text of ['Nombre: Ana Pérez','Tipo de negocio: Educación','Tipo de página: Educación','Cantidad de secciones: 4-6','sistema de reservaciones','pasarela de pagos','no es precio final','Fecha deseada: 2099-01-01','Descripción: Sitio para clases'])assert.ok(message.includes(text),text);
+  for(const text of ['Nombre: Ana Pérez','Nombre del negocio: Barbería Ana','Tipo de negocio: Barbería','Modalidad: Pago único','Necesidades: Quiero reservas'])assert.ok(message.includes(text),text);
  });
  await check('Contacto: FAQ, validaciones y mensaje ordenado',async()=>{
   await faq('contacto',4);
   await page.locator('#name').fill('Ana123');assert.equal(await page.locator('#name').evaluate(e=>e.checkValidity()),false);
   await page.locator('#name').fill('Ana Pérez');await page.locator('#email').fill('invalido');assert.equal(await page.locator('#email').evaluate(e=>e.checkValidity()),false);
-  await page.locator('#email').fill('ana@example.test');await page.locator('#subject').selectOption('Retiro de ganancias');await page.locator('#message').fill('Consulta de prueba');
+  await page.locator('#email').fill('ana@example.test');await page.locator('#subject').selectOption('Soporte de mi página de negocio');await page.locator('#message').fill('Consulta de prueba');
   await page.locator('#contact-form button[type="submit"]').click();await page.waitForFunction(()=>window.testWhatsApp);
-  const message=await page.evaluate(()=>new URL(window.testWhatsApp).searchParams.get('text'));assert.equal(message,'Nombre: Ana Pérez\nCorreo: ana@example.test\nAsunto: Retiro de ganancias\nMensaje: Consulta de prueba');
+  const message=await page.evaluate(()=>new URL(window.testWhatsApp).searchParams.get('text'));assert.equal(message,'Nombre: Ana Pérez\nCorreo: ana@example.test\nAsunto: Soporte de mi página de negocio\nMensaje: Consulta de prueba');
   assert.equal(await page.getByText('Lima, Perú',{exact:true}).count(),0);
  });
  await check('Login y registro: presentación, bloqueo inicial y Google sin acceso real',async()=>{
@@ -118,7 +116,7 @@ test('regresión final de la parte pública',async t=>{
   await go('registro.html?tipo=vendedor');assert.equal(await page.locator('input[value="seller"]').isChecked(),true);
  });
  await check('Responsive básico y footer en todas las páginas públicas',async()=>{
-  const files=['index','catalogo','como-funciona','vender-publico','pagina-personalizada','contacto','login','registro','terminos','privacidad','licencias','vendedor'];
+  const files=['index','catalogo','como-funciona','vender-publico','pagina-personalizada','webs-completas','contacto','login','registro','terminos','privacidad','licencias','vendedor'];
   await page.setViewportSize({width:390,height:844});
   for(const file of files){await go(file+'.html');await shell(['terminos','privacidad','licencias'].includes(file)?null:file==='vendedor'?'catalogo':file);
    assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1),'Desbordamiento en '+file);

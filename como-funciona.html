@@ -23,6 +23,7 @@
     <!-- Supabase JS -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <link rel="stylesheet" href="css/public.css?v=20261001">
+    <link rel="stylesheet" href="css/pillars.css?v=20261003">
 </head>
 <body data-public-page="como-funciona">
     <!-- Header -->
@@ -33,14 +34,7 @@
                 <span class="logo-text">TAVIKU</span>
             </a>
             
-            <nav class="nav-menu" aria-label="Navegación principal">
-                <a href="index.html" class="nav-link">Inicio</a>
-                <a href="catalogo.html" class="nav-link">Plantillas</a>
-                <a href="como-funciona.html" class="nav-link" aria-current="page">Cómo funciona</a>
-                <a href="vender-publico.html" class="nav-link">Vender</a>
-                <a href="pagina-personalizada.html" class="nav-link">Creamos tu página</a>
-                <a href="contacto.html" class="nav-link">Contacto</a>
-            </nav>
+            <nav class="nav-menu" aria-label="Navegación principal"><a href="index.html" class="nav-link">Inicio</a><a href="catalogo.html" class="nav-link">Plantillas</a><a href="pagina-personalizada.html" class="nav-link">Para negocios</a><a href="webs-completas.html" class="nav-link">Webs completas</a><a href="como-funciona.html" class="nav-link">Cómo funciona</a><a href="vender-publico.html" class="nav-link">Vender</a><a href="contacto.html" class="nav-link">Contacto</a></nav>
             
             <div class="auth-buttons">
                 <a href="login.html" class="btn btn-outline btn-sm">Iniciar sesión</a>
@@ -56,14 +50,9 @@
     </header>
 
     <!-- Page Header -->
-    <section class="section" style="background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-light) 100%); color: var(--text-white); padding: 4rem 0;">
-        <div class="container text-center">
-            <h1 style="font-size: 2.5rem; font-weight: 700; margin-bottom: 1rem;">Cómo Funciona TAVIKU</h1>
-            <p style="font-size: 1.25rem; opacity: 0.9;">Descubre lo fácil que es comprar y vender plantillas web</p>
-        </div>
-    </section>
+    <section class="hero"><div class="container hero-content"><h1>Cómo funciona TAVIKU</h1><p>Dos formas de avanzar en internet: encuentra una plantilla o crea la página de tu negocio con nosotros.</p></div></section>
 
-    <!-- Para Compradores -->
+    <section aria-labelledby="templates-heading"><div class="container"><h2 id="templates-heading" class="pillar-group-title">Plantillas web</h2></div><!-- Para Compradores -->
     <section class="how-it-works">
         <div class="container">
             <div class="user-type-section">
@@ -153,7 +142,7 @@
                 </div>
                 
                 <div class="text-center mt-4">
-                    <a href="registro.html" class="btn btn-accent btn-lg">
+                    <a href="registro.html?tipo=vendedor" class="btn btn-accent btn-lg">
                         <i class="fas fa-user-plus"></i> Crear cuenta de vendedor
                     </a>
                 </div>
@@ -161,11 +150,30 @@
         </div>
     </section>
 
-    <!-- Preguntas Frecuentes -->
+    </section>
+<section class="section pillar-section pillar-tint">
+<div class="container">
+<div class="section-title">
+<h2>Para negocios</h2>
+</div>
+<ol class="pillar-steps">
+<li>Cuéntanos sobre tu negocio</li>
+<li>Elige un modelo o cuéntanos qué necesitas</li>
+<li>Elegimos estilo y funciones</li>
+<li>Creamos y configuramos tu página</li>
+<li>Te entregamos tu web lista para usar</li>
+</ol>
+<div class="pillar-actions">
+<a href="pagina-personalizada.html" class="btn btn-primary">Crear la página de mi negocio</a>
+<a href="webs-completas.html" class="btn btn-outline">Ver webs completas</a>
+</div>
+</div>
+</section>
+<!-- Preguntas Frecuentes -->
     <section class="section">
         <div class="container">
             <div class="section-title">
-                <h2>Preguntas Frecuentes</h2>
+                <h2>Sobre plantillas</h2>
                 <p>Resolvemos tus dudas sobre TAVIKU</p>
             </div>
             
@@ -222,65 +230,142 @@
     </section>
 
     <!-- CTA -->
-    <section class="section" style="background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-light) 100%); color: var(--text-white);">
-        <div class="container text-center">
-            <h2 style="font-size: 2rem; font-weight: 700; margin-bottom: 1rem;">¿Listo para empezar?</h2>
-            <p style="font-size: 1.125rem; margin-bottom: 2rem; opacity: 0.9;">Únete a TAVIKU hoy mismo</p>
-            <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
-                <a href="registro.html" class="btn btn-secondary btn-lg">
-                    <i class="fas fa-user-plus"></i> Crear cuenta gratis
-                </a>
-                <a href="catalogo.html" class="btn btn-accent btn-lg">
-                    <i class="fas fa-search"></i> Explorar plantillas
-                </a>
-            </div>
-        </div>
-    </section>
+    <section class="section pillar-section ">
+<div class="container">
+<div class="section-title">
+<h2>Sobre páginas para negocios</h2>
+</div>
+<div class="faq-section">
+<div class="faq-item">
+<button type="button" class="faq-question" id="how-business-q0" aria-expanded="false" aria-controls="how-business-a0">
+<span>¿Necesito saber de tecnología?</span>
+<i class="fas fa-chevron-down" aria-hidden="true">
+</i>
+</button>
+<div class="faq-answer" id="how-business-a0" role="region" aria-labelledby="how-business-q0" hidden>
+<p>No. Nos encargamos de la configuración técnica y te orientamos para usar tu página.</p>
+</div>
+</div>
+<div class="faq-item">
+<button type="button" class="faq-question" id="how-business-q1" aria-expanded="false" aria-controls="how-business-a1">
+<span>¿Qué información necesitan de mi negocio?</span>
+<i class="fas fa-chevron-down" aria-hidden="true">
+</i>
+</button>
+<div class="faq-answer" id="how-business-a1" role="region" aria-labelledby="how-business-q1" hidden>
+<p>Nombre, servicios o productos, horarios, ubicación, datos de contacto, logotipo y fotos que quieras mostrar.</p>
+</div>
+</div>
+<div class="faq-item">
+<button type="button" class="faq-question" id="how-business-q2" aria-expanded="false" aria-controls="how-business-a2">
+<span>¿La página funciona en celular?</span>
+<i class="fas fa-chevron-down" aria-hidden="true">
+</i>
+</button>
+<div class="faq-answer" id="how-business-a2" role="region" aria-labelledby="how-business-q2" hidden>
+<p>Sí. Adaptamos el diseño para celular, tablet y computadora.</p>
+</div>
+</div>
+<div class="faq-item">
+<button type="button" class="faq-question" id="how-business-q3" aria-expanded="false" aria-controls="how-business-a3">
+<span>¿Puedo elegir una web ya preparada?</span>
+<i class="fas fa-chevron-down" aria-hidden="true">
+</i>
+</button>
+<div class="faq-answer" id="how-business-a3" role="region" aria-labelledby="how-business-q3" hidden>
+<p>Sí. Explora Webs completas y pulsa “Quiero una web así”. Tu solicitud incluirá el modelo elegido.</p>
+</div>
+</div>
+<div class="faq-item">
+<button type="button" class="faq-question" id="how-business-q4" aria-expanded="false" aria-controls="how-business-a4">
+<span>¿Puedo tener reservas?</span>
+<i class="fas fa-chevron-down" aria-hidden="true">
+</i>
+</button>
+<div class="faq-answer" id="how-business-a4" role="region" aria-labelledby="how-business-q4" hidden>
+<p>Sí. Podemos incluir reservas según los servicios, horarios y funciones acordados para tu negocio.</p>
+</div>
+</div>
+<div class="faq-item">
+<button type="button" class="faq-question" id="how-business-q5" aria-expanded="false" aria-controls="how-business-a5">
+<span>¿Puedo usar QR?</span>
+<i class="fas fa-chevron-down" aria-hidden="true">
+</i>
+</button>
+<div class="faq-answer" id="how-business-a5" role="region" aria-labelledby="how-business-q5" hidden>
+<p>Sí. Podemos entregarte un QR principal y otro para acceder directamente a las reservas.</p>
+</div>
+</div>
+<div class="faq-item">
+<button type="button" class="faq-question" id="how-business-q6" aria-expanded="false" aria-controls="how-business-a6">
+<span>¿Puedo administrar horarios, servicios o fotos?</span>
+<i class="fas fa-chevron-down" aria-hidden="true">
+</i>
+</button>
+<div class="faq-answer" id="how-business-a6" role="region" aria-labelledby="how-business-q6" hidden>
+<p>Sí, cuando tu propuesta incluya un panel privado con esas funciones. Definimos su alcance antes de comenzar.</p>
+</div>
+</div>
+<div class="faq-item">
+<button type="button" class="faq-question" id="how-business-q7" aria-expanded="false" aria-controls="how-business-a7">
+<span>¿Hay pago único o mantenimiento?</span>
+<i class="fas fa-chevron-down" aria-hidden="true">
+</i>
+</button>
+<div class="faq-answer" id="how-business-a7" role="region" aria-labelledby="how-business-q7" hidden>
+<p>Puedes solicitar pago único o mantenimiento mensual. Acordamos el alcance, los costos de dominio y alojamiento y cualquier servicio recurrente antes de empezar.</p>
+</div>
+</div>
+</div>
+</div>
+</section>
 
     <!-- Footer -->
     <footer class="footer">
-        <div class="container">
-            <div class="footer-content">
-                <div class="footer-section">
-                    <h3>TAVIKU</h3>
-                    <p>Marketplace peruano de plantillas y servicios web. Conectamos a diseñadores y desarrolladores con negocios que necesitan presencia online.</p>
-                </div>
-                
-                <div class="footer-section">
-                    <h3>Enlaces</h3>
-                    <div class="footer-links">
-                        <a href="catalogo.html">Plantillas</a>
-                        <a href="vender-publico.html">Vender</a>
-                        <a href="pagina-personalizada.html">Creamos tu página</a>
-                        <a href="como-funciona.html">Cómo funciona</a>
-                        <a href="contacto.html">Contacto</a>
-                    </div>
-                </div>
-                
-                <div class="footer-section">
-                    <h3>Legal</h3>
-                    <div class="footer-links">
-                        <a href="terminos.html">Términos y condiciones</a>
-                        <a href="privacidad.html">Política de privacidad</a>
-                        <a href="licencias.html">Licencias</a>
-                        <a href="contacto.html">Soporte</a>
-                    </div>
-                </div>
-                
-                <div class="footer-section">
-                    <h3>Contacto</h3>
-                    <div class="footer-links">
-                        <a href="https://wa.me/51993498739" target="_blank" rel="noopener noreferrer"><i class="fab fa-whatsapp"></i> WhatsApp</a>
-                        <a href="contacto.html"><i class="fas fa-envelope"></i> Soporte</a>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="footer-bottom">
-                <p>&copy; 2026 TAVIKU. Todos los derechos reservados.</p>
-            </div>
-        </div>
-    </footer>
+<div class="container">
+<div class="footer-content">
+<div class="footer-section">
+<h3>TAVIKU</h3>
+<p>TAVIKU conecta personas que buscan soluciones web con plantillas listas para usar y servicios de creación de páginas para negocios.</p>
+</div>
+<div class="footer-section">
+<h3>Plantillas</h3>
+<div class="footer-links">
+<a href="catalogo.html" class="">Explorar plantillas</a>
+<a href="vender-publico.html" class="">Vender</a>
+<a href="panel-comprador.html" class="">Mis compras</a>
+</div>
+</div>
+<div class="footer-section">
+<h3>Para negocios</h3>
+<div class="footer-links">
+<a href="pagina-personalizada.html" class="">Crear mi página</a>
+<a href="webs-completas.html" class="">Webs completas</a>
+<a href="como-funciona.html" class="">Cómo funciona</a>
+<a href="contacto.html" class="">Contacto</a>
+</div>
+</div>
+<div class="footer-section">
+<h3>Legal</h3>
+<div class="footer-links">
+<a href="terminos.html" class="">Términos y condiciones</a>
+<a href="privacidad.html" class="">Política de privacidad</a>
+<a href="licencias.html" class="">Licencias</a>
+</div>
+</div>
+<div class="footer-section">
+<h3>Contacto</h3>
+<div class="footer-links">
+<a href="https://wa.me/51993498739" class="">WhatsApp</a>
+<a href="contacto.html?asunto=soporte" class="">Soporte</a>
+</div>
+</div>
+</div>
+<div class="footer-bottom">
+<p>&copy; 2026 TAVIKU. Todos los derechos reservados.</p>
+</div>
+</div>
+</footer>
 
     <!-- WhatsApp Float Button -->
     <div class="whatsapp-float">
@@ -299,6 +384,6 @@
             }
         });
     </script>
-    <script src="js/public.js?v=20261001"></script>
+    <script src="js/public.js?v=20261003-pillars"></script>
 </body>
 </html>

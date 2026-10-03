@@ -4,28 +4,28 @@
     <meta charset="UTF-8">
     <link rel="stylesheet" href="css/auth-loading.css?v=20260930">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Detalle de Plantilla - TAVIKU</title>
-    <meta name="description" content="Visualiza los detalles de la plantilla web y realiza tu compra.">
-    <link rel="canonical" href="https://antoniaguilarsanches1-star.github.io/TEMBORA/plantilla.html">
+    <title>Webs completas - TAVIKU</title>
+    <meta name="description" content="Explora modelos de páginas completas para tu negocio.">
+    <link rel="canonical" href="https://antoniaguilarsanches1-star.github.io/TEMBORA/webs-completas.html">
     <link rel="icon" type="image/x-icon" href="favicon.ico">
-    
+
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
+
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    
+
     <!-- CSS -->
     <link rel="stylesheet" href="css/styles.css?v=20260916-2">
-    
+
     <!-- Supabase JS -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <link rel="stylesheet" href="css/public.css?v=20261001">
     <link rel="stylesheet" href="css/pillars.css?v=20261003">
 </head>
-<body data-public-page="plantilla" data-market="detalle">
+<body data-public-page="webs-completas">
     <!-- Header -->
     <header class="header">
         <div class="container header-content">
@@ -33,14 +33,14 @@
                 <img src="img/logo-simbolo-taviku.png" alt="TAVIKU" class="logo-symbol">
                 <span class="logo-text">TAVIKU</span>
             </a>
-            
+
             <nav class="nav-menu" aria-label="Navegación principal"><a href="index.html" class="nav-link">Inicio</a><a href="catalogo.html" class="nav-link">Plantillas</a><a href="pagina-personalizada.html" class="nav-link">Para negocios</a><a href="webs-completas.html" class="nav-link">Webs completas</a><a href="como-funciona.html" class="nav-link">Cómo funciona</a><a href="vender-publico.html" class="nav-link">Vender</a><a href="contacto.html" class="nav-link">Contacto</a></nav>
-            
+
             <div class="auth-buttons">
                 <a href="login.html" class="btn btn-outline btn-sm">Iniciar sesión</a>
                 <a href="registro.html" class="btn btn-primary btn-sm">Registrarse</a>
             </div>
-            
+
             <div class="hamburger">
                 <span></span>
                 <span></span>
@@ -48,15 +48,83 @@
             </div>
         </div>
     </header>
-    <main id="market-root" class="section"><div class="container">
-        <h1>Detalle de plantilla</h1>
-        <p id="market-status" role="status" aria-live="polite">Cargando…</p>
-        <button id="market-reload" type="button" class="btn btn-outline btn-sm">Actualizar</button>
-        <div id="market-content"></div>
-    </div></main>
-
-    <!-- Footer -->
-    <footer class="footer">
+<main>
+<section class="hero">
+<div class="container hero-content">
+<h1>Webs completas para tu negocio</h1>
+<p>Explora modelos listos para distintos tipos de negocio y elige el que más se parezca a lo que necesitas.</p>
+</div>
+</section>
+<section class="section pillar-section ">
+<div class="container">
+<div class="section-title">
+<h2>Encuentra tu modelo</h2>
+</div>
+<p class="pillar-intro">Un punto de partida que adaptamos a tu negocio. <a href="pagina-personalizada.html" class="">Conoce cómo trabajamos</a>
+</p>
+<p id="webs-status" role="status" aria-live="polite">Cargando modelos…</p>
+<button id="webs-retry" class="btn btn-outline" type="button" hidden>Reintentar</button>
+<div id="webs-gallery" class="pillar-grid">
+</div>
+</div>
+</section>
+<section class="section pillar-section ">
+<div class="container">
+<div class="section-title">
+<h2>Cuéntanos qué necesitas</h2>
+</div>
+<form id="business-request" class="form-container pillar-form">
+<p>Preparamos tu solicitud para enviarla por WhatsApp. Revisa el mensaje y confirma el envío allí.</p>
+<div class="form-group">
+<label for="chosen-model">Web elegida</label>
+<select id="chosen-model" name="Web elegida" required>
+<option value="">Selecciona un modelo de la galería</option>
+</select>
+</div>
+<div class="form-row">
+<div class="form-group">
+<label for="request-name">Nombre</label>
+<input id="request-name" name="Nombre" type="text" required maxlength="160" >
+</div>
+<div class="form-group">
+<label for="business-name">Nombre del negocio</label>
+<input id="business-name" name="Nombre del negocio" type="text" required maxlength="160" >
+</div>
+<div class="form-group">
+<label for="request-phone">WhatsApp</label>
+<input id="request-phone" name="WhatsApp" type="tel" required maxlength="160" autocomplete="tel" pattern="[+0-9 \(\)\-]{7,20}">
+</div>
+</div>
+<div class="form-group">
+<label for="request-description">¿Qué quieres cambiar o agregar?</label>
+<textarea id="request-description" name="Cambios o adicionales" rows="4" required maxlength="3000">
+</textarea>
+</div>
+<div class="form-row">
+<div class="form-group">
+<label for="request-mode">Modalidad</label>
+<select id="request-mode" name="Modalidad" required>
+<option>No estoy seguro</option>
+<option>Pago único</option>
+<option>Mantenimiento mensual</option>
+</select>
+</div>
+<div class="form-group">
+<label for="request-budget">Presupuesto aproximado (opcional)</label>
+<input id="request-budget" name="Presupuesto aproximado (opcional)" type="text"  maxlength="160" >
+</div>
+</div>
+<div class="pillar-actions">
+<button type="submit" class="btn btn-primary">Enviar solicitud</button>
+<a href="https://wa.me/51993498739" class="btn btn-outline">Hablar por WhatsApp</a>
+</div>
+<p id="request-status" role="status" aria-live="polite">
+</p>
+</form>
+</div>
+</section>
+</main>
+<footer class="footer">
 <div class="container">
 <div class="footer-content">
 <div class="footer-section">
@@ -110,45 +178,9 @@
     <!-- JavaScript -->
     <script src="js/app.js?v=20261001-public"></script>
     <script src="js/supabase.js?v=20260930-auth"></script>
-    <script src="js/plantillas-envio.js"></script>
-    <script src="js/mercado-api.js"></script>
-    <script src="js/pagos-api.js"></script>
-    <script src="js/mercado-ui.js?v=20261001-public"></script>
     <script>
-        document.addEventListener('DOMContentLoaded', async () => {
-            // Cargar detalle de plantilla desde Supabase
-            const urlParams = new URLSearchParams(window.location.search);
-            const templateId = urlParams.get('id');
-            
-            if (templateId && window.TemboraMercado) {
-                try {
-                    const plantilla = await window.TemboraMercado.detalle(templateId);
-                    if (plantilla) {
-                        const money = n => new Intl.NumberFormat('es-PE', {style: 'currency', currency: 'PEN'}).format(Number(n));
-                        const container = document.getElementById('market-content');
-                        
-                        container.innerHTML = `
-                            <div class="template-detail">
-                                <h1>${plantilla.nombre}</h1>
-                                <p class="template-price-large">${money(plantilla.precio)}</p>
-                                <p class="template-description">${plantilla.descripcion || 'Sin descripción'}</p>
-                                <p><strong>Tecnologías:</strong> ${(plantilla.tecnologias || []).join(', ')}</p>
-                                ${plantilla.demo_url ? `<a href="${plantilla.demo_url}" target="_blank" rel="noopener noreferrer" class="btn btn-outline btn-sm">Ver demo</a>` : ''}
-                                <a href="catalogo.html" class="btn btn-primary btn-sm">Volver al catálogo</a>
-                            </div>
-                        `;
-                    } else {
-                        document.getElementById('market-content').innerHTML = '<p>Plantilla no encontrada. <a href="catalogo.html">Volver al catálogo</a></p>';
-                    }
-                } catch (error) {
-                    console.error('Error al cargar plantilla:', error);
-                    document.getElementById('market-content').innerHTML = '<p>Error al cargar la plantilla. <a href="catalogo.html">Volver al catálogo</a></p>';
-                }
-            } else {
-                document.getElementById('market-content').innerHTML = '<p>No se especificó ID de plantilla. <a href="catalogo.html">Ir al catálogo</a></p>';
-            }
-            
-            // Verificar sesión usando función centralizada
+        // Verificar sesión usando función centralizada
+        document.addEventListener('DOMContentLoaded', async function() {
             const sesion = await verificarSesion();
             if (window.actualizarUIAutenticacion) {
                 window.actualizarUIAutenticacion(sesion);
@@ -156,5 +188,6 @@
         });
     </script>
     <script src="js/public.js?v=20261003-pillars"></script>
+<script src="js/business.js?v=20261003"></script>
 </body>
 </html>

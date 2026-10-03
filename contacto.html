@@ -23,6 +23,7 @@
     <!-- Supabase JS -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <link rel="stylesheet" href="css/public.css?v=20261001">
+    <link rel="stylesheet" href="css/pillars.css?v=20261003">
 </head>
 <body data-public-page="contacto">
     <!-- Header -->
@@ -33,14 +34,7 @@
                 <span class="logo-text">TAVIKU</span>
             </a>
             
-            <nav class="nav-menu" aria-label="Navegación principal">
-                <a href="index.html" class="nav-link">Inicio</a>
-                <a href="catalogo.html" class="nav-link">Plantillas</a>
-                <a href="como-funciona.html" class="nav-link">Cómo funciona</a>
-                <a href="vender-publico.html" class="nav-link">Vender</a>
-                <a href="pagina-personalizada.html" class="nav-link">Creamos tu página</a>
-                <a href="contacto.html" class="nav-link" aria-current="page">Contacto</a>
-            </nav>
+            <nav class="nav-menu" aria-label="Navegación principal"><a href="index.html" class="nav-link">Inicio</a><a href="catalogo.html" class="nav-link">Plantillas</a><a href="pagina-personalizada.html" class="nav-link">Para negocios</a><a href="webs-completas.html" class="nav-link">Webs completas</a><a href="como-funciona.html" class="nav-link">Cómo funciona</a><a href="vender-publico.html" class="nav-link">Vender</a><a href="contacto.html" class="nav-link">Contacto</a></nav>
             
             <div class="auth-buttons">
                 <a href="login.html" class="btn btn-outline btn-sm">Iniciar sesión</a>
@@ -82,8 +76,8 @@
                     <div class="contact-item">
                         <i class="fas fa-envelope"></i>
                         <div>
-                            <h4>Soporte de pedidos</h4>
-                            <p>Indica la referencia de tu pedido al contactarnos por WhatsApp.</p>
+                            <h4>Soporte TAVIKU</h4>
+                            <p>Cuéntanos si necesitas ayuda con una plantilla, una compra o la página de tu negocio.</p>
                         </div>
                     </div>
                     
@@ -130,17 +124,7 @@
                         
                         <div class="form-group">
                             <label for="subject">Asunto *</label>
-                            <select id="subject" name="subject" required>
-                                <option value="">Selecciona un asunto</option>
-                                <option value="Soporte técnico">Soporte técnico</option>
-                                <option value="Consulta general">Consulta general</option>
-                                <option value="Problema con compra">Problema con compra</option>
-                                <option value="Sugerencia">Sugerencia</option>
-                                <option value="Problema con descarga">Problema con descarga</option>
-                                <option value="Consulta de vendedor">Consulta de vendedor</option>
-                                <option value="Retiro de ganancias">Retiro de ganancias</option>
-                                <option value="Otro">Otro</option>
-                            </select>
+                            <select id="subject" name="subject" required><option value="">Selecciona un asunto</option><option>Consulta sobre una plantilla</option><option>Problema con una compra</option><option>Quiero vender plantillas</option><option>Quiero una página para mi negocio</option><option>Me interesa una Web completa</option><option>Soporte de mi página de negocio</option><option>Otra consulta</option></select>
                         </div>
                         
                         <div class="form-group">
@@ -166,110 +150,112 @@
         </div>
     </section>
 
-    <!-- FAQ -->
-    <section class="section" style="background-color: var(--bg-white);">
-        <div class="container">
-            <div class="section-title">
-                <h2>Preguntas Frecuentes</h2>
-                <p>Respuestas rápidas a las dudas más comunes</p>
-            </div>
-            
-            <div class="faq-section">
-                <div class="faq-item">
-                    <button type="button" class="faq-question" id="faq-question-1" aria-expanded="false" aria-controls="faq-answer-1">
-                        <span>¿Cuánto tardan en responder?</span>
-                        <i class="fas fa-chevron-down"></i>
-                    </button>
-                    <div class="faq-answer" id="faq-answer-1" role="region" aria-labelledby="faq-question-1" hidden><p>Normalmente respondemos por WhatsApp lo antes posible. El tiempo puede variar según la cantidad de consultas.</p></div>
-                </div>
-                
-                <div class="faq-item">
-                    <button type="button" class="faq-question" id="faq-question-2" aria-expanded="false" aria-controls="faq-answer-2">
-                        <span>¿Cómo puedo solicitar un reembolso?</span>
-                        <i class="fas fa-chevron-down"></i>
-                    </button>
-                    <div class="faq-answer" id="faq-answer-2" role="region" aria-labelledby="faq-question-2" hidden><p>Contáctanos por WhatsApp e indica la referencia de tu pedido y el motivo. Revisaremos el caso antes de confirmar cualquier reembolso.</p></div>
-                </div>
-                
-                <div class="faq-item">
-                    <button type="button" class="faq-question" id="faq-question-3" aria-expanded="false" aria-controls="faq-answer-3">
-                        <span>¿Ofrecen soporte para personalizar plantillas?</span>
-                        <i class="fas fa-chevron-down"></i>
-                    </button>
-                    <div class="faq-answer" id="faq-answer-3" role="region" aria-labelledby="faq-question-3" hidden><p>TAVIKU ofrece soporte sobre compra, pago y descarga. La personalización puede depender del vendedor o contratarse aparte mediante “Creamos tu página”.</p></div>
-                </div>
-                
-                <div class="faq-item">
-                    <button type="button" class="faq-question" id="faq-question-4" aria-expanded="false" aria-controls="faq-answer-4">
-                        <span>¿Puedo cambiar mi cuenta de comprador a vendedor?</span>
-                        <i class="fas fa-chevron-down"></i>
-                    </button>
-                    <div class="faq-answer" id="faq-answer-4" role="region" aria-labelledby="faq-question-4" hidden><p>Actualmente no puedes cambiar tu tipo de cuenta desde el panel. La selección inicial de comprador o vendedor no modifica el rol de una cuenta existente. Contacta con soporte si necesitas orientación.</p></div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- CTA -->
-    <section class="section" style="background: linear-gradient(135deg, var(--secondary-color) 0%, #34d399 100%); color: var(--text-white);">
-        <div class="container text-center">
-            <h2 style="font-size: 2rem; font-weight: 700; margin-bottom: 1rem;">¿No encontraste lo que buscabas?</h2>
-            <p style="font-size: 1.125rem; margin-bottom: 2rem; opacity: 0.9;">Explora nuestras secciones de ayuda</p>
-            <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
-                <a href="como-funciona.html" class="btn btn-accent btn-lg">
-                    <i class="fas fa-question-circle"></i> Cómo funciona
-                </a>
-                <a href="catalogo.html" class="btn btn-primary btn-lg">
-                    <i class="fas fa-th-large"></i> Ver plantillas
-                </a>
-            </div>
-        </div>
-    </section>
-
-    <!-- Footer -->
-    <footer class="footer">
-        <div class="container">
-            <div class="footer-content">
-                <div class="footer-section">
-                    <h3>TAVIKU</h3>
-                    <p>Marketplace peruano de plantillas y servicios web. Conectamos a diseñadores y desarrolladores con negocios que necesitan presencia online.</p>
-                </div>
-                
-                <div class="footer-section">
-                    <h3>Enlaces</h3>
-                    <div class="footer-links">
-                        <a href="catalogo.html">Plantillas</a>
-                        <a href="vender-publico.html">Vender</a>
-                        <a href="pagina-personalizada.html">Creamos tu página</a>
-                        <a href="como-funciona.html">Cómo funciona</a>
-                        <a href="contacto.html">Contacto</a>
-                    </div>
-                </div>
-                
-                <div class="footer-section">
-                    <h3>Legal</h3>
-                    <div class="footer-links">
-                        <a href="terminos.html">Términos y condiciones</a>
-                        <a href="privacidad.html">Política de privacidad</a>
-                        <a href="licencias.html">Licencias</a>
-                        <a href="contacto.html">Soporte</a>
-                    </div>
-                </div>
-                
-                <div class="footer-section">
-                    <h3>Contacto</h3>
-                    <div class="footer-links">
-                        <a href="https://wa.me/51993498739" target="_blank" rel="noopener noreferrer"><i class="fab fa-whatsapp"></i> WhatsApp</a>
-                        <a href="contacto.html"><i class="fas fa-envelope"></i> Soporte</a>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="footer-bottom">
-                <p>&copy; 2026 TAVIKU. Todos los derechos reservados.</p>
-            </div>
-        </div>
-    </footer>
+<section class="section pillar-section ">
+<div class="container">
+<div class="section-title">
+<h2>Preguntas frecuentes</h2>
+</div>
+<div class="faq-section">
+<div class="faq-item">
+<button type="button" class="faq-question" id="contact-q0" aria-expanded="false" aria-controls="contact-a0">
+<span>¿Tengo un problema con una compra?</span>
+<i class="fas fa-chevron-down" aria-hidden="true">
+</i>
+</button>
+<div class="faq-answer" id="contact-a0" role="region" aria-labelledby="contact-q0" hidden>
+<p>Indica la referencia de tu pedido y describe el problema para revisar tu pago o descarga.</p>
+</div>
+</div>
+<div class="faq-item">
+<button type="button" class="faq-question" id="contact-q1" aria-expanded="false" aria-controls="contact-a1">
+<span>¿Quiero vender plantillas?</span>
+<i class="fas fa-chevron-down" aria-hidden="true">
+</i>
+</button>
+<div class="faq-answer" id="contact-a1" role="region" aria-labelledby="contact-q1" hidden>
+<p>Crea una cuenta de vendedor. Recibes el 80% de cada venta verificada y puedes solicitar retiros por Yape desde S/50.</p>
+</div>
+</div>
+<div class="faq-item">
+<button type="button" class="faq-question" id="contact-q2" aria-expanded="false" aria-controls="contact-a2">
+<span>¿Cómo solicito una página para mi negocio?</span>
+<i class="fas fa-chevron-down" aria-hidden="true">
+</i>
+</button>
+<div class="faq-answer" id="contact-a2" role="region" aria-labelledby="contact-q2" hidden>
+<p>Completa el formulario de Para negocios o elige un modelo en Webs completas. Prepararemos una propuesta contigo.</p>
+</div>
+</div>
+<div class="faq-item">
+<button type="button" class="faq-question" id="contact-q3" aria-expanded="false" aria-controls="contact-a3">
+<span>¿Necesito soporte de mi página?</span>
+<i class="fas fa-chevron-down" aria-hidden="true">
+</i>
+</button>
+<div class="faq-answer" id="contact-a3" role="region" aria-labelledby="contact-q3" hidden>
+<p>Selecciona “Soporte de mi página de negocio” e indica el nombre de tu negocio y qué necesitas resolver.</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="section pillar-section pillar-tint">
+<div class="container">
+<div class="section-title">
+<h2>Encuentra lo que necesitas</h2>
+</div>
+<div class="pillar-actions">
+<a href="catalogo.html" class="btn btn-primary">Ver plantillas</a>
+<a href="pagina-personalizada.html" class="btn btn-primary">Para negocios</a>
+<a href="webs-completas.html" class="btn btn-primary">Webs completas</a>
+</div>
+</div>
+</section>
+<footer class="footer">
+<div class="container">
+<div class="footer-content">
+<div class="footer-section">
+<h3>TAVIKU</h3>
+<p>TAVIKU conecta personas que buscan soluciones web con plantillas listas para usar y servicios de creación de páginas para negocios.</p>
+</div>
+<div class="footer-section">
+<h3>Plantillas</h3>
+<div class="footer-links">
+<a href="catalogo.html" class="">Explorar plantillas</a>
+<a href="vender-publico.html" class="">Vender</a>
+<a href="panel-comprador.html" class="">Mis compras</a>
+</div>
+</div>
+<div class="footer-section">
+<h3>Para negocios</h3>
+<div class="footer-links">
+<a href="pagina-personalizada.html" class="">Crear mi página</a>
+<a href="webs-completas.html" class="">Webs completas</a>
+<a href="como-funciona.html" class="">Cómo funciona</a>
+<a href="contacto.html" class="">Contacto</a>
+</div>
+</div>
+<div class="footer-section">
+<h3>Legal</h3>
+<div class="footer-links">
+<a href="terminos.html" class="">Términos y condiciones</a>
+<a href="privacidad.html" class="">Política de privacidad</a>
+<a href="licencias.html" class="">Licencias</a>
+</div>
+</div>
+<div class="footer-section">
+<h3>Contacto</h3>
+<div class="footer-links">
+<a href="https://wa.me/51993498739" class="">WhatsApp</a>
+<a href="contacto.html?asunto=soporte" class="">Soporte</a>
+</div>
+</div>
+</div>
+<div class="footer-bottom">
+<p>&copy; 2026 TAVIKU. Todos los derechos reservados.</p>
+</div>
+</div>
+</footer>
 
     <!-- WhatsApp Float Button -->
     <div class="whatsapp-float">
@@ -288,6 +274,6 @@
             }
         });
     </script>
-    <script src="js/public.js?v=20261001"></script>
+    <script src="js/public.js?v=20261003-pillars"></script>
 </body>
 </html>

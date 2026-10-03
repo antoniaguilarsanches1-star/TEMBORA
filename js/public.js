@@ -4,6 +4,7 @@
     document.addEventListener('DOMContentLoaded', () => {
         const page = document.body.dataset.publicPage;
         if (!page) return;
+        if (page === 'contacto' && new URLSearchParams(location.search).get('asunto') === 'soporte') document.getElementById('subject').value = 'Otra consulta';
         function markActive() {
             const current = ['plantilla', 'vendedor'].includes(page) ? 'catalogo' : page;
             document.querySelectorAll('.nav-menu a, .auth-buttons a').forEach(link => {
