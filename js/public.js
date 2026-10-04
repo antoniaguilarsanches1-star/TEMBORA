@@ -4,7 +4,7 @@
     document.addEventListener('DOMContentLoaded', () => {
         const page = document.body.dataset.publicPage;
         if (!page) return;
-        if (page === 'contacto' && new URLSearchParams(location.search).get('asunto') === 'soporte') document.getElementById('subject').value = 'Otra consulta';
+        if (page === 'contacto' && new URLSearchParams(location.search).get('asunto') === 'soporte') document.getElementById('subject').value = 'Soporte';
         document.querySelectorAll('.footer a[href="contacto.html"]').forEach(link => {
             if (link.textContent.trim() === 'Soporte') link.href = 'contacto.html?asunto=soporte';
         });

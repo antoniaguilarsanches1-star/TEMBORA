@@ -196,7 +196,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
 function initWhatsAppButton() {
     const whatsappBtn = document.querySelector('.whatsapp-float');
-    if (whatsappBtn) {
+    // Los enlaces ya abren WhatsApp de forma nativa; no abrir una segunda ventana.
+    if (whatsappBtn && whatsappBtn.tagName !== 'A') {
         whatsappBtn.addEventListener('click', () => {
             const message = 'Hola, quiero información sobre TAVIKU';
             openWhatsApp(message);

@@ -81,7 +81,7 @@ test('regresión final de la parte pública',async t=>{
    if(legal[file]){const text=await page.locator('body').innerText();assert.ok(text.includes('1 de octubre de 2026'));for(const phrase of legal[file])assert.ok(text.includes(phrase),phrase);assert.ok(!text.includes('tribunales competentes de la ciudad de Lima'));}
   }
   await page.locator('.footer').getByRole('link',{name:'Soporte',exact:true}).first().click();await ready();
-  assert.equal(await page.locator('#subject').inputValue(),'Otra consulta');await shell('contacto');
+  assert.equal(await page.locator('#subject').inputValue(),'Soporte');await shell('contacto');
   for(const file of ['index','catalogo','como-funciona','pagina-personalizada','contacto']){
    await go(file+'.html');await shell(file);assert.equal(await page.locator('.whatsapp-float').isVisible(),true,file);
   }
@@ -95,6 +95,7 @@ test('regresión final de la parte pública',async t=>{
   assert.equal(await page.locator('.public-template .template-category').innerText(),'Restaurantes');
   await page.getByText('Ver todas las plantillas',{exact:true}).waitFor();
   await page.locator('a[href="catalogo.html?category=restaurantes"]').click();
+  await page.waitForURL('**/catalogo.html?category=restaurantes');await ready();
   await page.waitForFunction(()=>document.getElementById('category-filter').value==='1');
   await shell('catalogo');
  });
@@ -140,9 +141,9 @@ test('regresión final de la parte pública',async t=>{
   await faq('contacto',4);
   await page.locator('#name').fill('Ana123');assert.equal(await page.locator('#name').evaluate(e=>e.checkValidity()),false);
   await page.locator('#name').fill('Ana Pérez');await page.locator('#email').fill('invalido');assert.equal(await page.locator('#email').evaluate(e=>e.checkValidity()),false);
-  await page.locator('#email').fill('ana@example.test');await page.locator('#subject').selectOption('Soporte de mi página de negocio');await page.locator('#message').fill('Consulta de prueba');
+  await page.locator('#email').fill('ana@example.test');await page.locator('#subject').selectOption('Soporte');await page.locator('#message').fill('Consulta de prueba');
   await page.locator('#contact-form button[type="submit"]').click();await page.waitForFunction(()=>window.testWhatsApp);
-  const message=await page.evaluate(()=>new URL(window.testWhatsApp).searchParams.get('text'));assert.equal(message,'Nombre: Ana Pérez\nCorreo: ana@example.test\nAsunto: Soporte de mi página de negocio\nMensaje: Consulta de prueba');
+  const message=await page.evaluate(()=>new URL(window.testWhatsApp).searchParams.get('text'));assert.equal(message,'Nombre: Ana Pérez\nCorreo: ana@example.test\nAsunto: Soporte\nMensaje: Consulta de prueba');
   assert.equal(await page.getByText('Lima, Perú',{exact:true}).count(),0);
  });
  await check('Login y registro: presentación, bloqueo inicial y Google sin acceso real',async()=>{

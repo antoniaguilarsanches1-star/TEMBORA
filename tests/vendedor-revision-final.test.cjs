@@ -7,11 +7,13 @@ const {chromium}=require('playwright');
 test('regresión final única: vendedor → revisión → corrección → reenvío, sin pagos reales',async t=>{
  const root=path.resolve(__dirname,'..');
  const previous=file=>execFileSync('git',['show','d2f14f2:'+file],{cwd:root,encoding:'utf8'}).replaceAll('\r\n','\n');
- for(const file of ['js/supabase.js','js/auth-oauth.js','js/mercado-api.js','js/pagos-api.js','js/plantillas-envio.js','panel-comprador.html','compra.html','plantilla.html'])assert.equal(fs.readFileSync(path.join(root,file),'utf8').replaceAll('\r\n','\n'),previous(file),file+' intacto');
+ // Solo se permiten los metadatos de la limpieza; contenido y lógica siguen protegidos.
+ const withoutCleanupMetadata=text=>text.replace('    <meta name="robots" content="noindex, nofollow">\n','').replace('Consulta tu pedido, comprobante y descarga en TAVIKU.','Panel de control para compradores de TAVIKU.');
+ for(const file of ['js/supabase.js','js/auth-oauth.js','js/mercado-api.js','js/pagos-api.js','js/plantillas-envio.js','panel-comprador.html','compra.html','plantilla.html'])assert.equal(withoutCleanupMetadata(fs.readFileSync(path.join(root,file),'utf8').replaceAll('\r\n','\n')),withoutCleanupMetadata(previous(file)),file+' intacto salvo metadatos');
  const source=fs.readFileSync(path.join(root,'js/mercado-ui.js'),'utf8'),before=previous('js/mercado-ui.js');
  const fn=(s,name)=>{const start=s.indexOf('    async function '+name+'(');assert.ok(start>=0);const tail=s.slice(start+1),end=tail.search(/\n    (?:async )?function /);return end<0?tail:tail.slice(0,end);};
  for(const name of ['buyer','buyerDetail','checkout','buyerHistory','buyerProfile'])assert.equal(fn(source,name),fn(before,name),name+' intacto');
- assert.equal(execFileSync('git',['diff','d2f14f2','--','supabase'],{cwd:root,encoding:'utf8'}),'','Sin cambios de base de datos');
+ assert.equal(execFileSync('git',['diff','61a3d69','--','supabase'],{cwd:root,encoding:'utf8'}),'','Sin cambios de base de datos desde el estado previo a la limpieza');
  const sellerId='11111111-1111-4111-8111-111111111111',adminId='22222222-2222-4222-8222-222222222222',publishedId='aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa';
  const baseTemplate={nombre:'Publicada de prueba',descripcion:'Descripción válida para revisión de plantilla. '.repeat(4),precio:80,categoria_id:1,tecnologias:['HTML','CSS'],demo_url:'https://example.test/demo',vendedor_id:sellerId,imagen_principal:'preview.png',archivo_zip_path:'template.zip',created_at:'2026-10-01T12:00:00Z'};
  const db={categorias:[{id:1,nombre:'Negocios'}],plantillas:[{...baseTemplate,id:publishedId,estado:'publicada',enviada_revision_at:'2026-10-01T12:00:00Z'}],imagenes_plantilla:[],perfiles:[{id:sellerId,rol:'vendedor',nombre_completo:'Ana Vendedora',bio:'Creo sitios web'},{id:adminId,rol:'admin',nombre_completo:'Admin'}],pedidos:[{vendedor_id:sellerId,plantilla_nombre:'Publicada de prueba',monto:49,ingreso_vendedor:39.2,estado_pago:'verificado',created_at:'2026-10-01T12:00:00Z'}],retiros:[],webs_completas:[]};

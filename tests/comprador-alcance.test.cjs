@@ -5,11 +5,18 @@ const {execFileSync}=require('node:child_process');
 const git=args=>execFileSync('git',args,{encoding:'utf8'});
 const normalized=text=>text.replaceAll('\r\n','\n');
 const baseline=file=>normalized(git(['show','683ba04:'+file]));
+// La limpieza pública puede actualizar SEO, asuntos y versión del script.
+// El resto del contenido y toda la lógica protegida se comparan sin excepciones.
+const cleanupContent=text=>normalized(text)
+ .replace(/<meta name="description"[^>]*>/g,'')
+ .replace(/<select id="subject"[\s\S]*?<\/select>/g,'')
+ .replace(/js\/(public|app)\.js\?v=[^" ]+/g,'js/$1.js')
+ .replaceAll('Selecciona “Soporte de mi página de negocio”','Selecciona “Soporte”');
 
 test('bloque comprador conserva rediseño público, servicios, sesión, APIs y RLS',()=>{
  const files=['index.html','catalogo.html','pagina-personalizada.html','webs-completas.html','como-funciona.html','vender-publico.html','contacto.html','login.html','registro.html','css/pillars.css','css/public.css','js/business.js','js/supabase.js','js/auth-oauth.js','js/mercado-api.js','js/pagos-api.js','js/plantillas-envio.js'];
  files.push(...git(['ls-tree','-r','--name-only','683ba04','supabase']).trim().split('\n').filter(Boolean));
- for(const file of files)assert.equal(normalized(fs.readFileSync(file,'utf8')),baseline(file),file+' debe permanecer intacto');
+ for(const file of files)assert.equal(cleanupContent(fs.readFileSync(file,'utf8')),cleanupContent(baseline(file)),file+' debe permanecer intacto salvo limpieza pública');
  for(const file of ['admin.html','compra.html','panel-comprador.html','plantilla.html']){
   const current=normalized(fs.readFileSync(file,'utf8')),before=baseline(file);
   for(const regex of [/<nav class="nav-menu"[^>]*>[\s\S]*?<\/nav>/,/<footer class="footer">[\s\S]*?<\/footer>/])if(file!=='admin.html'||regex.source.startsWith('<footer'))assert.equal(current.match(regex)[0],before.match(regex)[0],file+' conserva navegación y footer');

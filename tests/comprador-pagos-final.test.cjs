@@ -65,6 +65,7 @@ test('regresión comprador y pagos con backend simulado, sin pagos reales',async
   window.supabase={createClient:()=>client};
  })();`;
  const context=await browser.newContext({viewport:{width:1365,height:900},acceptDownloads:true});
+ context.setDefaultTimeout(15000);
  await context.route('https://**/*',route=>route.fulfill({contentType:route.request().url().includes('supabase-js')?'text/javascript':'text/plain',body:route.request().url().includes('supabase-js')?sdk:''}));
  const buyer=await context.newPage(),admin=await context.newPage(),errors=[];
  for(const page of [buyer,admin]){page.on('pageerror',e=>errors.push(e.message));page.on('dialog',d=>d.accept());}
@@ -87,6 +88,7 @@ test('regresión comprador y pagos con backend simulado, sin pagos reales',async
  await buyer.getByRole('link',{name:'Ver estado del pago',exact:true}).click();await buyer.getByRole('heading',{name:'Pago en revisión',exact:true}).waitFor();
  // A separate context keeps the administrator identity independent from the buyer.
  const adminContext=await browser.newContext({viewport:{width:1365,height:900}});await adminContext.addInitScript(()=>localStorage.setItem('test-role','admin'));
+ adminContext.setDefaultTimeout(15000);
  await adminContext.route('https://**/*',route=>route.fulfill({contentType:route.request().url().includes('supabase-js')?'text/javascript':'text/plain',body:route.request().url().includes('supabase-js')?sdk:''}));
  const reviewer=await adminContext.newPage();reviewer.on('pageerror',e=>errors.push(e.message));reviewer.on('dialog',d=>d.accept());
  await go(reviewer,'admin.html');
