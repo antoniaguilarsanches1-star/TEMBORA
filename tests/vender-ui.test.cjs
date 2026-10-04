@@ -22,7 +22,7 @@ function ui(options={}) {
  comprobar:async()=>options.state || {success:true,vacio:true},descartar:async()=>({success:true,vacio:true}),
  nuevo:async()=>({success:true,vacio:true})};
  const window={accesoPagina:Promise.resolve(true),TemboraEnvios:service,addEventListener:()=>{}};
- const context={window,document,Option:class{constructor(text,value){this.text=text;this.value=value;}},
+ const context={window,document,URLSearchParams,location:{search:''},Option:class{constructor(text,value){this.text=text;this.value=value;}},
  verificarSesion:async()=>({success:true,rol:options.role||'vendedor'}),
  crearPlantilla:async(...args)=>{calls.push('create');return options.create ? options.create(...args) : {success:true,plantilla:{id:'id-1',estado:'pendiente'},message:'Pendiente de aprobación'};}};
  vm.runInNewContext(code,context);
@@ -50,8 +50,8 @@ test('durante el envío no se puede duplicar; éxito muestra referencia y pendie
  assert.equal(h.get('sell-fields').disabled,true);assert.equal(h.form.attrs['aria-busy'],'true');
  await h.window.TemboraVenta.enviar(h.form);assert.equal(h.calls.filter(x=>x==='create').length,1);
  finish({success:true,plantilla:{id:'id-1',estado:'pendiente'},message:'Pendiente de aprobación'});
- await pending;assert.equal(h.get('sell-fields').disabled,true);assert.equal(h.get('sell-status').textContent,'Pendiente de aprobación');
- assert.equal(h.get('sell-reference').textContent,'Referencia: id-1');assert.equal(h.get('sell-new').hidden,false);
+ await pending;assert.equal(h.get('sell-fields').disabled,true);assert.match(h.get('sell-status').textContent,/Tu plantilla fue enviada correctamente/);
+ assert.equal(h.get('sell-reference').textContent,'Referencia: ID-1');assert.equal(h.get('sell-new').hidden,true);assert.equal(h.get('sell-submit').hidden,true);assert.equal(h.get('sell-badge').textContent,'Pendiente de revisión');
 });
 test('fallo limpiado mantiene datos del formulario y permite reintento',async()=>{
  const h=ui({create:async()=>({success:false,error:'Falló y se limpió'})});await turn();

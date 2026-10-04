@@ -1,0 +1,17 @@
+/* Solo el panel administrador. */
+[data-market="admin"] #market-root { padding-top:2rem; }
+[data-market="admin"] .review-nav { position:sticky; top:0; z-index:5; padding:1rem 0; background:#f8fafc; }
+[data-market="admin"] .admin-info { padding:1rem 1.25rem; margin:1rem 0; border-left:4px solid #2563eb; border-radius:8px; background:#eff6ff; color:#1e40af; }
+[data-market="admin"] .auth-buttons [aria-current] { outline:2px solid #2563eb; outline-offset:3px; }
+[data-market="admin"] .admin-users { display:grid; gap:.75rem; margin:1rem 0; }
+[data-market="admin"] .admin-user { display:grid; grid-template-columns:1.3fr 1.5fr .7fr .8fr 1fr auto; align-items:center; gap:1rem; padding:1rem; }
+[data-market="admin"] .admin-user h3,[data-market="admin"] .admin-user p { margin:0; }
+[data-market="admin"] .admin-user select { min-width:0; }
+[data-market="admin"] .admin-withdrawal .form-group { margin-top:1rem; }
+@media(max-width:1000px) {
+ [data-market="admin"] .admin-user { grid-template-columns:repeat(2,minmax(0,1fr)); }
+ [data-market="admin"] .review-nav { position:static; }
+}
+@media(max-width:600px) {
+ [data-market="admin"] .review-nav button { flex:1 1 40%; }
+}

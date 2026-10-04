@@ -24,11 +24,11 @@ function setup(mode,extra={},payments={}) {
  for(const key of Object.keys(api)){const fn=api[key];api[key]=(...args)=>{calls.push({key,args});return fn(...args);};}
  const win={TemboraMercado:api,TemboraPagos:payments,accesoPagina:Promise.resolve(extra.access!==false),addEventListener:(name,fn)=>events[name]=fn};
  const document={body:{dataset:{market:mode}},createElement:tag=>new Element(tag),getElementById:id=>elements.get(id),addEventListener:(name,fn)=>events[name]=fn,querySelector:()=>null,querySelectorAll:()=>all().filter(e=>['button','input','textarea','select'].includes(e.tagName))};
- const ctx={window:win,document,navigator:{},location:{search:'?id=aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa',reload:()=>calls.push({key:'reload'})},
+ const ctx={window:win,document,navigator:{},location:{search:extra.search||'?id=aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa',reload:()=>calls.push({key:'reload'})},
   supabaseClient:{auth:{onAuthStateChange:fn=>sessionEvents.push(fn)}},Intl,URL:Object.assign(URL,{createObjectURL:()=> 'blob:unit',revokeObjectURL:()=>{}}),URLSearchParams,
   Option:class extends Element {constructor(t,v){super('option',t);this.value=v;}},confirm:()=>true,setTimeout:fn=>timers.push(fn),localStorage:{getItem:()=>null},
   setInterval:fn=>{timers.push(fn);return timers.length;},clearInterval:()=>{},
-  redirigirSegunRol:async()=>calls.push({key:'panel'})};
+  verificarSesion:async()=>({user:{email:'ana@example.test'}}),redirigirSegunRol:async()=>calls.push({key:'panel'})};
  vm.runInNewContext(source,ctx);
  return {calls,elements,all,events,init:()=>events.DOMContentLoaded(),click:text=>{const e=all().find(e=>e.tagName==='button'&&e.textContent===text);assert.ok(e,text);return e.click();},session:(...args)=>sessionEvents[0](...args),timers};
 }
@@ -56,8 +56,8 @@ test('vendedor muestra estados/rechazo como texto y solo ofrece editar lo permit
   {id:'a',nombre:'<img onerror=alert(1)>',estado:'pendiente',precio:20,enviada_revision_at:'2026-09-16'},
   {id:'b',nombre:'Corregible',estado:'rechazada',precio:20,motivo_rechazo:'Imagen borrosa'}]});
  await f.init();assert.equal(f.all().filter(e=>e.textContent==='Editar / corregir').length,1);
- assert.ok(f.all().some(e=>e.textContent==='Motivo de rechazo: Imagen borrosa'));
- assert.ok(f.all().some(e=>e.textContent==='Pendiente de aprobación'));
+ assert.ok(f.all().some(e=>e.textContent==='Imagen borrosa'));
+ assert.ok(f.all().some(e=>e.textContent==='Pendiente de revisión'));
  assert.ok(f.all().some(e=>e.textContent==='<img onerror=alert(1)>'));
 });
 test('admin no anuncia publicación cuando falla RPC',async()=>{
@@ -143,8 +143,15 @@ test('usuarios renderiza nombres sin interpretar HTML y muestra rol real',async(
 });
 
 test('perfil permite editar nombre y biografía sin selector de rol',async()=>{
- const f=setup('vendedor',{miPerfil:async()=>({nombre_completo:'Ana',bio:'Web',rol:'vendedor'})});
- await f.init();await f.click('Mi perfil');
- assert.ok(f.all().some(e=>e.textContent==='Rol: vendedor'));
+ const f=setup('vendedor',{search:'?vista=perfil',miPerfil:async()=>({nombre_completo:'Ana',bio:'Web',rol:'vendedor'})});
+ await f.init();
+ assert.ok(f.all().some(e=>e.textContent==='Vendedor'));
  assert.ok(!f.all().some(e=>e.tagName==='select'));
+});
+
+test('Admin conserva menú y Actualizar si falla la carga inicial',async()=>{
+ const f=setup('admin',{categorias:async()=>{throw Error('Sin conexión');}});await f.init();
+ assert.match(f.elements.get('market-status').textContent,/Sin conexión/);
+ for(const label of ['Revisión de plantillas','Pagos y ventas','Solicitudes de retiro','Configurar Yape','Usuarios','Mi perfil'])assert.ok(f.all().some(e=>e.textContent===label));
+ f.elements.get('market-reload').click();assert.ok(f.calls.some(c=>c.key==='reload'));
 });

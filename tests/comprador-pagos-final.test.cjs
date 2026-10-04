@@ -9,13 +9,13 @@ const {chromium}=require('playwright');
 test('regresión comprador y pagos con backend simulado, sin pagos reales',async t=>{
  const root=path.resolve(__dirname,'..');
  const withoutPublicShell=s=>s.replace(/<nav class="nav-menu"[^>]*>[\s\S]*?<\/nav>/,'').replace(/<footer class="footer">[\s\S]*?<\/footer>/,'').replace(/\s*<link rel="stylesheet" href="css\/pillars.css[^>]*>/,'');
- for(const file of ['js/supabase.js','js/mercado-api.js','js/pagos-api.js','panel-vendedor.html']){
+ for(const file of ['js/supabase.js','js/mercado-api.js','js/pagos-api.js']){
   const current=fs.readFileSync(path.join(root,file),'utf8').replaceAll('\r\n','\n'),before=execFileSync('git',['show','683ba04:'+file],{cwd:root,encoding:'utf8'}).replaceAll('\r\n','\n');
   assert.equal(file.endsWith('.html')?withoutPublicShell(current):current,file.endsWith('.html')?withoutPublicShell(before):before,file+' conserva lógica y contenido privado');
  }
- const source=fs.readFileSync(path.join(root,'js/mercado-ui.js'),'utf8').replaceAll('\r\n','\n'),before=execFileSync('git',['show','683ba04:js/mercado-ui.js'],{cwd:root,encoding:'utf8'}).replaceAll('\r\n','\n');
+ const source=fs.readFileSync(path.join(root,'js/mercado-ui.js'),'utf8').replaceAll('\r\n','\n'),before=execFileSync('git',['show','d2f14f2:js/mercado-ui.js'],{cwd:root,encoding:'utf8'}).replaceAll('\r\n','\n');
  const fn=(s,name)=>{const start=s.indexOf('    async function '+name+'('),rest=s.slice(start+1),end=rest.search(/\n    (?:async )?function /);return end<0?rest:rest.slice(0,end);};
- for(const name of ['seller','editor','admin','configurarYape','finanzas','retirosAdmin','usuarios'])assert.equal(fn(source,name),fn(before,name),name+' sin cambios');
+ for(const name of ['buyer','buyerDetail','checkout','buyerHistory','buyerProfile'])assert.equal(fn(source,name),fn(before,name),name+' sin cambios');
  const buyerId='11111111-1111-4111-8111-111111111111',adminId='22222222-2222-4222-8222-222222222222',sellerId='33333333-3333-4333-8333-333333333333',templateId='aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa',orderId='dddddddd-dddd-4ddd-8ddd-dddddddddddd';
  const template={id:templateId,vendedor_id:sellerId,nombre:'Sitio de prueba',descripcion:'Descripción de la plantilla de prueba.',precio:80,categoria_id:1,tecnologias:['HTML','CSS'],demo_url:'https://example.test/demo',imagen_principal:'preview.png',estado:'publicada'};
  const db={categorias:[{id:1,nombre:'Negocios'}],plantillas:[template],imagenes_plantilla:[{plantilla_id:templateId,url:'extra.png',orden:1}],favoritos:[],pedidos:[],movimientos_auditoria:[],perfiles:[{id:buyerId,rol:'comprador',nombre_completo:'Ana Pérez',bio:''},{id:adminId,rol:'admin',nombre_completo:'Admin'}]};

@@ -5,6 +5,9 @@
         const page = document.body.dataset.publicPage;
         if (!page) return;
         if (page === 'contacto' && new URLSearchParams(location.search).get('asunto') === 'soporte') document.getElementById('subject').value = 'Otra consulta';
+        document.querySelectorAll('.footer a[href="contacto.html"]').forEach(link => {
+            if (link.textContent.trim() === 'Soporte') link.href = 'contacto.html?asunto=soporte';
+        });
         const params = new URLSearchParams(location.search);
         if (page === 'login') {
             const messages = { favoritos: 'Inicia sesión para guardar plantillas en favoritos.', comprar: 'Inicia sesión para comprar esta plantilla.' };

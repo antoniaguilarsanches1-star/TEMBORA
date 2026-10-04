@@ -10,6 +10,7 @@ test('revisión final exclusiva de retiros',async t=>{
  const errors=[];
  async function escenario(total,withdrawals=[]) {
   const page=await browser.newPage();page.on('pageerror',e=>errors.push(e.message));
+  await page.route('http://fixture.test/**',r=>r.fulfill({body:'<html></html>',contentType:'text/html'}));await page.goto('http://fixture.test/panel-vendedor.html?vista=ventas');
   await page.setContent('<body data-market="vendedor"><main id="market-root"><p id="market-status"></p><button id="market-reload">Actualizar</button><div id="market-content"></div></main></body>');
   await page.addScriptTag({content:'var module={exports:{}};'+fs.readFileSync('js/pagos-api.js','utf8')});
   await page.evaluate(({total,withdrawals})=>{
@@ -25,7 +26,6 @@ test('revisión final exclusiva de retiros',async t=>{
   },{total,withdrawals});
   await page.addScriptTag({content:fs.readFileSync('js/mercado-ui.js','utf8')});
   await page.evaluate(()=>document.dispatchEvent(new Event('DOMContentLoaded')));
-  await page.getByText('Ventas, ganancias y retiros',{exact:true}).click();
   await page.locator('#edit-retiro-monto').waitFor();
   return page;
  }
@@ -56,6 +56,7 @@ test('revisión final exclusiva de retiros',async t=>{
   const page=await escenario(160,[row]);
   assert.equal(await page.locator('#edit-retiro-monto').inputValue(),estado==='rechazado'?'160.00':'80.00');
   assert.equal(await page.getByText('Solicitar retiro',{exact:true}).isDisabled(),['pendiente','aprobado'].includes(estado));
+  await page.getByRole('button',{name:'Historial de retiros',exact:true}).click();
   const text=await page.locator('#market-content').innerText();
   assert.match(text,/Fecha de solicitud/);assert.match(text,/123456789/);assert.match(text,/José Pérez/);
   if(estado==='pagado'){assert.match(text,/Fecha de pago/);assert.match(text,/YAPE123/);}

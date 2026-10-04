@@ -114,32 +114,6 @@
     <script src="js/mercado-api.js"></script>
     <script src="js/pagos-api.js"></script>
     <script src="js/mercado-ui.js?v=20261001-public"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', async () => {
-            // Cargar perfil de vendedor desde Supabase
-            const urlParams = new URLSearchParams(window.location.search);
-            const sellerName = urlParams.get('name');
-            
-            if (sellerName && window.TemboraMercado) {
-                try {
-                    // Esta página probablemente debería mostrar el perfil del vendedor
-                    // Por ahora, redirigimos al catálogo ya que no hay una función específica para perfiles públicos
-                    document.getElementById('market-content').innerHTML = '<p>Ver catálogo de plantillas para ver el trabajo de vendedores. <a href="catalogo.html">Ir al catálogo</a></p>';
-                } catch (error) {
-                    console.error('Error al cargar perfil de vendedor:', error);
-                    document.getElementById('market-content').innerHTML = '<p>Error al cargar el perfil. <a href="catalogo.html">Ir al catálogo</a></p>';
-                }
-            } else {
-                document.getElementById('market-content').innerHTML = '<p>No se especificó vendedor. <a href="catalogo.html">Ir al catálogo</a></p>';
-            }
-            
-            // Verificar sesión usando función centralizada
-            const sesion = await verificarSesion();
-            if (window.actualizarUIAutenticacion) {
-                window.actualizarUIAutenticacion(sesion);
-            }
-        });
-    </script>
     <script src="js/public.js?v=20261003-pillars"></script>
 </body>
 </html>

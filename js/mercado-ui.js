@@ -70,30 +70,78 @@
         await photo(p.imagen_principal,parent);
         for(const img of await api.galeria(p.id)) await photo(img.url,parent);
     }
-    async function seller() {
-        const rows=await api.propias(); clear();
-        area.append(link('Agregar plantilla','vender.html'));
-        button('Ventas, ganancias y retiros',finanzas);
-        button('Mi perfil',perfil);
-        if(!rows.length) area.append(el('p','Todavía no tienes plantillas.'));
-        for(const p of rows) {
-            const c=card(p); c.append(el('p',state(p)),el('p','Referencia: '+p.id));
-            if(p.motivo_rechazo) c.append(el('p','Motivo de rechazo: '+p.motivo_rechazo));
-            button('Ver información',async()=> { clear(); area.append(el('h2',p.nombre)); description(p,area); await preview(p,area); button('Volver',seller); notice(state(p)); },c);
-            if(api.editable(p)) {
-                button('Editar / corregir',()=>editor(p),c);
-                button('Limpiar archivos antiguos sin uso',async()=>{await api.limpiarObsoletos(p.id);notice('Limpieza comprobada. Se conservaron los archivos referenciados y los subidos en las últimas 24 horas.');},c);
-                button('Enviar a revisión',async()=> { if(!confirm('¿Enviar esta versión a revisión? Quedará bloqueada.')) return; await api.enviar(p.id); await seller(); notice('Enviada: pendiente de aprobación.'); },c);
-                button('Retirar plantilla',async()=> {
-                    if(!confirm('¿Eliminar esta preparación o plantilla rechazada y sus archivos? Esta acción no se puede deshacer.')) return;
-                    await api.retirar(p.id);
-                    // Clear only the receipt for the successfully removed preparation.
-                    try { const key='tembora:envio:'+p.vendedor_id; if(JSON.parse(localStorage.getItem(key) || 'null')?.id===p.id) localStorage.removeItem(key); } catch(_) { /* The panel remains usable without local storage. */ }
-                    await seller(); notice('Plantilla retirada.');
-                },c);
+    const savedCorrections=new Map();
+    function sellerView(title,section='plantillas') {
+        viewTitle(title);
+        window.TavikuSellerShell?.select(section);
+    }
+    function templateBadge(p) {
+        return el('span',p.estado==='pendiente' && p.enviada_revision_at?'Pendiente de revisión':state(p),'seller-badge seller-'+p.estado);
+    }
+    function rejection(p,parent) {
+        if(p.motivo_rechazo) {
+            const box=el('div',undefined,'seller-rejection');box.append(el('strong','Motivo de rechazo'),el('p',p.motivo_rechazo));parent.append(box);
+        }
+    }
+    function correctionSaved(p) {
+        return p.estado!=='rechazada' || savedCorrections.get(p.id)===(p.revisada_at || p.motivo_rechazo || p.id) ||
+            (Number.isFinite(Date.parse(p.revisada_at)) && Date.parse(p.updated_at)>Date.parse(p.revisada_at));
+    }
+    function sellerActions(p,parent) {
+        if(!api.editable(p))return;
+        button('Editar / corregir',()=>editor(p),parent);
+        if(correctionSaved(p))button('Enviar a revisión',async()=> {
+            if(!confirm('Al enviar esta versión, quedará bloqueada hasta que el administrador la apruebe o rechace. ¿Deseas continuar?'))return;
+            await api.enviar(p.id);savedCorrections.delete(p.id);await seller();notice('Enviada: pendiente de revisión.');
+        },parent);
+        else parent.append(el('p','Guarda una corrección válida para habilitar el envío a revisión.','seller-help'));
+        button('Retirar plantilla',async()=>{
+            if(!confirm('¿Eliminar esta preparación o plantilla rechazada y sus archivos? Esta acción no se puede deshacer.'))return;
+            await api.retirar(p.id);
+            try {const key='tembora:envio:'+p.vendedor_id;if(JSON.parse(localStorage.getItem(key)||'null')?.id===p.id)localStorage.removeItem(key);}catch(_){}
+            savedCorrections.delete(p.id);await seller();notice('Plantilla retirada.');
+        },parent);
+    }
+    async function templateGallery(p,parent) {
+        const gallery=el('div',undefined,'seller-gallery'),main=el('div',undefined,'seller-gallery-main'),thumbs=el('div',undefined,'seller-thumbnails');
+        gallery.append(main,thumbs);parent.append(gallery);
+        await photo(p.imagen_principal,main);
+        const images=await api.galeria(p.id);
+        if(!gallery.isConnected)return;
+        if(images.length) {
+            for(const [index,path] of [p.imagen_principal,...images.map(i=>i.url)].filter(Boolean).entries()) {
+                const thumb=el('button',undefined,'seller-thumbnail');thumb.type='button';thumb.setAttribute('aria-label',index===0?'Ver imagen principal':'Ver imagen adicional '+index);
+                thumb.addEventListener('click',()=>{const img=thumb.querySelector('img');if(img){main.replaceChildren(img.cloneNode());thumbs.querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed',String(b===thumb)));}});
+                thumb.setAttribute('aria-pressed',String(index===0));thumbs.append(thumb);await photo(path,thumb);
             }
         }
-        notice(rows.length+' plantilla(s). Las enviadas y publicadas están bloqueadas.');
+    }
+    function templateInfo(p,parent) {
+        parent.append(templateBadge(p),el('h2',p.nombre),el('p',money(p.precio),'seller-price'),el('p',cats.find(c=>String(c.id)===String(p.categoria_id))?.nombre || 'Sin categoría'),el('p','Referencia: '+shortRef(p.id),'seller-help'));
+        description(p,parent);rejection(p,parent);
+    }
+    async function sellerDetail(p) {
+        clear();sellerView('Detalle de plantilla');
+        const info=el('section',undefined,'seller-surface');area.append(info);templateInfo(p,info);
+        if(!api.editable(p))info.append(el('p','Sus datos y archivos permanecen bloqueados mientras esté en revisión o publicada.','seller-help'));
+        await templateGallery(p,info);const controls=el('div',undefined,'seller-actions');info.append(controls);sellerActions(p,controls);
+        button('Volver a Mis plantillas',seller);notice('');
+    }
+    async function seller() {
+        const rows=await api.propias();clear();sellerView('Mis plantillas');
+        const summary=el('div',undefined,'seller-summary');
+        for(const [key,title] of [['publicada','Publicadas'],['pendiente','Pendientes'],['rechazada','Rechazadas']]){
+            const box=el('div',undefined,'seller-surface');box.append(el('span',title),el('strong',String(rows.filter(p=>p.estado===key && (key!=='pendiente'||p.enviada_revision_at)).length)));summary.append(box);
+        }
+        area.append(summary);
+        if(!rows.length)area.append(el('p','Todavía no tienes plantillas. Agrega tu primera plantilla para enviarla a revisión.','seller-empty'));
+        const grid=el('div',undefined,'seller-grid');area.append(grid);
+        for(const p of rows){
+            const c=el('article',undefined,'seller-surface'),image=el('div',undefined,'seller-cover');grid.append(c);c.append(image);photo(p.imagen_principal,image);
+            c.append(el('h2',p.nombre),el('p',money(p.precio),'seller-price'),el('p',cats.find(x=>String(x.id)===String(p.categoria_id))?.nombre || 'Sin categoría'),templateBadge(p),el('p','Referencia: '+shortRef(p.id),'seller-help'));rejection(p,c);
+            const controls=el('div',undefined,'seller-actions');c.append(controls);button('Ver información',()=>sellerDetail(p),controls);sellerActions(p,controls);
+        }
+        notice('Tienes '+rows.length+' plantillas. Las plantillas enviadas a revisión o publicadas permanecen bloqueadas según su estado.');
     }
     function field(form,label,name,value,type='text') {
         const box=el('div',undefined,'form-group'), l=el('label',label);
@@ -102,9 +150,8 @@
         if(type!=='file') input.value=value ?? ''; box.append(l,input); form.append(box); return input;
     }
     async function editor(p) {
-        clear(); area.append(el('h2','Corregir '+p.nombre));
-        if(p.motivo_rechazo) area.append(el('p','Motivo: '+p.motivo_rechazo));
-        const form=el('form'), inputs={};
+        clear();sellerView('Corregir plantilla');area.append(templateBadge(p),el('h2',p.nombre));rejection(p,area);
+        const form=el('form',undefined,'seller-surface seller-editor'), inputs={};
         inputs.nombre=field(form,'Título','nombre',p.nombre); inputs.nombre.required=true;
         inputs.descripcion=field(form,'Descripción (mínimo 100 caracteres)','descripcion',p.descripcion,'textarea'); inputs.descripcion.minLength=100; inputs.descripcion.required=true;
         inputs.precio=field(form,'Precio (S/)','precio',p.precio,'number'); inputs.precio.min=20; inputs.precio.step='0.01'; inputs.precio.required=true;
@@ -113,7 +160,7 @@
         inputs.categoria_id.value=String(p.categoria_id); form.append(label,inputs.categoria_id);
         inputs.tecnologias=field(form,'Tecnologías separadas por comas','tecnologias',(p.tecnologias || []).join(', ')); inputs.tecnologias.required=true;
         inputs.demo_url=field(form,'Demo (opcional)','demo_url',p.demo_url,'url');
-        form.append(el('p','Para conservar los archivos, deja los siguientes campos vacíos. Para reemplazarlos, selecciona nuevamente la imagen principal y el ZIP, más las imágenes adicionales que quieras conservar.'));
+        form.append(el('p','Deja estos campos vacíos para conservar los archivos actuales. Selecciona nuevos archivos solo si deseas reemplazarlos. Para reemplazar, adjunta imagen principal y ZIP, junto con las imágenes adicionales que deseas conservar.'));
         const principal=field(form,'Imagen principal (máximo 5 MB)','principal',null,'file'); principal.accept='.jpg,.jpeg,.png,.webp';
         const gallery=field(form,'Hasta 5 imágenes adicionales (5 MB cada una)','galeria',null,'file'); gallery.multiple=true; gallery.accept=principal.accept;
         const zip=field(form,'ZIP privado (máximo 50 MB)','zip',null,'file'); zip.accept='.zip';
@@ -122,32 +169,56 @@
             e.preventDefault(); if(!form.reportValidity()) return;
             const datos=Object.fromEntries(Object.entries(inputs).map(([k,input])=>[k,input.value]));
             const files={imagenPrincipal:principal.files[0],imagenesAdicionales:Array.from(gallery.files),archivoZip:zip.files[0]};
-            action(async()=> { await api.guardar(p.id,datos,files,notice); await seller(); notice('Corrección guardada. Puedes enviarla a revisión.'); });
+            action(async()=> { await api.guardar(p.id,datos,files,notice);savedCorrections.set(p.id,p.revisada_at || p.motivo_rechazo || p.id); await seller(); notice('Corrección guardada. Puedes enviarla a revisión.'); });
         });
         button('Volver sin guardar',seller); notice('Puedes editar esta plantilla. Guardar no la publica ni la envía.');
     }
+    function reviewNav(active='revision') {
+        const nav=document.getElementById('admin-nav') || el('nav',undefined,'review-nav');nav.replaceChildren();nav.setAttribute('aria-label','Administración');
+        if(!document.getElementById('admin-nav'))area.append(nav);
+        for(const [key,label,fn] of [['revision','Revisión de plantillas',admin],['pagos','Pagos y ventas',pagosAdmin],['retiros','Solicitudes de retiro',retirosAdmin],['yape','Configurar Yape',configurarYape],['usuarios','Usuarios',usuarios],['perfil','Mi perfil',perfil]]){
+            const b=button(label,fn,nav);if(key===active)b.setAttribute('aria-current','page');
+        }
+    }
+    function adminView(title,section) {
+        viewTitle(title);reviewNav(section);
+        if(typeof history!=='undefined')history.replaceState(null,'','admin.html?vista='+section);
+    }
+    async function adminNames() {
+        try {return new Map((await api.usuarios()).map(p=>[p.id,p.nombre_completo || shortRef(p.id)]));}catch(_){return new Map();}
+    }
+    function adminInfo(text) {area.append(el('p',text,'admin-info'));}
+
+    async function vendorName(p,parent) {
+        const name=el('p','Vendedor · '+shortRef(p.vendedor_id),'seller-help');parent.append(name);
+        try {const profile=await api.perfilPublico(p.vendedor_id);if(name.isConnected && profile?.nombre_completo)name.textContent='Vendedor: '+profile.nombre_completo;}catch(_){}
+    }
     async function admin() {
-        const rows=await api.pendientes(); clear();
-        button('Pagos y ventas',pagosAdmin); button('Solicitudes de retiro',retirosAdmin); button('Configurar Yape',configurarYape);
-        button('Usuarios',usuarios);button('Mi perfil',perfil);
-        if(!rows.length) area.append(el('p','No hay plantillas pendientes de revisión.'));
-        for(const p of rows) {
-            const c=card(p); c.append(el('p','Enviada: '+new Date(p.enviada_revision_at).toLocaleString('es-PE')));
-            button('Revisar plantilla',async()=> {
-                clear(); area.append(el('h2',p.nombre),el('p','Vendedor: '+p.vendedor_id),el('p',money(p.precio)),el('p','Referencia: '+p.id));
-                description(p,area); await preview(p,area);
-                button('Descargar ZIP para revisión',async()=> {
-                    const blob=await api.zipRevision(p.id), url=URL.createObjectURL(blob);
-                    const a=link('Descargar',url); a.download='revision-'+p.id+'.zip'; area.append(a); a.click(); a.remove();
-                    setTimeout(()=>URL.revokeObjectURL(url),60000); notice('ZIP obtenido con tu permiso de administrador.');
-                });
-                const motivo=el('textarea'); motivo.placeholder='Motivo obligatorio para rechazar'; motivo.setAttribute('aria-label','Motivo del rechazo'); area.append(motivo);
-                button('Aprobar y publicar',async()=> { if(!confirm('¿Aprobar y publicar esta plantilla?')) return; await api.revisar(p.id,'publicada'); await admin(); notice('Plantilla publicada.'); });
-                button('Rechazar',async()=> { await api.revisar(p.id,'rechazada',motivo.value); await admin(); notice('Plantilla rechazada. El vendedor puede corregirla.'); });
-                button('Volver',admin); notice('Revisa los datos, las imágenes, la demo y el archivo antes de decidir.');
-            },c);
+        const rows=await api.pendientes();clear();adminView('Revisión de plantillas','revision');
+        if(!rows.length)area.append(el('p','No hay plantillas pendientes de revisión.','seller-empty'));
+        const grid=el('div',undefined,'seller-grid');area.append(grid);
+        for(const p of rows){
+            const c=el('article',undefined,'seller-surface'),image=el('div',undefined,'seller-cover');grid.append(c);c.append(image);photo(p.imagen_principal,image);
+            c.append(el('h2',p.nombre),templateBadge(p),el('p',money(p.precio),'seller-price'),el('p',cats.find(x=>String(x.id)===String(p.categoria_id))?.nombre || 'Sin categoría'),el('p',(p.tecnologias || []).join(', ')),el('p',p.descripcion,'review-description'),el('p','Referencia: '+shortRef(p.id),'seller-help'),el('p','Enviada: '+dateText(p.enviada_revision_at)));
+            vendorName(p,c);const demo=safeURL(p.demo_url);if(demo){const l=link('Ver demo',demo);l.target='_blank';l.rel='noopener noreferrer';c.append(l);}
+            button('Revisar plantilla',()=>reviewTemplate(p),c);
         }
         notice(rows.length+' envío(s) pendiente(s).');
+    }
+    async function reviewTemplate(p) {
+        clear();adminView('Revisión de plantillas','revision');
+        const info=el('section',undefined,'seller-surface');area.append(info);templateInfo(p,info);info.append(el('p','Enviada: '+dateText(p.enviada_revision_at)));vendorName(p,info);await templateGallery(p,info);
+        const controls=el('div',undefined,'seller-actions');info.append(controls);
+        button('Descargar ZIP para revisión',async()=>{
+            const blob=await api.zipRevision(p.id),url=URL.createObjectURL(blob);
+            const a=link('Descargar',url);a.download='revision-'+shortRef(p.id)+'.zip';area.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),60000);notice('ZIP obtenido con tu permiso de administrador.');
+        },controls);
+        const approve=button('Aprobar y publicar',async()=>{if(!confirm('¿Aprobar y publicar esta plantilla?'))return;await api.revisar(p.id,'publicada');await admin();notice('Plantilla publicada.');},controls);approve.className='btn btn-primary';
+        const rejectionBox=el('div',undefined,'seller-rejection');info.append(rejectionBox);
+        const label=el('label','Motivo obligatorio para rechazar');label.htmlFor='review-reason';
+        const reason=el('textarea');reason.id='review-reason';reason.required=true;reason.rows=3;reason.setAttribute('aria-label','Motivo del rechazo');rejectionBox.append(label,reason);
+        button('Rechazar',async()=>{if(!reason.value.trim()){reason.reportValidity();throw Error('Indica el motivo del rechazo.');}await api.revisar(p.id,'rechazada',reason.value);await admin();notice('Plantilla rechazada. El vendedor puede corregirla.');},rejectionBox);
+        button('Volver a revisión de plantillas',admin);notice('Revisa los datos, las imágenes, la demo y el archivo antes de decidir.');
     }
     function filtered(rows) {
         const value=id=>document.getElementById(id)?.value || '';
@@ -343,16 +414,19 @@
         button('Volver a Mi panel',buyer,actions(area));notice('');
     }
     async function configurarYape() {
-        const c=await pay.config();clear();area.append(el('h2','Destino de los pagos por Yape'));
-        const form=el('form'),numero=field(form,'Número Yape de la plataforma','numero',c.yape_numero||''),titular=field(form,'Titular que verá el comprador','titular',c.yape_titular||'');
-        numero.pattern='9[0-9]{8}';numero.required=true;titular.required=true;
+        const c=await pay.config();clear();adminView('Configurar Yape','yape');area.append(el('h2','Destino de los pagos por Yape'));adminInfo('Los pedidos existentes conservan su destino original.');
+        const form=el('form',undefined,'seller-surface seller-editor'),numero=field(form,'Número Yape de la plataforma','numero',c.yape_numero||''),titular=field(form,'Titular que verá el comprador','titular',c.yape_titular||'');
+        numero.pattern='9[0-9]{8}';numero.inputMode='numeric';numero.maxLength=9;numero.minLength=9;numero.required=true;numero.title='9 dígitos, empezando por 9';titular.pattern='[\\p{L} ]+';titular.minLength=3;titular.required=true;
         const b=el('button','Guardar destino Yape','btn btn-primary');b.type='submit';form.append(b);area.append(form);
-        form.addEventListener('submit',e=>{e.preventDefault();if(!form.reportValidity())return;const n=numero.value,t=titular.value;
-            action(async()=>{if(!confirm('¿Confirmas que este es el destino real de los pagos? Los pedidos nuevos usarán estos datos.'))return;await pay.configurar(n,t);await admin();notice('Destino Yape configurado.');});});
-        button('Volver',admin);notice(c.activo?'Los pedidos existentes conservan su destino original.':'Compras bloqueadas hasta configurar el destino real.');
+        form.addEventListener('submit',e=>{e.preventDefault();if(!form.reportValidity())return;const n=numero.value,t=titular.value.normalize('NFC').trim();
+            if(!/^9[0-9]{8}$/.test(n)||t.length<3||! /^[\p{L} ]+$/u.test(t)){notice('Ingresa un Yape de 9 dígitos empezando por 9 y un titular de al menos 3 caracteres, solo letras y espacios.');return;}
+            action(async()=>{if(!confirm('¿Guardar el nuevo destino Yape? Número: '+n+'. Titular: '+t+'. Los pedidos existentes conservan su destino original.'))return;await pay.configurar(n,t);await configurarYape();notice('Destino Yape configurado.');});});
+        button('Volver',admin);notice(c.activo?'':'Compras bloqueadas hasta configurar el destino real.');
     }
+
     async function pagosAdmin() {
-        const rows=await pay.pedidosAdmin();clear();viewTitle('Pagos y ventas');
+        const rows=await pay.pedidosAdmin();clear();adminView('Pagos y ventas','pagos');
+        const names=await adminNames();
         const fechaPeru=()=>new Intl.DateTimeFormat('es-PE',{timeZone:'America/Lima',day:'2-digit',month:'2-digit',year:'numeric'}).format(new Date());
         const prefijos=[],revision=generation;
         const actualizarFechas=()=>prefijos.forEach(p=>{p.textContent=fechaPeru()+' - Operación ';});
@@ -365,7 +439,7 @@
             if(!rows.some(o=>o.estado_pago===key))grid.append(el('p','No hay pedidos '+title.toLowerCase()+'.','account-empty'));
         }
         for(const o of rows) {
-            const c=orderCard(o,groups[o.estado_pago] || area);c.append(el('p','20% plataforma: '+money(o.comision_plataforma)+' · 80% vendedor: '+money(o.ingreso_vendedor)));
+            const c=orderCard(o,groups[o.estado_pago] || area);c.append(el('p','Comprador: '+(names.get(o.comprador_id)||shortRef(o.comprador_id))),el('p','Vendedor: '+(names.get(o.vendedor_id)||shortRef(o.vendedor_id))));c.append(el('p','20% plataforma: '+money(o.comision_plataforma)+' · 80% vendedor: '+money(o.ingreso_vendedor)));
             if(o.motivo_rechazo)c.append(el('p','Motivo: '+o.motivo_rechazo));
             if(o.estado_pago==='verificado')c.append(el('p','Fecha de verificación: '+dateText(o.revisado_at)),el('p','Operación Yape: '+(o.operacion_yape || 'No registrada')));
             if(o.comprobante_url) button('Ver comprobante',async()=>{
@@ -386,12 +460,17 @@
                 button('Rechazar comprobante',async()=>{if(!motivo.value.trim()){motivo.reportValidity();throw new Error('Escribe el motivo del rechazo.');}await pay.revisar(o.id,false,motivo.value);paymentChannel?.postMessage('actualizar');await pagosAdmin();notice('Comprobante rechazado; el comprador puede corregirlo.');},c);
             }
         }
-        button('Revisión de plantillas',()=>{viewTitle('Revisión de plantillas');return admin();});notice('Pedidos consultados. Solo un abono real debe aprobarse.');
+        notice('Pedidos consultados. Solo un abono real debe aprobarse.');
     }
     async function finanzas() {
         const orders=await pay.ventas(),withdrawals=await pay.retiros(),b=pay.balance(orders,withdrawals);clear();
-        area.append(el('h2','Ventas y ganancias'),el('p','Ganado (80%): '+money(b.total)+' · Reservado: '+money(b.reservado)+' · Pagado: '+money(b.pagado)+' · Disponible: '+money(b.disponible)));
-        for(const o of orders)area.append(el('p',o.plantilla_nombre+' — '+o.estado_pago+' — Venta '+money(o.monto)+' — Tu parte '+money(o.ingreso_vendedor)));
+        sellerView('Ventas, ganancias y retiros','ventas');
+        const summary=el('div',undefined,'seller-summary');area.append(summary);
+        for(const [label,value] of [['Ganado',b.total],['Reservado',b.reservado],['Pagado',b.pagado],['Disponible',b.disponible]]){const box=el('div',undefined,'seller-surface');box.append(el('span',label),el('strong',money(value)));summary.append(box);}
+        area.append(el('h2','Ventas verificadas'));
+        const sales=el('div',undefined,'seller-grid');area.append(sales);
+        for(const o of orders.filter(o=>o.estado_pago==='verificado')){const row=el('article',undefined,'seller-surface');row.append(el('h3',o.plantilla_nombre),el('p','Venta total: '+money(o.monto)),el('p','80% vendedor: '+money(o.ingreso_vendedor)),el('span','Verificado','seller-badge seller-publicada'));if(o.revisado_at || o.created_at)row.append(el('p',dateText(o.revisado_at || o.created_at)));sales.append(row);}
+        if(!sales.children.length)sales.append(el('p','Aún no tienes ventas verificadas.','seller-empty'));
         area.append(el('h3','Solicitar retiro por Yape (mínimo S/50)'));
         const pendiente=withdrawals.some(r=>['pendiente','aprobado'].includes(r.estado));
         const bloqueado=pendiente || !Number.isFinite(b.disponible) || b.disponible<50;
@@ -407,53 +486,81 @@
             if(!/^[0-9]{9}$/.test(n) || t.length<2 || !/^[\p{L} ]+$/u.test(t)){notice('Ingresa un Yape de 9 dígitos y un titular de al menos 2 caracteres, solo letras y espacios.');return;}
             if(!confirm('Confirma tu retiro:\nMonto: '+money(b.disponible)+'\nYape: '+n+'\nTitular: '+t))return;
             action(async()=>{await pay.solicitar(b.disponible,n,t);await finanzas();notice('Solicitud registrada. El saldo queda reservado hasta su resolución.');});});
-        area.append(el('h3','Mis retiros'));
-        const fecha=value=>value?new Date(value).toLocaleString('es-PE'):'—';
-        for(const r of withdrawals) {
-            const c=el('article');
-            c.append(el('p',money(r.monto)+' — '+({pendiente:'Pendiente',aprobado:'Pendiente',pagado:'Pagado',rechazado:'Rechazado'}[r.estado]||r.estado)),
-                el('p','Yape: '+r.destino_numero+' · Titular: '+r.destino_titular),el('p','Fecha de solicitud: '+fecha(r.created_at)));
-            if(r.estado==='pagado')c.append(el('p','Fecha de pago: '+fecha(r.pagado_at)+' · Código de operación Yape: '+r.referencia_pago));
-            if(r.motivo_rechazo)c.append(el('p','Motivo de rechazo: '+r.motivo_rechazo));
-            area.append(c);
+        button('Historial de retiros',sellerWithdrawals);button('Mis plantillas',seller);notice('El saldo se calcula con ventas verificadas y retiros reservados o pagados.');
+    }
+    async function sellerWithdrawals() {
+        const withdrawals=await pay.retiros();clear();sellerView('Historial de retiros','ventas');
+        area.append(el('p','Aquí puedes consultar tus solicitudes de retiro y su estado.'));
+        if(!withdrawals.length)area.append(el('p','Aún no tienes retiros registrados.','seller-empty'));
+        const list=el('div',undefined,'seller-grid');area.append(list);
+        for(const r of withdrawals){
+            const c=el('article',undefined,'seller-surface');list.append(c);
+            c.append(el('h2',money(r.monto)),el('span',({pendiente:'Pendiente',aprobado:'Pendiente',pagado:'Pagado',rechazado:'Rechazado'}[r.estado]||r.estado),'seller-badge '+(r.estado==='pagado'?'seller-publicada':r.estado==='rechazado'?'seller-rechazada':'seller-pendiente')),el('p','Fecha de solicitud: '+dateText(r.created_at)),el('p','Yape: '+r.destino_numero),el('p','Titular: '+r.destino_titular));
+            if(r.pagado_at)c.append(el('p','Fecha de pago: '+dateText(r.pagado_at)));
+            if(r.referencia_pago)c.append(el('p','Operación Yape: '+r.referencia_pago));
+            if(r.motivo_rechazo)rejection(r,c);
         }
-        button('Historial',historial);button('Mis plantillas',seller);notice('El saldo se calcula con ventas verificadas y retiros reservados o pagados.');
+        button('Volver a Ventas y retiros',finanzas);notice('');
     }
     async function retirosAdmin() {
-        const rows=await pay.retiros(true);clear();area.append(el('h2','Retiros de vendedores'));
-        if(!rows.length)area.append(el('p','Sin solicitudes.'));
+        const rows=await pay.retiros(true),names=await adminNames();clear();adminView('Solicitudes de retiro','retiros');
+        area.append(el('p','Revisa y procesa las solicitudes de retiro de los vendedores.'));adminInfo('Las transferencias se realizan personalmente fuera de la plataforma.');
+        if(!rows.length)area.append(el('p','Sin solicitudes.','seller-empty'));
+        const list=el('div',undefined,'seller-grid');area.append(list);
         for(const r of rows) {
-            const c=el('article',undefined,'form-container');area.append(c);c.append(el('h3',money(r.monto)+' — '+r.estado),el('p','Vendedor: '+r.vendedor_id),el('p','Yape: '+r.destino_numero+' · '+r.destino_titular));
+            const c=el('article',undefined,'seller-surface admin-withdrawal');list.append(c);
+            c.append(el('h2',money(r.monto),'seller-price'),el('span',({pendiente:'Pendiente',aprobado:'Pendiente',pagado:'Pagado',rechazado:'Rechazado'}[r.estado]||r.estado),'seller-badge '+(r.estado==='pagado'?'seller-publicada':r.estado==='rechazado'?'seller-rechazada':'seller-pendiente')),
+                el('h3',names.get(r.vendedor_id)||'Vendedor '+shortRef(r.vendedor_id)),el('p','Yape: '+r.destino_numero),el('p','Titular: '+r.destino_titular),el('p','Fecha de solicitud: '+dateText(r.created_at)),el('p','Referencia: '+shortRef(r.id),'seller-help'));
+            if(r.referencia_pago)c.append(el('p','Operación Yape: '+r.referencia_pago));if(r.pagado_at)c.append(el('p','Fecha de pago: '+dateText(r.pagado_at)));rejection(r,c);
             if(['pendiente','aprobado'].includes(r.estado)) {
-                const ref=field(c,'Motivo de rechazo o código de operación Yape de la transferencia realizada','retiro-ref-'+r.id,'');
-                if(r.estado==='pendiente')button('Aprobar solicitud',async()=>{await pay.revisarRetiro(r.id,'aprobado','');await retirosAdmin();},c);
-                button('Rechazar y liberar saldo',async()=>{await pay.revisarRetiro(r.id,'rechazado',ref.value);await retirosAdmin();},c);
-                if(r.estado==='aprobado')button('Registrar transferencia ya realizada',async()=>{
-                    if(!confirm('¿Ya transferiste '+money(r.monto)+' al destino indicado? Esto registra el pago; no realiza una transferencia.'))return;
-                    await pay.revisarRetiro(r.id,'pagado',ref.value);await retirosAdmin();notice('Transferencia registrada.');
+                const operation=field(c,'Código de operación Yape','retiro-operacion-'+r.id,'');operation.required=true;operation.minLength=3;
+                const paid=button('Registrar como pagado',async()=>{
+                    const code=operation.value.trim();if(code.length<3)throw Error('Indica el código de operación Yape (mínimo 3 caracteres).');
+                    if(!confirm('¿Ya transferiste '+money(r.monto)+' al Yape indicado? Esta acción registrará el retiro como pagado; no realiza una transferencia.'))return;
+                    await pay.revisarRetiro(r.id,'pagado',code);await retirosAdmin();notice('Retiro pagado. Código y fecha registrados.');
+                },c);paid.className='btn btn-primary';
+                const reason=field(c,'Motivo del rechazo','retiro-motivo-'+r.id,'','textarea');reason.required=true;reason.minLength=3;
+                button('Rechazar y liberar saldo',async()=>{
+                    const cause=reason.value.trim();if(cause.length<3)throw Error('Indica el motivo del rechazo (mínimo 3 caracteres).');
+                    if(!confirm('¿Rechazar este retiro y devolver '+money(r.monto)+' al saldo disponible del vendedor?'))return;
+                    await pay.revisarRetiro(r.id,'rechazado',cause);await retirosAdmin();notice('Retiro rechazado. Saldo liberado.');
                 },c);
-            } else c.append(el('p',r.motivo_rechazo||r.referencia_pago||''));
+            }
         }
-        button('Volver',admin);notice('Las transferencias se realizan personalmente fuera de la plataforma.');
+        notice('');
     }
+
     async function usuarios() {
-        const rows=await api.usuarios();clear();area.append(el('h2','Usuarios'));
-        const search=field(area,'Buscar por nombre, ID o rol','usuario-busqueda',''),list=el('div');area.append(list);
-        const render=()=>{list.replaceChildren();for(const p of rows.filter(p=>(p.nombre_completo+' '+p.id+' '+p.rol).toLowerCase().includes(search.value.toLowerCase()))) {
-            const c=el('article',undefined,'form-container');list.append(c);c.append(el('h3',p.nombre_completo || 'Sin nombre'),el('p',p.id+' — '+p.rol));
-            const select=el('select');select.setAttribute('aria-label','Rol de '+(p.nombre_completo||p.id));
+        const rows=await api.usuarios(),session=await verificarSesion();clear();adminView('Usuarios','usuarios');adminInfo('No se muestran contraseñas ni credenciales.');
+        const search=field(area,'Buscar por nombre, correo, ID o rol','usuario-busqueda',''),list=el('div',undefined,'admin-users');area.append(list);
+        const render=()=>{list.replaceChildren();for(const p of rows.filter(p=>([p.nombre_completo,p.email,p.correo,p.id,p.rol].filter(Boolean).join(' ')).toLowerCase().includes(search.value.toLowerCase()))) {
+            const c=el('article',undefined,'seller-surface admin-user');list.append(c);c.append(el('h3',p.nombre_completo || 'Sin nombre'),el('p',p.email||p.correo||'Correo no disponible'),el('span',p.rol,'seller-badge'),el('p','ID: '+shortRef(p.id),'seller-help'));
+            if(p.id===session.user?.id){c.append(el('p','Tu cuenta · rol protegido','seller-help'));continue;}
+            const select=el('select');select.setAttribute('aria-label','Rol de '+(p.nombre_completo||shortRef(p.id)));
             for(const role of ['comprador','vendedor','admin'])select.add(new Option(role,role));select.value=p.rol;c.append(select);
-            button('Guardar rol',async()=>{if(select.value===p.rol)return;if(!confirm('¿Cambiar el rol de esta cuenta a '+select.value+'? Cambiarán sus permisos de acceso.'))return;
+            button('Guardar rol',async()=>{if(select.value===p.rol)return;if(p.rol==='admin'&&select.value!=='admin'&&rows.filter(x=>x.rol==='admin').length<=1)throw Error('Debe permanecer al menos un administrador.');if(!confirm('¿Cambiar el rol de '+(p.nombre_completo||shortRef(p.id))+' a '+select.value+'? Cambiarán sus permisos de acceso.'))return;
                 await api.cambiarRol(p.id,select.value);await usuarios();notice('Rol actualizado mediante la función administrativa protegida.');},c);
-        }};search.addEventListener('input',render);render();button('Volver',admin);notice(rows.length+' perfiles registrados. No se muestran contraseñas ni credenciales.');
+        }};search.addEventListener('input',render);render();button('Volver',admin);notice(rows.length+' perfiles registrados.');
     }
+
     async function perfil() {
         if(mode==='comprador' || mode==='compra')return buyerProfile();
-        const p=await api.miPerfil();clear();area.append(el('h2','Mi perfil'),el('p','Rol: '+p.rol));
-        const form=el('form'),name=field(form,'Nombre','perfil-nombre',p.nombre_completo),bio=field(form,'Biografía','perfil-bio',p.bio,'textarea');name.required=true;name.maxLength=120;bio.maxLength=2000;
-        const b=el('button','Guardar perfil','btn btn-primary');b.type='submit';form.append(b);area.append(form);
-        form.addEventListener('submit',e=>{e.preventDefault();if(!form.reportValidity())return;const datos={nombre_completo:name.value,bio:bio.value};action(async()=>{await api.miPerfil(datos);notice('Perfil guardado.');});});
-        button('Volver',reload);notice('Puedes actualizar tu nombre y biografía.');
+        if(mode==='vendedor')return sellerProfile();
+        const [p,session]=await Promise.all([api.miPerfil(),verificarSesion()]);clear();adminView('Mi perfil','perfil');
+        const form=el('form',undefined,'seller-surface seller-editor');form.append(el('span','Admin','seller-badge'));
+        const name=field(form,'Nombre','perfil-nombre',p.nombre_completo),email=field(form,'Correo','perfil-correo',session.user?.email||'','email'),bio=field(form,'Biografía','perfil-bio',p.bio,'textarea');name.required=true;name.maxLength=120;bio.maxLength=2000;email.readOnly=true;
+        const b=el('button','Guardar cambios','btn btn-primary');b.type='submit';form.append(b);area.append(form);
+        form.addEventListener('submit',e=>{e.preventDefault();if(!form.reportValidity())return;action(async()=>{await api.miPerfil({nombre_completo:name.value,bio:bio.value});notice('Perfil guardado.');});});
+        button('Volver al panel admin',admin);notice('Puedes actualizar tu nombre y biografía.');
+    }
+
+    async function sellerProfile() {
+        const [p,session]=await Promise.all([api.miPerfil(),verificarSesion()]);clear();sellerView('Mi perfil','perfil');
+        const form=el('form',undefined,'seller-surface seller-editor');form.append(el('span','Vendedor','seller-badge'));
+        const name=field(form,'Nombre','perfil-nombre',p.nombre_completo),email=field(form,'Correo','perfil-correo',session.user?.email || '','email'),bio=field(form,'Biografía','perfil-bio',p.bio,'textarea');name.required=true;name.maxLength=120;bio.maxLength=2000;email.readOnly=true;
+        const save=el('button','Guardar cambios','btn btn-primary');save.type='submit';form.append(save);area.append(form);
+        form.addEventListener('submit',e=>{e.preventDefault();if(!form.reportValidity())return;action(async()=>{await api.miPerfil({nombre_completo:name.value,bio:bio.value});notice('Perfil guardado.');});});
+        button('Volver a Mi panel',seller);notice('Tu biografía se muestra en tu perfil público.');
     }
     async function buyerProfile() {
         const [p,session]=await Promise.all([api.miPerfil(),verificarSesion()]);clear();viewTitle('Mi perfil');
@@ -497,6 +604,7 @@
         document.getElementById('market-reload').addEventListener('click',()=>{if(!busy) location.reload();});
         try {
             if(['vendedor','admin','comprador','compra'].includes(mode) && !await window.accesoPagina) return;
+            if(mode==='admin')reviewNav(new URLSearchParams(location.search).get('vista')||'revision');
             cats=await api.categorias();
             const select=document.getElementById('category-filter');
             if(select) {
@@ -514,7 +622,7 @@
                 });
                 document.getElementById('search-catalog').addEventListener('keydown',e=>{if(e.key==='Enter') {e.preventDefault(); action(catalog);}});
             }
-            await reload();
+            if(mode==='vendedor'){const view=new URLSearchParams(location.search).get('vista');await (view==='ventas'?finanzas:view==='perfil'?sellerProfile:seller)();}else if(mode==='admin'){const view=new URLSearchParams(location.search).get('vista');await ({pagos:pagosAdmin,retiros:retirosAdmin,yape:configurarYape,usuarios,perfil}[view]||admin)();}else await reload();
         } catch(e) { notice(e.message || 'No se pudo cargar. Pulsa Actualizar para reintentar.'); }
     });
     window.addEventListener('pagehide',()=>urls.forEach(u=>URL.revokeObjectURL(u)));

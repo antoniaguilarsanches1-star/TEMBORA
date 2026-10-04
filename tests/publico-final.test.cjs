@@ -20,12 +20,12 @@ test('regresión final de la parte pública',async t=>{
  page.on('pageerror',e=>errors.push(e.message));
  await context.addInitScript(()=>{window.open=(url)=>{window.testWhatsApp=url;return null;};});
  const sdk=`(() => {
-  const user={id:'seller',app_metadata:{provider:'google'}};
+  const user={id:'bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb',app_metadata:{provider:'google'}};
   const role=()=>localStorage.getItem('test-role');
   const session=()=>role()?{user,access_token:'fixture-token'}:null;
   const categories=[{id:1,nombre:'Restaurantes'},{id:2,nombre:'Landing Pages'}];
-  const templates=[{id:'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa',nombre:'Restaurante de prueba',descripcion:'Plantilla pública de prueba',precio:79,categoria_id:1,estado:'publicada',imagen_principal:'image.png',vendedor_id:'seller',tecnologias:['HTML']}];
-  const client={from:table=>{const filters=[];const rows=()=> (table==='categorias'?categories:table==='plantillas'?templates:table==='perfiles'?[{id:'seller',rol:role()}]:[]).filter(r=>filters.every(([k,v])=>r[k]===v));
+  const templates=[{id:'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa',nombre:'Restaurante de prueba',descripcion:'Plantilla pública de prueba',precio:79,categoria_id:1,estado:'publicada',imagen_principal:'image.png',vendedor_id:'bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb',tecnologias:['HTML']}];
+  const client={from:table=>{const filters=[];const rows=()=> (table==='categorias'?categories:table==='plantillas'?templates:table==='perfiles'?[{id:'bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb',rol:role()||'vendedor',nombre_completo:'Vendedor de prueba'}]:[]).filter(r=>filters.every(([k,v])=>r[k]===v));
    const q={select:()=>q,order:()=>q,eq:(k,v)=>{filters.push([k,v]);return q;},not:()=>q,range:async()=>({data:rows()}),maybeSingle:async()=>({data:rows()[0]||null}),single:async()=>({data:rows()[0]||null}),then:resolve=>resolve({data:rows()})};return q;},
    storage:{from:()=>({download:async()=>({data:new Blob([Uint8Array.from(atob('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+jRZkAAAAASUVORK5CYII='),c=>c.charCodeAt(0))],{type:'image/png'})})})},
    auth:{getSession:async()=>{await new Promise(r=>setTimeout(r,100));return {data:{session:session()}};},getUser:async()=>({data:{user}}),onAuthStateChange:()=>({data:{subscription:{unsubscribe(){}}}}),signInWithOAuth:async args=>{window.testOAuth=args;return {error:null};}}};
@@ -45,8 +45,48 @@ test('regresión final de la parte pública',async t=>{
   assert.deepEqual(await page.locator('.nav-menu a').allTextContents(),['Inicio','Plantillas','Para negocios','Webs completas','Cómo funciona','Vender','Contacto']);
   if(current)assert.equal(await page.locator('.header [aria-current="page"]').getAttribute('href'),current+'.html');
   const links=await page.locator('.footer a').evaluateAll(nodes=>nodes.map(n=>n.getAttribute('href')));
-  for(const href of links){if(href.startsWith('https:')){assert.ok(href.startsWith('https://wa.me/'));continue;}assert.ok(fs.existsSync(path.join(root,href.split("?")[0])),href);}
+  for(const href of links){if(href.startsWith('https:')){assert.ok(href.startsWith('https://wa.me/'));continue;}assert.ok(fs.existsSync(path.join(root,href.split('?')[0])),href);}
  }
+ await check('Correcciones públicas y legales finales',async()=>{
+  const detail='plantilla.html?id=aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa';
+  await go(detail);await shell('catalogo');
+  await page.getByRole('button',{name:'Guardar en favoritos',exact:true}).waitFor();
+  assert.equal(await page.locator('[data-detail-panel]').isVisible(),false);
+  assert.equal(await page.getByRole('button',{name:'Guardar en favoritos',exact:true}).count(),1);
+  await page.getByRole('button',{name:'Guardar en favoritos',exact:true}).click();
+  await page.waitForURL('**/login.html?motivo=favoritos*');await ready();
+  assert.ok((await page.locator('#login-intent').innerText()).includes('Inicia sesión para guardar plantillas en favoritos.'));
+  assert.equal(await page.getByRole('link',{name:'Volver a la plantilla'}).getAttribute('href'),detail);
+  await go(detail);await page.getByRole('button',{name:'Comprar con Yape',exact:true}).click();
+  await page.waitForURL('**/login.html?motivo=comprar*');await ready();
+  assert.ok((await page.locator('#login-intent').innerText()).includes('Inicia sesión para comprar esta plantilla.'));
+ });
+ await check('Correcciones siguientes: vendedor, panel y legales',async()=>{
+  const detail='plantilla.html?id=aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa';
+  await go(detail);await page.getByRole('link',{name:'Ver vendedor',exact:true}).click();
+  await page.getByRole('heading',{name:'Vendedor de prueba',exact:true}).waitFor();await shell('catalogo');
+  for(const [role,target] of [['comprador','panel-comprador.html'],['vendedor','panel-vendedor.html'],['admin','admin.html']]){
+   await page.evaluate(r=>localStorage.setItem('test-role',r),role);await go(detail);
+   if(role==='comprador')await page.locator('#user-panel-btn').click();else await page.getByRole('button',{name:'Ver mi panel',exact:true}).click();await page.waitForURL('**/'+target);
+  }
+  await page.evaluate(()=>localStorage.removeItem('test-role'));
+  const legal={
+   terminos:['1. Aceptación y Alcance del Servicio','archivo comprimido en formato ZIP','50 MB','S/20.00','20%','80%','S/50.00','Comprador o Vendedor','rol Administrador es controlado'],
+   privacidad:['29733','Contacto y Cotizaciones','Datos de Sesión','acceso restringido','ARCO'],
+   licencias:['Redistribución en constructores o generadores','No puedes incorporar los archivos fuente']
+  };
+  for(const file of ['login','registro','terminos','privacidad','licencias']){
+   await go(file+'.html');await shell(['login','registro'].includes(file)?file:null);
+   assert.equal(await page.locator('.whatsapp-float').count(),0,file);
+   if(legal[file]){const text=await page.locator('body').innerText();assert.ok(text.includes('1 de octubre de 2026'));for(const phrase of legal[file])assert.ok(text.includes(phrase),phrase);assert.ok(!text.includes('tribunales competentes de la ciudad de Lima'));}
+  }
+  await page.locator('.footer').getByRole('link',{name:'Soporte',exact:true}).first().click();await ready();
+  assert.equal(await page.locator('#subject').inputValue(),'Otra consulta');await shell('contacto');
+  for(const file of ['index','catalogo','como-funciona','pagina-personalizada','contacto']){
+   await go(file+'.html');await shell(file);assert.equal(await page.locator('.whatsapp-float').isVisible(),true,file);
+  }
+  await go(detail);await page.getByRole('button',{name:'Guardar en favoritos',exact:true}).waitFor();assert.equal(await page.locator('[data-detail-panel]').isVisible(),false);
+ });
  await check('Inicio: tarjetas, categorías, hero y navbar',async()=>{
   await go('index.html');await shell('index');
   await page.locator('.public-template img').waitFor();

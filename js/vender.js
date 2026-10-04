@@ -16,12 +16,21 @@
     function render(result) {
         actions();
         reference.hidden = !result.id && !result.plantilla;
-        reference.textContent = reference.hidden ? '' : 'Referencia: ' + (result.id || result.plantilla.id);
+        reference.textContent = reference.hidden ? '' : 'Referencia: ' + String(result.id || result.plantilla.id).slice(0,8).toUpperCase();
+        const submitted = result.success && result.plantilla;
+        document.getElementById('sell-submit').hidden = !!submitted;
+        const badge = document.getElementById('sell-badge');
+        badge.hidden = !submitted;
         if (result.success && result.plantilla) {
             ready = false;
-            form.reset();
-            message(result.message);
-            actions(['sell-check','sell-new']);
+            const state = result.plantilla.estado;
+            badge.textContent = ({pendiente:'Pendiente de revisión',publicada:'Publicada',rechazada:'Rechazada'}[state] || 'Estado por comprobar');
+            badge.className = 'seller-badge seller-' + state;
+            message(state === 'pendiente'
+                ? 'Tu plantilla fue enviada correctamente. El administrador la revisará y mientras tanto sus datos y archivos permanecerán bloqueados.'
+                : state === 'publicada' ? 'Tu plantilla está publicada. Sus datos y archivos permanecen bloqueados.'
+                : 'Tu plantilla fue rechazada. Vuelve a Mis plantillas para consultar el motivo y guardar una corrección.');
+            actions(['sell-check']);
         } else if (result.recuperable) {
             ready = false;
             message(result.error);
@@ -48,7 +57,11 @@
             const select = document.getElementById('category');
             select.replaceChildren(new Option('Selecciona una categoría', ''));
             for (const categoria of categorias) select.add(new Option(categoria.nombre, String(categoria.id)));
-            const estado = await window.TemboraEnvios.comprobar();
+            // Agregar desde el panel conserva el flujo existente para preparar otra plantilla.
+            const nueva = new URLSearchParams(location.search).get('nueva') === '1';
+            let estado = await window.TemboraEnvios.comprobar();
+            if (nueva && estado.success) estado = await window.TemboraEnvios.nuevo();
+            if (nueva && estado.success) history.replaceState(null, '', location.pathname);
             render(estado);
             if (!estado.success && !estado.recuperable) actions(['sell-retry']);
         } catch (e) {
