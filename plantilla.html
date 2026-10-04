@@ -23,6 +23,7 @@
     <!-- Supabase JS -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <link rel="stylesheet" href="css/public.css?v=20261001">
+    <link rel="stylesheet" href="css/cuenta.css?v=20261001">
     <link rel="stylesheet" href="css/pillars.css?v=20261003">
 </head>
 <body data-public-page="plantilla" data-market="detalle">
@@ -113,48 +114,7 @@
     <script src="js/plantillas-envio.js"></script>
     <script src="js/mercado-api.js"></script>
     <script src="js/pagos-api.js"></script>
-    <script src="js/mercado-ui.js?v=20261001-public"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', async () => {
-            // Cargar detalle de plantilla desde Supabase
-            const urlParams = new URLSearchParams(window.location.search);
-            const templateId = urlParams.get('id');
-            
-            if (templateId && window.TemboraMercado) {
-                try {
-                    const plantilla = await window.TemboraMercado.detalle(templateId);
-                    if (plantilla) {
-                        const money = n => new Intl.NumberFormat('es-PE', {style: 'currency', currency: 'PEN'}).format(Number(n));
-                        const container = document.getElementById('market-content');
-                        
-                        container.innerHTML = `
-                            <div class="template-detail">
-                                <h1>${plantilla.nombre}</h1>
-                                <p class="template-price-large">${money(plantilla.precio)}</p>
-                                <p class="template-description">${plantilla.descripcion || 'Sin descripción'}</p>
-                                <p><strong>Tecnologías:</strong> ${(plantilla.tecnologias || []).join(', ')}</p>
-                                ${plantilla.demo_url ? `<a href="${plantilla.demo_url}" target="_blank" rel="noopener noreferrer" class="btn btn-outline btn-sm">Ver demo</a>` : ''}
-                                <a href="catalogo.html" class="btn btn-primary btn-sm">Volver al catálogo</a>
-                            </div>
-                        `;
-                    } else {
-                        document.getElementById('market-content').innerHTML = '<p>Plantilla no encontrada. <a href="catalogo.html">Volver al catálogo</a></p>';
-                    }
-                } catch (error) {
-                    console.error('Error al cargar plantilla:', error);
-                    document.getElementById('market-content').innerHTML = '<p>Error al cargar la plantilla. <a href="catalogo.html">Volver al catálogo</a></p>';
-                }
-            } else {
-                document.getElementById('market-content').innerHTML = '<p>No se especificó ID de plantilla. <a href="catalogo.html">Ir al catálogo</a></p>';
-            }
-            
-            // Verificar sesión usando función centralizada
-            const sesion = await verificarSesion();
-            if (window.actualizarUIAutenticacion) {
-                window.actualizarUIAutenticacion(sesion);
-            }
-        });
-    </script>
-    <script src="js/public.js?v=20261003-pillars"></script>
+    <script src="js/mercado-ui.js?v=20261001-cuenta"></script>
+<script src="js/public.js?v=20261003-pillars"></script>
 </body>
 </html>

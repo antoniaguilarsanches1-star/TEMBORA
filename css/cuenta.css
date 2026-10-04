@@ -1,0 +1,43 @@
+/* Presentación de compras y pagos: los controles conservan sus permisos existentes. */
+.account-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr)); gap:1.5rem; margin:1.25rem 0 2rem; align-items:start; }
+.account-card { background:var(--bg-white); border:1px solid var(--border-color); border-radius:var(--radius-lg); padding:1.5rem; box-shadow:var(--shadow-sm); overflow-wrap:anywhere; }
+.account-card h3 { margin-bottom:.7rem; }
+.account-card p { margin:.65rem 0; }
+.account-card-content { min-width:0; }
+#market-content > .order-card { display:grid; grid-template-columns:minmax(200px,.65fr) minmax(0,1fr); gap:1.5rem; align-items:start; }
+.account-card-content > .btn { margin:.5rem .5rem .5rem 0; }
+.account-image { background:var(--bg-light); border-radius:var(--radius-md); margin-bottom:1.2rem; aspect-ratio:16/9; display:flex; align-items:center; justify-content:center; overflow:hidden; color:var(--text-light); }
+.account-image img { width:100%; height:100%; object-fit:cover; }
+.account-price { font-size:1.65rem; font-weight:700; color:var(--primary-color); }
+.account-muted { color:var(--text-light); font-size:.9rem; }
+.account-actions { display:flex; flex-wrap:wrap; align-items:center; gap:.75rem; margin:1.2rem 0; }
+.account-actions .btn { margin:0; }
+.payment-badge { display:inline-block; padding:.3rem .75rem; border-radius:2rem; background:#eef2ff; color:#334155; font-size:.85rem; font-weight:600; }
+.payment-pendiente { background:#fff3cd; color:#714c00; }
+.payment-verificado { background:#dcfce7; color:#166534; }
+.payment-rechazado { background:#fee2e2; color:#991b1b; }
+.account-empty { background:var(--bg-light); padding:1.5rem; border-radius:var(--radius-md); color:var(--text-light); }
+.account-payment { margin-top:1.4rem; }
+.account-yape { background:#f5f3ff; padding:1.25rem; border-radius:var(--radius-md); }
+.account-yape p { font-weight:600; }
+.account-steps { padding-left:1.5rem; margin:1.2rem 0; }
+.account-steps li { margin:.5rem 0; }
+.account-warning { background:#fff8e5; padding:1rem; border-left:3px solid #d99c12; }
+.account-history { display:grid; gap:1rem; margin:1.25rem 0; }
+.account-profile { max-width:640px; margin:1.5rem auto; }
+.account-profile > .payment-badge { margin-bottom:1rem; }
+.account-profile input[readonly] { background:var(--bg-light); color:var(--text-light); }
+.account-gallery { display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr)); gap:1rem; margin-bottom:1.5rem; }
+.account-gallery img { width:100%; border-radius:var(--radius-md); object-fit:contain; background:var(--bg-light); }
+.account-gallery img:first-child { grid-column:1/-1; max-height:480px; }
+.account-description { white-space:pre-wrap; line-height:1.8; }
+.account-toast { position:fixed; bottom:1.5rem; right:1.5rem; max-width:calc(100vw - 3rem); padding:1rem 1.5rem; background:#1e293b; color:white; border-radius:var(--radius-md); box-shadow:var(--shadow-lg); z-index:1500; }
+[data-market="comprador"] #market-status, [data-market="compra"] #market-status, [data-market="detalle"] #market-status { min-height:1.5em; }
+[data-market="comprador"] #market-reload, [data-market="compra"] #market-reload, [data-market="admin"] #market-reload { margin:1rem 0; }
+@media(max-width:600px) {
+ #market-content > .order-card { grid-template-columns:minmax(0,1fr); }
+ .account-card { padding:1rem; }
+ .account-actions { align-items:stretch; flex-direction:column; }
+ .account-actions .btn { text-align:center; }
+ .account-toast { bottom:1rem; right:1rem; max-width:calc(100vw - 2rem); }
+}

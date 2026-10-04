@@ -27,6 +27,7 @@
 
     <!-- Supabase JS -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <link rel="stylesheet" href="css/cuenta.css?v=20261001">
     <link rel="stylesheet" href="css/pillars.css?v=20261003">
 </head>
 <body data-market="compra">
@@ -66,7 +67,7 @@
         </div>
     </header>
     <main id="market-root" class="section"><div class="container">
-        <h1>Mi pedido</h1>
+        <h1>Detalle de compra</h1>
         <p id="market-status" role="status" aria-live="polite">Cargando…</p>
         <button id="market-reload" type="button" class="btn btn-outline btn-sm">Actualizar</button>
         <div id="market-content"></div>
@@ -119,17 +120,12 @@
 </div>
 </footer>
 
-    <!-- WhatsApp Float Button -->
-    <div class="whatsapp-float">
-        <i class="fab fa-whatsapp"></i>
-    </div>
-
     <!-- JavaScript -->
     <script src="js/app.js"></script>
     <script src="js/supabase.js?v=20260930-auth"></script>
     <script src="js/plantillas-envio.js"></script>
     <script src="js/mercado-api.js"></script>
     <script src="js/pagos-api.js"></script>
-    <script src="js/mercado-ui.js"></script>
+    <script src="js/mercado-ui.js?v=20261001-cuenta"></script>
 </body>
 </html>

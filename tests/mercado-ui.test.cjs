@@ -13,6 +13,7 @@ function setup(mode,extra={},payments={}) {
   setAttribute(k,v){this[k]=v;}
   addEventListener(k,fn){this.listeners[k]=fn;}
   reportValidity(){return true;}
+  querySelector(selector){const cls=selector.slice(1);const walk=e=>e.children.flatMap(c=>[c,...walk(c)]);return walk(this).find(e=>(e.className||" ").split(" ").includes(cls))||null;}
   remove(){}
   click(){return this.listeners.click?.();}
  }
@@ -22,7 +23,7 @@ function setup(mode,extra={},payments={}) {
   galeria:async()=>[],imagen:async()=>new Blob(),editable:p=>p.estado==='rechazada'||!p.enviada_revision_at, ...extra};
  for(const key of Object.keys(api)){const fn=api[key];api[key]=(...args)=>{calls.push({key,args});return fn(...args);};}
  const win={TemboraMercado:api,TemboraPagos:payments,accesoPagina:Promise.resolve(extra.access!==false),addEventListener:(name,fn)=>events[name]=fn};
- const document={body:{dataset:{market:mode}},createElement:tag=>new Element(tag),getElementById:id=>elements.get(id),addEventListener:(name,fn)=>events[name]=fn,querySelectorAll:()=>all().filter(e=>['button','input','textarea','select'].includes(e.tagName))};
+ const document={body:{dataset:{market:mode}},createElement:tag=>new Element(tag),getElementById:id=>elements.get(id),addEventListener:(name,fn)=>events[name]=fn,querySelector:()=>null,querySelectorAll:()=>all().filter(e=>['button','input','textarea','select'].includes(e.tagName))};
  const ctx={window:win,document,navigator:{},location:{search:'?id=aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa',reload:()=>calls.push({key:'reload'})},
   supabaseClient:{auth:{onAuthStateChange:fn=>sessionEvents.push(fn)}},Intl,URL:Object.assign(URL,{createObjectURL:()=> 'blob:unit',revokeObjectURL:()=>{}}),URLSearchParams,
   Option:class extends Element {constructor(t,v){super('option',t);this.value=v;}},confirm:()=>true,setTimeout:fn=>timers.push(fn),localStorage:{getItem:()=>null},
@@ -33,19 +34,19 @@ function setup(mode,extra={},payments={}) {
 }
 test('pedido abierto cambia de pendiente a verificado sin recargar la página',async()=>{
  let order={id:'p',plantilla_nombre:'Web',monto:49,estado_pago:'pendiente',enviada_pago_at:'hoy'};
- const f=setup('comprador',{}, {compras:async()=>[order],pedido:async()=>order});await f.init();await f.click('Ver pedido / pagar');
- const title=f.all().find(e=>e.textContent==='Pedido: p');
+ const f=setup('comprador',{}, {compras:async()=>[order],pedido:async()=>order});await f.init();await f.click('Ver estado del pago');
+ const title=f.all().find(e=>e.textContent==='Pedido P');
  order={...order,estado_pago:'verificado',revisado_por:'admin'};await f.events.focus();
  assert.ok(f.all().includes(title));assert.ok(f.all().some(e=>e.textContent==='Descargar ZIP'));
  assert.ok(!f.all().some(e=>e.textContent.includes('Comprobante recibido')));
 });
 test('consulta sin cambios conserva archivo y formulario; Mis compras refleja aprobación',async()=>{
  let order={id:'p',plantilla_nombre:'Web',monto:49,estado_pago:'pendiente'};
- const f=setup('comprador',{}, {compras:async()=>[order],pedido:async()=>order});await f.init();await f.click('Ver pedido / pagar');
+ const f=setup('comprador',{}, {compras:async()=>[order],pedido:async()=>order});await f.init();await f.click('Ver estado del pago');
  const file=f.all().find(e=>e.type==='file');file.files=[{name:'pago.png'}];await f.events.focus();
  assert.ok(f.all().includes(file));assert.equal(file.files[0].name,'pago.png');
- await f.click('Mis compras');order={...order,estado_pago:'verificado',revisado_por:'admin'};await f.events.focus();
- assert.ok(f.all().some(e=>e.textContent==='Ver compra / descargar'));
+ await f.click('Volver a Mis compras');order={...order,estado_pago:'verificado',revisado_por:'admin'};await f.events.focus();
+ assert.ok(f.all().some(e=>e.textContent==='Ver compra / Descargar ZIP'));
 });
 test('guard denegado no carga filas privadas',async()=>{
  const f=setup('vendedor',{access:false});await f.init();assert.equal(f.calls.length,0);
@@ -87,18 +88,18 @@ test('cambio de cuenta limpia filas antes de recargar',async()=>{
 });
 test('comprador pendiente muestra instrucciones reales del pedido sin descarga',async()=>{
  const order={id:'p',plantilla_nombre:'Web',monto:100,estado_pago:'pendiente',yape_numero:'900000000',yape_titular:'TEMP'};
- const f=setup('comprador',{}, {compras:async()=>[order],pedido:async()=>order});await f.init();await f.click('Ver pedido / pagar');
+ const f=setup('comprador',{}, {compras:async()=>[order],pedido:async()=>order});await f.init();await f.click('Ver estado del pago');
  assert.ok(f.all().some(e=>e.textContent==='Número: 900000000'));assert.ok(!f.all().some(e=>e.textContent==='Descargar ZIP'));
  assert.ok(f.all().some(e=>e.textContent==='Enviar comprobante'));
 });
 test('comprobante enviado muestra espera sin volver a ofrecer pago',async()=>{
  const order={id:'p',plantilla_nombre:'Web',monto:100,estado_pago:'pendiente',enviada_pago_at:'2026-09-16'};
- const f=setup('comprador',{}, {compras:async()=>[order],pedido:async()=>order});await f.init();await f.click('Ver pedido / pagar');
+ const f=setup('comprador',{}, {compras:async()=>[order],pedido:async()=>order});await f.init();await f.click('Ver estado del pago');
  assert.ok(f.all().some(e=>e.textContent.includes('No vuelvas a pagar')));assert.ok(!f.all().some(e=>e.textContent==='Enviar comprobante'));
 });
 test('compra aprobada muestra descarga y no solicita otro pago',async()=>{
  const order={id:'p',plantilla_nombre:'Web',monto:100,estado_pago:'verificado'};
- const f=setup('comprador',{}, {compras:async()=>[order],pedido:async()=>order});await f.init();await f.click('Ver compra / descargar');
+ const f=setup('comprador',{}, {compras:async()=>[order],pedido:async()=>order});await f.init();await f.click('Ver compra / Descargar ZIP');
  assert.ok(f.all().some(e=>e.textContent==='Descargar ZIP'));assert.ok(!f.all().some(e=>e.textContent==='Enviar comprobante'));
 });
 test('fallo de aprobación no anuncia descarga habilitada',async()=>{
@@ -110,6 +111,28 @@ test('fallo de aprobación no anuncia descarga habilitada',async()=>{
 test('ruta de compra sin acceso no consulta el pedido',async()=>{
  let read=false;const f=setup('compra',{access:false},{pedido:async()=>{read=true;}});
  await f.init();assert.equal(read,false);
+});
+
+test('Recuperar último comprobante conserva recuperación de envío, sin usar visor',async()=>{
+ let recovered=0,evidence=0;
+ const order={id:'p',plantilla_nombre:'Web',monto:49,estado_pago:'pendiente'};
+ const f=setup('comprador',{}, {compras:async()=>[order],pedido:async()=>order,recuperar:async id=>{assert.equal(id,'p');recovered++;order.enviada_pago_at='2026-10-03';},evidencia:async()=>{evidence++;}});
+ await f.init();await f.click('Ver estado del pago');await f.click('Recuperar último comprobante');
+ assert.equal(recovered,1);assert.equal(evidence,0);
+ assert.ok(f.all().some(e=>e.textContent.includes('Comprobante recibido')));
+ assert.ok(!f.all().some(e=>e.textContent==='Recuperar último comprobante'));
+});
+
+test('Actualizar permanece disponible tras fallos de consulta y recuperación',async()=>{
+ const f=setup('comprador',{}, {compras:async()=>{throw Error('Sin conexión');}});await f.init();
+ assert.match(f.elements.get('market-status').textContent,/Sin conexión/);
+ f.elements.get('market-reload').click();assert.ok(f.calls.some(c=>c.key==='reload'));
+ const order={id:'p',plantilla_nombre:'Web',monto:49,estado_pago:'rechazado'};
+ const g=setup('comprador',{}, {compras:async()=>[order],pedido:async()=>order,recuperar:async()=>{throw Error('Envío aún no confirmado');}});
+ await g.init();await g.click('Corregir comprobante');await g.click('Recuperar último comprobante');
+ assert.match(g.elements.get('market-status').textContent,/Envío aún no confirmado/);
+ assert.equal(g.elements.get('market-reload').disabled,false);
+ g.elements.get('market-reload').click();assert.ok(g.calls.some(c=>c.key==='reload'));
 });
 
 test('usuarios renderiza nombres sin interpretar HTML y muestra rol real',async()=>{

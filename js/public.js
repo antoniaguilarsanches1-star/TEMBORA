@@ -5,6 +5,27 @@
         const page = document.body.dataset.publicPage;
         if (!page) return;
         if (page === 'contacto' && new URLSearchParams(location.search).get('asunto') === 'soporte') document.getElementById('subject').value = 'Otra consulta';
+        const params = new URLSearchParams(location.search);
+        if (page === 'login') {
+            const messages = { favoritos: 'Inicia sesión para guardar plantillas en favoritos.', comprar: 'Inicia sesión para comprar esta plantilla.' };
+            const message = Object.hasOwn(messages, params.get('motivo')) ? messages[params.get('motivo')] : null;
+            if (message) {
+                const notice = document.createElement('p'); notice.id = 'login-intent'; notice.setAttribute('role', 'status'); notice.textContent = message;
+                const container = document.querySelector('.form-container'); container.prepend(notice);
+                const id = params.get('plantilla');
+                if (/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id || '')) {
+                    const back = document.createElement('a'); back.href = 'plantilla.html?id=' + encodeURIComponent(id); back.textContent = 'Volver a la plantilla';
+                    notice.append(document.createElement('br'), back);
+                }
+            }
+        }
+        if (page === 'plantilla') {
+            const syncPanel = () => document.querySelectorAll('[data-detail-panel]').forEach(button => {
+                button.hidden = document.documentElement.getAttribute('data-session-state') !== 'authenticated';
+            });
+            new MutationObserver(syncPanel).observe(document.documentElement, { attributes: true, attributeFilter: ['data-session-state'] });
+            syncPanel();
+        }
         function markActive() {
             const current = ['plantilla', 'vendedor'].includes(page) ? 'catalogo' : page;
             document.querySelectorAll('.nav-menu a, .auth-buttons a').forEach(link => {

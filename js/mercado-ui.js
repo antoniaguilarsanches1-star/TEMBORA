@@ -181,41 +181,99 @@
             notice('0 plantillas publicadas.');
         }
     }
+    function viewTitle(text) {
+        const heading=document.querySelector('#market-root h1');
+        if(heading)heading.textContent=text;
+    }
+    const shortRef=id=>String(id || '').slice(0,8).toUpperCase();
+    const dateText=value=>value && Number.isFinite(new Date(value).getTime()) ? new Date(value).toLocaleString('es-PE',{timeZone:'America/Lima'}) : 'No registrada';
+    const paymentLabel=o=>({pendiente:'Pendiente',verificado:'Verificado',rechazado:'Rechazado'}[o.estado_pago] || 'Estado no disponible');
+    function badge(o) { return el('span',paymentLabel(o),'payment-badge payment-'+o.estado_pago); }
+    function primary(b) { b.className='btn btn-primary';return b; }
+    function actions(parent) { const box=el('div',undefined,'account-actions');parent.append(box);return box; }
+    function toast(text) {
+        let box=document.getElementById('account-toast');
+        if(!box){box=el('div',undefined,'account-toast');box.id='account-toast';box.setAttribute('role','status');document.body.append(box);}
+        clearTimeout(toast.timer);box.textContent=text;box.hidden=false;
+        toast.timer=setTimeout(()=>{box.hidden=true;},2500);
+    }
+    function orderCard(o,parent=area) {
+        const c=el('article',undefined,'account-card order-card'),image=el('div',undefined,'account-image'),content=el('div',undefined,'account-card-content');
+        c.append(image,content);parent.append(c);
+        content.append(el('h3',o.plantilla_nombre),el('p',money(o.monto),'account-price'),badge(o),el('p','Pedido '+shortRef(o.id),'account-muted'));
+        if(o.created_at)content.append(el('p','Solicitud: '+dateText(o.created_at),'account-muted'));
+        const revision=generation;
+        api.detalle(o.plantilla_id).then(p=>{
+            if(revision!==generation || !image.isConnected)return;
+            if(p?.imagen_principal)photo(p.imagen_principal,image);else image.append(el('span','Imagen no disponible'));
+        }).catch(()=>{if(revision===generation && image.isConnected)image.append(el('span','Imagen no disponible'));});
+        return content;
+    }
+    async function buyerDetail(p) {
+        const [favs,orders]=await Promise.all([api.favoritos(),pay.compras()]);clear();
+        const gallery=el('div',undefined,'account-gallery'),info=el('section',undefined,'account-card account-detail');
+        area.append(gallery,info);photo(p.imagen_principal,gallery);
+        api.galeria(p.id).then(rows=>{if(gallery.isConnected)for(const image of rows)photo(image.url,gallery);}).catch(()=>{if(gallery.isConnected)gallery.append(el('p','No se pudo cargar la galería. Actualiza para reintentar.'));});
+        info.append(el('h1',p.nombre),el('p',cats.find(c=>String(c.id)===String(p.categoria_id))?.nombre || 'Sin categoría'),el('p',money(p.precio),'account-price'));
+        const tags=el('div',undefined,'account-actions');for(const tech of p.tecnologias || [])tags.append(el('span',tech,'payment-badge'));info.append(tags);
+        const desc=el('p',p.descripcion,'account-description');info.append(desc);
+        const demo=safeURL(p.demo_url);if(demo){const a=link('Ver demo',demo);a.target='_blank';a.rel='noopener noreferrer';info.append(a);}
+        const buttons=actions(info),order=orders.find(o=>o.plantilla_id===p.id && o.estado_pago==='verificado') || orders.find(o=>o.plantilla_id===p.id && o.estado_pago==='pendiente') || orders.find(o=>o.plantilla_id===p.id && o.estado_pago==='rechazado');
+        if(order)buttons.append(primary(link(order.estado_pago==='verificado'?'Ver compra':order.estado_pago==='rechazado'?'Corregir comprobante':'Ver estado del pago','compra.html?pedido='+encodeURIComponent(order.id))));
+        else primary(button('Comprar con Yape',async()=>{const order=await pay.crear(p.id);location.href='compra.html?pedido='+encodeURIComponent(order.id);},buttons));
+        if(p.vendedor_id)buttons.append(link('Ver vendedor','vendedor.html?id='+encodeURIComponent(p.vendedor_id)));
+        let saved=favs.some(f=>f.plantilla_id===p.id);
+        const favorite=button(saved?'Quitar de favoritos':'Guardar en favoritos',async()=>{
+            await api.favorito(p.id,!saved);saved=!saved;favorite.textContent=saved?'Quitar de favoritos':'Guardar en favoritos';favorite.setAttribute('aria-pressed',String(saved));notice('');toast(saved?'Guardada en favoritos':'Eliminada de favoritos');
+        },buttons);favorite.setAttribute('aria-pressed',String(saved));
+        info.append(el('p','Licencia estándar: 1 sitio final · modificable · no redistribuible.','account-muted'),link('Ver licencia completa','licencias.html'));notice('');
+    }
     async function detail() {
         const p=await api.detalle(new URLSearchParams(location.search).get('id')); clear();
         if(!p) { notice('Plantilla no disponible o aún no publicada.'); area.append(link('Volver al catálogo','catalogo.html')); return; }
+        const session=await verificarSesion();
+        if(session.success && session.rol==='comprador')return buyerDetail(p);
         area.append(el('h1',p.nombre),el('p',money(p.precio))); description(p,area); await preview(p,area);
-        button('Guardar en favoritos',async()=>{ await api.favorito(p.id,true); notice('Guardada en tus favoritos.'); });
+        const requireSession=async reason=>{
+            const session=await verificarSesion();
+            if(session.session)return true;
+            if(session.code==='NO_SESSION')location.href='login.html?motivo='+reason+'&plantilla='+encodeURIComponent(p.id);
+            else notice(session.error || 'No se pudo comprobar tu sesión. Reintenta.');
+            return false;
+        };
+        button('Guardar en favoritos',async()=>{ if(!await requireSession('favoritos'))return;await api.favorito(p.id,true); notice('Guardada en tus favoritos.'); });
         if(p.vendedor_id)area.append(link('Ver vendedor','vendedor.html?id='+encodeURIComponent(p.vendedor_id)));
-        button('Comprar con Yape',async()=>{const order=await pay.crear(p.id);location.href='compra.html?pedido='+encodeURIComponent(order.id);});
-        button('Ver mi panel',()=>redirigirSegunRol()); notice('Plantilla publicada.');
+        button('Comprar con Yape',async()=>{if(!await requireSession('comprar'))return;const order=await pay.crear(p.id);location.href='compra.html?pedido='+encodeURIComponent(order.id);});
+        const panel=button('Ver mi panel',()=>redirigirSegunRol());
+        panel.setAttribute('data-detail-panel','');
+        panel.hidden=document.documentElement.getAttribute('data-session-state')!=='authenticated';
+        notice('Plantilla publicada.');
     }
     async function buyer() {
         const favs=await api.favoritos(), orders=await pay.compras(); clear();
+        viewTitle('Mi panel');
+        const shortcuts=actions(area);button('Historial de movimientos',historial,shortcuts);button('Mi perfil',perfil,shortcuts);
         area.append(el('h2','Mis compras y pedidos'));
-        const orderViews=new Map();
-        if(!orders.length) area.append(el('p','Todavía no tienes pedidos.'));
+        const grid=el('div',undefined,'account-grid');area.append(grid);
+        if(!orders.length){grid.append(el('p','Todavía no tienes compras ni pedidos. Explora las plantillas para comenzar.','account-empty'),link('Explorar plantillas','catalogo.html'));}
         for(const o of orders) {
-            const c=el('article',undefined,'form-container'),label=el('p',money(o.monto)+' — '+o.estado_pago); c.append(el('h3',o.plantilla_nombre),label);area.append(c);
-            const b=button(o.estado_pago==='verificado'?'Ver compra / descargar':'Ver pedido / pagar',()=>checkout(o.id),c);
-            orderViews.set(o.id,{label,b});
+            const c=orderCard(o,grid);if(o.motivo_rechazo)c.append(el('p','Motivo: '+o.motivo_rechazo));
+            primary(button(o.estado_pago==='verificado'?'Ver compra / Descargar ZIP':o.estado_pago==='rechazado'?'Corregir comprobante':'Ver estado del pago',()=>checkout(o.id),actions(c)));
         }
+        const signature=rows=>JSON.stringify(rows.map(o=>[o.id,o.estado_pago,o.enviada_pago_at,o.motivo_rechazo]));let previous=signature(orders);
         refreshOrders=async current=>{
             const rows=await pay.compras();if(!current())return;
-            for(const o of rows) {
-                const view=orderViews.get(o.id);if(!view)continue;
-                view.label.textContent=money(o.monto)+' — '+o.estado_pago;
-                view.b.textContent=o.estado_pago==='verificado'?'Ver compra / descargar':'Ver pedido / pagar';
-            }
+            if(signature(rows)!==previous){previous=signature(rows);await buyer();}
         };
-        button('Historial de movimientos',historial);
-        button('Mi perfil',perfil);
         area.append(el('h2','Mis favoritos'));
-        if(!favs.length) area.append(el('p','Todavía no guardaste favoritos.'));
+        const favorites=el('div',undefined,'account-grid');area.append(favorites);
+        if(!favs.length) favorites.append(el('p','Todavía no guardaste favoritos. Guarda las plantillas que te interesan desde su detalle.','account-empty'));
         for(const f of favs) {
-            const p=await api.detalle(f.plantilla_id), c=p?card(p):el('article','Plantilla ya no disponible');
-            if(!p) area.append(c); else c.append(link('Ver plantilla','plantilla.html?id='+p.id));
-            button('Quitar de favoritos',async()=>{await api.favorito(f.plantilla_id,false); await buyer();},c);
+            const p=await api.detalle(f.plantilla_id),c=el('article',undefined,'account-card');favorites.append(c);
+            if(!p)c.append(el('p','Plantilla ya no disponible'));
+            else {const image=el('div',undefined,'account-image');c.append(image);photo(p.imagen_principal,image);c.append(el('h3',p.nombre),el('p',cats.find(x=>String(x.id)===String(p.categoria_id))?.nombre || 'Sin categoría'),el('p',money(p.precio),'account-price'));}
+            const buttons=actions(c);if(p)buttons.append(link('Ver plantilla','plantilla.html?id='+p.id));
+            button('Quitar de favoritos',async()=>{await api.favorito(f.plantilla_id,false); await buyer();toast('Eliminada de favoritos');},buttons);
         }
         notice('Información de tu cuenta actualizada.');
     }
@@ -225,18 +283,23 @@
     }
     async function checkout(id) {
         const o=await pay.pedido(id);clear();
-        const label=el('p','Estado: '+o.estado_pago),payment=el('div');
-        area.append(el('h2',o.plantilla_nombre),el('p','Pedido: '+o.id),el('p','Total: '+money(o.monto)),label,payment);
+        const title=p=>viewTitle(p.estado_pago==='pendiente'?(p.enviada_pago_at?'Pago en revisión':'Completa tu compra'):'Detalle de compra');title(o);
+        const content=orderCard(o),label=content.querySelector('.payment-badge'),payment=el('div',undefined,'account-payment');
+        content.append(payment);
+        if(o.estado_pago==='pendiente' && o.enviada_pago_at)label.textContent='Pendiente de verificación';
         renderPayment(o,payment);
         const signature=p=>JSON.stringify([p.estado_pago,p.enviada_pago_at,p.motivo_rechazo,p.revisado_por,p.revisado_at,p.operacion_yape]);
         let previous=signature(o);
         refreshOrders=async current=>{
             const next=await pay.pedido(id);if(!current() || signature(next)===previous)return;
-            previous=signature(next);label.textContent='Estado: '+next.estado_pago;
+            previous=signature(next);title(next);label.textContent=next.estado_pago==='pendiente' && next.enviada_pago_at?'Pendiente de verificación':paymentLabel(next);label.className='payment-badge payment-'+next.estado_pago;
             payment.replaceChildren();renderPayment(next,payment);
             notice(next.estado_pago==='verificado'?'Pago aprobado. Tu descarga está disponible.':'Estado del pedido actualizado.');
         };
-        button('Mis compras',buyer);notice('Pedido actualizado.');
+        const back=actions(area);
+        if(mode==='compra')back.append(link('Volver a Mis compras','panel-comprador.html'));
+        else button('Volver a Mis compras',buyer,back);
+        notice('Pedido actualizado.');
     }
     function renderPayment(o,parent) {
         if(o.estado_pago==='verificado') {
@@ -245,13 +308,13 @@
                 ? new Intl.DateTimeFormat('es-PE',{timeZone:'America/Lima',day:'2-digit',month:'2-digit',year:'numeric'}).format(fecha)
                 : 'No registrada')));
             parent.append(el('p','Operación Yape: '+(o.operacion_yape || 'No registrada')));
-            button('Descargar ZIP',async()=>{await saveBlob(await pay.descargar(o.id),'plantilla-'+o.plantilla_id+'.zip');notice('Descarga autorizada por tu compra verificada.');},parent);
+            primary(button('Descargar ZIP',async()=>{await saveBlob(await pay.descargar(o.id),'plantilla-'+o.plantilla_id+'.zip');notice('Descarga autorizada por tu compra verificada.');},parent));
         } else if(o.estado_pago==='pendiente' && o.enviada_pago_at) {
             parent.append(el('p','Comprobante recibido. Un administrador verificará el abono. No vuelvas a pagar.'));
         } else {
             if(o.motivo_rechazo) parent.append(el('p','Motivo del rechazo: '+o.motivo_rechazo));
-            parent.append(el('h3','Pago por Yape'),el('p','Número: '+o.yape_numero),el('p','Titular: '+o.yape_titular),
-                el('p','Yapea exactamente '+money(o.monto)+' y verifica el titular antes de confirmar. Adjunta la captura de la operación. Si ya pagaste, no repitas el pago: corrige el comprobante.'));
+            const destination=el('div',undefined,'account-yape');destination.append(el('h3','Pago por Yape'),el('p','Número: '+o.yape_numero),el('p','Titular: '+o.yape_titular),el('p','Monto exacto: '+money(o.monto),'account-price'));parent.append(destination);
+            const steps=el('ol',undefined,'account-steps');for(const step of ['Paga exactamente el monto indicado.','Verifica número y titular.','Toma captura del comprobante.','Súbelo.','Espera verificación.'])steps.append(el('li',step));parent.append(steps,el('p','Si ya realizaste el pago, no vuelvas a pagar.','account-warning'));
             const form=el('form'),file=field(form,'Comprobante JPG, PNG o WebP (máximo 5 MB)','comprobante',null,'file');file.accept='.jpg,.jpeg,.png,.webp';file.required=true;
             const send=el('button','Enviar comprobante','btn btn-primary');send.type='submit';form.append(send);parent.append(form);
             form.addEventListener('submit',e=>{e.preventDefault();if(!form.reportValidity())return;const selected=file.files[0];
@@ -260,9 +323,24 @@
         }
     }
     async function historial() {
+        if(mode==='comprador' || mode==='compra')return buyerHistory();
         const rows=await pay.historial();clear();area.append(el('h2','Historial'));
         for(const r of rows)area.append(el('p',new Date(r.created_at).toLocaleString('es-PE')+' — '+r.entidad+' — '+r.accion+' — '+(r.detalle||'')));
         if(!rows.length)area.append(el('p','Sin movimientos.'));button('Volver',reload);notice('Historial registrado en el servidor.');
+    }
+    async function buyerHistory() {
+        const [rows,orders]=await Promise.all([pay.historial(),pay.compras()]);clear();viewTitle('Historial de movimientos');
+        const labels={creado:'Pedido creado',comprobante_enviado:'Comprobante enviado',pago_verificado:'Pago verificado',pago_rechazado:'Pago rechazado'};
+        const list=el('div',undefined,'account-history');area.append(list);
+        for(const r of [...rows].sort((a,b)=>new Date(b.created_at)-new Date(a.created_at))) {
+            const o=r.entidad==='pedido'?orders.find(o=>o.id===r.entidad_id):null,c=el('article',undefined,'account-card');
+            c.append(el('p',dateText(r.created_at),'account-muted'),el('h3',labels[r.accion] || 'Movimiento registrado'),el('p',o?o.plantilla_nombre+' · Pedido '+shortRef(o.id):'Pedido '+shortRef(r.entidad_id)));
+            if(o)c.append(el('p','Monto: '+money(o.monto)));
+            if(r.accion==='pago_verificado' && o?.operacion_yape)c.append(el('p','Operación Yape: '+o.operacion_yape));
+            list.append(c);
+        }
+        if(!rows.length)list.append(el('p','Todavía no hay movimientos en tu cuenta.','account-empty'));
+        button('Volver a Mi panel',buyer,actions(area));notice('');
     }
     async function configurarYape() {
         const c=await pay.config();clear();area.append(el('h2','Destino de los pagos por Yape'));
@@ -274,7 +352,7 @@
         button('Volver',admin);notice(c.activo?'Los pedidos existentes conservan su destino original.':'Compras bloqueadas hasta configurar el destino real.');
     }
     async function pagosAdmin() {
-        const rows=await pay.pedidosAdmin();clear();area.append(el('h2','Pagos y ventas'));
+        const rows=await pay.pedidosAdmin();clear();viewTitle('Pagos y ventas');
         const fechaPeru=()=>new Intl.DateTimeFormat('es-PE',{timeZone:'America/Lima',day:'2-digit',month:'2-digit',year:'numeric'}).format(new Date());
         const prefijos=[],revision=generation;
         const actualizarFechas=()=>prefijos.forEach(p=>{p.textContent=fechaPeru()+' - Operación ';});
@@ -282,8 +360,14 @@
         const approved=rows.filter(o=>o.estado_pago==='verificado');
         area.append(el('p','Ventas verificadas: '+money(approved.reduce((n,o)=>n+Number(o.monto),0))+' · Plataforma: '+money(approved.reduce((n,o)=>n+Number(o.comision_plataforma),0))));
         if(!rows.length)area.append(el('p','No hay pedidos.'));
+        const groups={};for(const [key,title] of [['pendiente','Pendientes'],['verificado','Verificados'],['rechazado','Rechazados']]) {
+            const section=el('section',undefined,'account-payment-group');section.append(el('h2',title));const grid=el('div',undefined,'account-grid');section.append(grid);area.append(section);groups[key]=grid;
+            if(!rows.some(o=>o.estado_pago===key))grid.append(el('p','No hay pedidos '+title.toLowerCase()+'.','account-empty'));
+        }
         for(const o of rows) {
-            const c=el('article',undefined,'form-container');area.append(c);c.append(el('h3',o.plantilla_nombre),el('p',o.id+' — '+money(o.monto)+' — '+o.estado_pago),el('p','20% plataforma: '+money(o.comision_plataforma)+' · 80% vendedor: '+money(o.ingreso_vendedor)));
+            const c=orderCard(o,groups[o.estado_pago] || area);c.append(el('p','20% plataforma: '+money(o.comision_plataforma)+' · 80% vendedor: '+money(o.ingreso_vendedor)));
+            if(o.motivo_rechazo)c.append(el('p','Motivo: '+o.motivo_rechazo));
+            if(o.estado_pago==='verificado')c.append(el('p','Fecha de verificación: '+dateText(o.revisado_at)),el('p','Operación Yape: '+(o.operacion_yape || 'No registrada')));
             if(o.comprobante_url) button('Ver comprobante',async()=>{
                 const blob=await pay.evidencia(o.comprobante_url),url=URL.createObjectURL(blob);urls.push(url);const img=el('img');img.src=url;img.alt='Comprobante presentado';img.style.maxWidth='100%';c.append(img);notice('Compara la imagen con el abono real en Yape. La captura por sí sola no confirma el pago.');
             },c);
@@ -291,17 +375,18 @@
                 c.append(el('p','Destino: '+o.yape_numero+' / '+o.yape_titular));
                 const prefijo=el('p',fechaPeru()+' - Operación ');prefijos.push(prefijo);c.append(prefijo);
                 const ref=field(c,'Código/número de operación Yape','ref-'+o.id,'');
-                button('Confirmar abono y habilitar descarga',async()=>{
+                primary(button('Confirmar abono y habilitar descarga',async()=>{
                     const codigo=ref.value.trim();
                     if(!codigo)throw new Error('Escribe el código/número de operación Yape.');
                     if(!confirm('¿Comprobaste el ingreso real de '+money(o.monto)+' al Yape indicado? Esta aprobación habilita el ZIP y acredita el 80% al vendedor.'))return;
                     await pay.revisar(o.id,true,fechaPeru()+' - Operación '+codigo);paymentChannel?.postMessage('actualizar');await pagosAdmin();notice('Pago aprobado y descarga habilitada.');
-                },c);
+                },c));
                 const motivo=field(c,'Motivo para rechazar el comprobante','motivo-'+o.id,'');
-                button('Rechazar comprobante',async()=>{await pay.revisar(o.id,false,motivo.value);paymentChannel?.postMessage('actualizar');await pagosAdmin();notice('Comprobante rechazado; el comprador puede corregirlo.');},c);
+                motivo.required=true;
+                button('Rechazar comprobante',async()=>{if(!motivo.value.trim()){motivo.reportValidity();throw new Error('Escribe el motivo del rechazo.');}await pay.revisar(o.id,false,motivo.value);paymentChannel?.postMessage('actualizar');await pagosAdmin();notice('Comprobante rechazado; el comprador puede corregirlo.');},c);
             }
         }
-        button('Revisión de plantillas',admin);notice('Pedidos consultados. Solo un abono real debe aprobarse.');
+        button('Revisión de plantillas',()=>{viewTitle('Revisión de plantillas');return admin();});notice('Pedidos consultados. Solo un abono real debe aprobarse.');
     }
     async function finanzas() {
         const orders=await pay.ventas(),withdrawals=await pay.retiros(),b=pay.balance(orders,withdrawals);clear();
@@ -363,11 +448,20 @@
         }};search.addEventListener('input',render);render();button('Volver',admin);notice(rows.length+' perfiles registrados. No se muestran contraseñas ni credenciales.');
     }
     async function perfil() {
+        if(mode==='comprador' || mode==='compra')return buyerProfile();
         const p=await api.miPerfil();clear();area.append(el('h2','Mi perfil'),el('p','Rol: '+p.rol));
         const form=el('form'),name=field(form,'Nombre','perfil-nombre',p.nombre_completo),bio=field(form,'Biografía','perfil-bio',p.bio,'textarea');name.required=true;name.maxLength=120;bio.maxLength=2000;
         const b=el('button','Guardar perfil','btn btn-primary');b.type='submit';form.append(b);area.append(form);
         form.addEventListener('submit',e=>{e.preventDefault();if(!form.reportValidity())return;const datos={nombre_completo:name.value,bio:bio.value};action(async()=>{await api.miPerfil(datos);notice('Perfil guardado.');});});
         button('Volver',reload);notice('Puedes actualizar tu nombre y biografía.');
+    }
+    async function buyerProfile() {
+        const [p,session]=await Promise.all([api.miPerfil(),verificarSesion()]);clear();viewTitle('Mi perfil');
+        const form=el('form',undefined,'account-card account-profile');form.append(el('span','Comprador','payment-badge'));
+        const name=field(form,'Nombre','perfil-nombre',p.nombre_completo),email=field(form,'Correo','perfil-correo',session.user?.email || '', 'email'),bio=field(form,'Biografía (opcional)','perfil-bio',p.bio,'textarea');
+        name.required=true;name.maxLength=120;email.readOnly=true;bio.maxLength=2000;
+        const buttons=actions(form),save=el('button','Guardar cambios','btn btn-primary');save.type='submit';buttons.append(save);button('Volver a Mi panel',buyer,buttons);area.append(form);
+        form.addEventListener('submit',e=>{e.preventDefault();if(!form.reportValidity())return;const datos={nombre_completo:name.value,bio:bio.value};action(async()=>{await api.miPerfil(datos);notice('Perfil guardado.');});});notice('Puedes actualizar tu nombre y biografía.');
     }
     async function vendedorPublico() {
         const id=new URLSearchParams(location.search).get('id');if(!id){clear();notice('Selecciona un vendedor desde una plantilla publicada.');area.append(link('Ver catálogo','catalogo.html'));return;}
@@ -392,6 +486,14 @@
     });
     document.addEventListener('DOMContentLoaded',async()=> {
         area=document.getElementById('market-content'); status=document.getElementById('market-status'); if(!area) return;
+        if(['comprador','compra','admin'].includes(mode)) {
+            const markPanel=()=>{
+                const panel=document.getElementById('user-panel-btn');
+                if(panel && mode!=='compra')panel.setAttribute('aria-current','page');
+            };
+            const auth=document.querySelector('.auth-buttons');
+            if(auth){new MutationObserver(markPanel).observe(auth,{childList:true});markPanel();}
+        }
         document.getElementById('market-reload').addEventListener('click',()=>{if(!busy) location.reload();});
         try {
             if(['vendedor','admin','comprador','compra'].includes(mode) && !await window.accesoPagina) return;
