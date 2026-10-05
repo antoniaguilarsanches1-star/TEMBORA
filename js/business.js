@@ -76,6 +76,27 @@
                 card.append(el('span', model.tipo_negocio), el('h3', model.nombre), el('p', model.descripcion));
                 const features = el('ul', undefined, 'web-features');
                 (model.funciones || []).forEach(text => features.append(el('li', text))); card.append(features);
+
+                if (model.descripcion_panel || (model.imagenes_admin || []).length) {
+                    const panel = el('section', undefined, 'web-admin-preview');
+                    panel.append(el('h4', 'Panel administrativo incluido'));
+                    if (model.descripcion_panel) panel.append(el('p', model.descripcion_panel));
+                    if ((model.imagenes_admin || []).length) {
+                        const gallery = el('div', undefined, 'web-admin-images');
+                        for (const path of model.imagenes_admin) {
+                            const signed = await cover(path);
+                            if (!signed) continue;
+                            const adminImg = el('img');
+                            adminImg.src = signed;
+                            adminImg.alt = 'Vista del panel administrativo de ' + model.nombre;
+                            adminImg.loading = 'lazy';
+                            gallery.append(adminImg);
+                        }
+                        if (gallery.childElementCount) panel.append(gallery);
+                    }
+                    card.append(panel);
+                }
+
                 const actions = el('div', undefined, 'pillar-actions');
                 const demo = demoUrl(model.demo_url);
                 if (demo) {
@@ -105,6 +126,7 @@
             current = model; form.reset();
             for (const name of ['nombre', 'tipo_negocio', 'descripcion', 'demo_url', 'estado', 'posicion']) form.elements[name].value = model[name];
             form.elements.funciones.value = model.funciones.join('\n');
+            form.elements.descripcion_panel.value = model.descripcion_panel || '';
             document.getElementById('web-editor-title').textContent = 'Editar: ' + model.nombre;
             form.scrollIntoView({ behavior: 'smooth', block: 'start' }); form.elements.nombre.focus({ preventScroll: true });
         }
@@ -131,12 +153,21 @@
             fields.demo_url.setCustomValidity(fields.demo_url.value && !demoUrl(fields.demo_url.value) ? 'Usa un enlace HTTPS válido sin credenciales.' : '');
             if (!form.reportValidity()) return;
             const file = fields.portada.files[0];
+            const adminFiles = [...fields.imagenes_admin.files];
             if (file && (!['image/jpeg', 'image/png', 'image/webp'].includes(file.type) || file.size > 5 * 1024 * 1024)) {
-                status.textContent = 'Elige una imagen JPG, PNG o WebP de hasta 5 MB.'; return;
+                status.textContent = 'Elige una portada JPG, PNG o WebP de hasta 5 MB.'; return;
+            }
+            if (adminFiles.length > 6) {
+                status.textContent = 'Puedes subir hasta 6 imágenes del panel administrativo.'; return;
+            }
+            if (adminFiles.some(image => !['image/jpeg', 'image/png', 'image/webp'].includes(image.type) || image.size > 5 * 1024 * 1024)) {
+                status.textContent = 'Las imágenes del panel deben ser JPG, PNG o WebP y pesar hasta 5 MB cada una.'; return;
             }
             const record = {
                 nombre: fields.nombre.value.trim(), tipo_negocio: fields.tipo_negocio.value,
                 descripcion: fields.descripcion.value.trim(), funciones: fields.funciones.value.split('\n').map(s => s.trim()).filter(Boolean),
+                descripcion_panel: fields.descripcion_panel.value.trim(),
+                imagenes_admin: current?.imagenes_admin || [],
                 demo_url: fields.demo_url.value.trim(), estado: fields.estado.value, posicion: Number(fields.posicion.value),
                 portada: current?.portada || null
             };
@@ -144,14 +175,26 @@
                 status.textContent = 'Para publicar agrega una portada, una demo HTTPS y al menos una función.'; return;
             }
             loading = true; save.disabled = true; status.textContent = 'Guardando modelo…';
-            let uploaded = null, saveAttempted = false;
+            const uploaded = [];
+            let saveAttempted = false;
             try {
                 const session = await verificarSesion();
                 if (!session?.success || session.rol !== 'admin') throw new Error('Tu sesión de administrador no está disponible.');
                 if (file) {
-                    uploaded = crypto.randomUUID() + '.' + ({'image/jpeg':'jpg','image/png':'png','image/webp':'webp'}[file.type]);
-                    const { error } = await supabaseClient.storage.from(bucket).upload(uploaded, file, { upsert: false, contentType: file.type });
-                    if (error) throw error; record.portada = uploaded;
+                    const path = crypto.randomUUID() + '.' + ({'image/jpeg':'jpg','image/png':'png','image/webp':'webp'}[file.type]);
+                    const { error } = await supabaseClient.storage.from(bucket).upload(path, file, { upsert: false, contentType: file.type });
+                    if (error) throw error;
+                    uploaded.push(path); record.portada = path;
+                }
+                if (adminFiles.length) {
+                    const newAdminImages = [];
+                    for (const image of adminFiles) {
+                        const path = crypto.randomUUID() + '.' + ({'image/jpeg':'jpg','image/png':'png','image/webp':'webp'}[image.type]);
+                        const { error } = await supabaseClient.storage.from(bucket).upload(path, image, { upsert: false, contentType: image.type });
+                        if (error) throw error;
+                        uploaded.push(path); newAdminImages.push(path);
+                    }
+                    record.imagenes_admin = newAdminImages;
                 }
                 // Conservar un ID estable impide duplicar altas si se pierde la respuesta.
                 const targetId = current?.id || newId;
@@ -161,10 +204,15 @@
                 const query = existing.data ? supabaseClient.from('webs_completas').update(record).eq('id', targetId) : supabaseClient.from('webs_completas').insert({ id: targetId, ...record });
                 const { data, error } = await query.select('id').single();
                 if (error || !data) throw error || new Error('No se confirmó el guardado.');
-                uploaded = null; reset(); await refresh(); status.textContent = 'Modelo guardado. Solo las webs publicadas aparecen en la galería.';
+
+                // Si se reemplazaron capturas del panel, retirar las anteriores después de confirmar el guardado.
+                if (adminFiles.length && current?.imagenes_admin?.length) {
+                    await supabaseClient.storage.from(bucket).remove(current.imagenes_admin).catch(() => {});
+                }
+                reset(); await refresh(); status.textContent = 'Modelo guardado. Solo las webs publicadas aparecen en la galería.';
             } catch (_) {
-                // Una respuesta perdida puede corresponder a un guardado exitoso: no borrar su portada.
-                if (uploaded && !saveAttempted) await supabaseClient.storage.from(bucket).remove([uploaded]).catch(() => {});
+                // Si todavía no se intentó guardar, estos archivos sí son huérfanos y pueden retirarse.
+                if (uploaded.length && !saveAttempted) await supabaseClient.storage.from(bucket).remove(uploaded).catch(() => {});
                 status.textContent = 'No se pudo guardar. Comprueba tu sesión y conexión, y reintenta. Tus datos siguen en el formulario.';
             } finally { loading = false; save.disabled = false; }
         });
