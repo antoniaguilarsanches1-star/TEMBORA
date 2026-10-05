@@ -35,16 +35,18 @@
 .pillar-form .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
 .pillar-form :is(input,select,textarea) { width: 100%; min-width: 0; }
 .pillar-form :is(input,textarea):read-only { background: #f1f6ff; }
-.web-cover { width: 100%; aspect-ratio: 16/10; object-fit: cover; border-radius: 8px; background: #eff6ff; }
-.web-features { padding-left: 1.2rem; }
+.web-cover { width: 100%; aspect-ratio: 16/7; object-fit: cover; object-position: top center; border-radius: 10px; background: #eff6ff; }
+.web-features { padding-left: 1.2rem; margin: .25rem 0 0; }
+.web-features-toggle { appearance:none; border:0; background:transparent; color:#2563eb; font:inherit; font-weight:600; padding:0; cursor:pointer; align-self:flex-start; }
+.web-features-toggle:hover { text-decoration:underline; }
 .admin-panel-media { border: 1px solid #dce5f3; border-radius: 12px; padding: 1rem 1.1rem; margin: 1rem 0; }
 .admin-panel-media legend { padding: 0 .45rem; font-weight: 700; color: #1e3a8a; }
-.web-admin-preview { border-top: 1px solid #e5e7eb; padding-top: 1rem; margin-top: .25rem; }
+.web-admin-preview { border-top: 1px solid #e5e7eb; padding-top: 1rem; margin-top: .35rem; }
 .web-admin-preview h4 { margin: 0 0 .45rem; color: #1e3a8a; font-size: 1rem; }
 .web-admin-preview p { margin-bottom: .75rem; }
-.web-admin-images { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: .65rem; }
-.web-admin-images img { width: 100%; aspect-ratio: 16/10; object-fit: cover; border-radius: 8px; border: 1px solid #dce5f3; background: #f8fafc; }
-.pillar-card .pillar-actions { margin-top: auto; justify-content: flex-start; }
+.web-admin-images { display: grid; grid-template-columns: minmax(0,560px); gap: .65rem; }
+.web-admin-images img { width: 100%; aspect-ratio: 16/9; object-fit: cover; object-position: top center; border-radius: 8px; border: 1px solid #dce5f3; background: #f8fafc; }
+.pillar-card .pillar-actions { margin-top: .35rem; justify-content: flex-start; }
 .pillar-card .pillar-actions .btn { min-width: 0; }
 .webs-admin { border-top: 1px solid #dce5f3; }
 .webs-admin .pillar-form { margin: 1.5rem 0; }
