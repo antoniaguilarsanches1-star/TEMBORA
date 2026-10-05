@@ -74,8 +74,23 @@
                 const url = await cover(model.portada);
                 if (url) { img.src = url; card.append(img); }
                 card.append(el('span', model.tipo_negocio), el('h3', model.nombre), el('p', model.descripcion));
+                const allFeatures = model.funciones || [];
                 const features = el('ul', undefined, 'web-features');
-                (model.funciones || []).forEach(text => features.append(el('li', text))); card.append(features);
+                const visibleFeatures = allFeatures.slice(0, 7);
+                visibleFeatures.forEach(text => features.append(el('li', text)));
+                card.append(features);
+
+                if (allFeatures.length > 7) {
+                    const more = button('Ver todas las funciones', () => {
+                        const expanded = more.getAttribute('aria-expanded') === 'true';
+                        features.replaceChildren();
+                        (expanded ? visibleFeatures : allFeatures).forEach(text => features.append(el('li', text)));
+                        more.textContent = expanded ? 'Ver todas las funciones' : 'Ver menos';
+                        more.setAttribute('aria-expanded', String(!expanded));
+                    }, 'web-features-toggle');
+                    more.setAttribute('aria-expanded', 'false');
+                    card.append(more);
+                }
 
                 if (model.descripcion_panel || (model.imagenes_admin || []).length) {
                     const panel = el('section', undefined, 'web-admin-preview');
