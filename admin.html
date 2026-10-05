@@ -29,7 +29,7 @@
     <!-- Supabase JS -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <link rel="stylesheet" href="css/cuenta.css?v=20261001">
-    <link rel="stylesheet" href="css/pillars.css?v=20261003">
+    <link rel="stylesheet" href="css/pillars.css?v=20261005-adminmedia">
 <link rel="stylesheet" href="css/vendedor-revision.css?v=20261003">
 <link rel="stylesheet" href="css/admin-panel.css?v=20261003">
 </head>
@@ -92,6 +92,11 @@
             <div class="form-group"><label for="web-description">Descripción corta</label><textarea id="web-description" name="descripcion" required maxlength="1200" rows="3"></textarea></div>
             <div class="form-group"><label for="web-features">Funciones principales (una por línea, máximo 30)</label><textarea id="web-features" name="funciones" rows="4" maxlength="3000"></textarea></div>
             <div class="form-group"><label for="web-cover">Subir o cambiar portada (JPG, PNG o WebP, hasta 5 MB)</label><input id="web-cover" name="portada" type="file" accept="image/jpeg,image/png,image/webp"><p>Al editar, conserva la portada actual si no eliges otra imagen.</p></div>
+            <fieldset class="admin-panel-media">
+                <legend>Panel administrativo incluido</legend>
+                <div class="form-group"><label for="web-admin-description">Descripción del panel</label><textarea id="web-admin-description" name="descripcion_panel" rows="3" maxlength="1600" placeholder="Ej.: Gestiona reservas, estados de citas, bloqueos e ingresos desde un panel privado."></textarea></div>
+                <div class="form-group"><label for="web-admin-images">Imágenes del panel administrador (hasta 6)</label><input id="web-admin-images" name="imagenes_admin" type="file" accept="image/jpeg,image/png,image/webp" multiple><p>JPG, PNG o WebP, máximo 5 MB por imagen. Al editar, si eliges nuevas imágenes reemplazarán las anteriores.</p></div>
+            </fieldset>
             <div class="form-group"><label for="web-demo">Enlace de demo (HTTPS)</label><input id="web-demo" name="demo_url" type="url" maxlength="2000" placeholder="https://"></div>
             <div class="form-row">
                 <div class="form-group"><label for="web-state">Estado</label><select id="web-state" name="estado"><option value="borrador">Borrador</option><option value="publicada">Publicada</option><option value="oculta">Oculta</option></select></div>
@@ -155,7 +160,7 @@
     <script src="js/mercado-api.js"></script>
     <script src="js/pagos-api.js"></script>
     <script src="js/mercado-ui.js?v=20261001-cuenta"></script>
-    <script src="js/business.js?v=20261003"></script>
+    <script src="js/business.js?v=20261005-adminmedia"></script>
 <script src="js/admin-shell.js?v=20261003"></script>
 </body>
 </html>
