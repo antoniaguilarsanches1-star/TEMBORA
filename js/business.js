@@ -168,15 +168,12 @@
             fields.demo_url.setCustomValidity(fields.demo_url.value && !demoUrl(fields.demo_url.value) ? 'Usa un enlace HTTPS válido sin credenciales.' : '');
             if (!form.reportValidity()) return;
             const file = fields.portada.files[0];
-            const adminFiles = [...fields.imagenes_admin.files];
+            const adminFiles = [...fields.imagenes_admin.files].slice(0, 1);
             if (file && (!['image/jpeg', 'image/png', 'image/webp'].includes(file.type) || file.size > 5 * 1024 * 1024)) {
                 status.textContent = 'Elige una portada JPG, PNG o WebP de hasta 5 MB.'; return;
             }
-            if (adminFiles.length > 6) {
-                status.textContent = 'Puedes subir hasta 6 imágenes del panel administrativo.'; return;
-            }
-            if (adminFiles.some(image => !['image/jpeg', 'image/png', 'image/webp'].includes(image.type) || image.size > 5 * 1024 * 1024)) {
-                status.textContent = 'Las imágenes del panel deben ser JPG, PNG o WebP y pesar hasta 5 MB cada una.'; return;
+                        if (adminFiles.some(image => !['image/jpeg', 'image/png', 'image/webp'].includes(image.type) || image.size > 5 * 1024 * 1024)) {
+                status.textContent = 'La imagen del panel debe ser JPG, PNG o WebP y pesar hasta 5 MB.'; return;
             }
             const record = {
                 nombre: fields.nombre.value.trim(), tipo_negocio: fields.tipo_negocio.value,
