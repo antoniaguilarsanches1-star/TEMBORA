@@ -8,7 +8,7 @@ create table public.webs_completas (
     funciones text[] not null default '{}' check (cardinality(funciones) <= 30),
     portada text check (portada ~ '^[a-f0-9-]+[.](jpg|png|webp)$'),
     descripcion_panel text not null default '' check (length(descripcion_panel) <= 1600),
-    imagenes_admin text[] not null default '{}' check (cardinality(imagenes_admin) <= 6),
+    imagenes_admin text[] not null default '{}' check (cardinality(imagenes_admin) <= 1),
     demo_url text not null default '' check (demo_url = '' or demo_url ~ '^https://[^/@[:space:]]+([/?#][^[:space:]]*)?
     estado text not null default 'borrador' check (estado in ('borrador','publicada','oculta')),
     posicion integer not null default 0 check (posicion >= 0),
