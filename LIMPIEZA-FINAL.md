@@ -51,3 +51,34 @@ Informe nuevo: `LIMPIEZA-FINAL.md`. Archivos eliminados: ninguno.
 ## Futuro, sin implementar
 
 Tratar el sistema operativo de negocios como una etapa independiente y ampliar sus condiciones cuando se defina el servicio funcional. Al publicar esta limpieza, realizar una comprobación breve del sitio real, OAuth, recursos externos y demos configuradas. No se ha hecho push.
+
+## Cierre actualizado — 6 de octubre de 2026
+
+TAVIKU queda definido y cerrado como plataforma de **dos ramas**:
+
+1. **Plantillas**: marketplace con comprador, vendedor y administrador, pagos por Yape, revisión de comprobantes, descarga privada del ZIP y retiros del vendedor.
+2. **Webs completas**: galería de modelos de negocio, demo pública, solicitud por WhatsApp y gestión administrativa de los modelos.
+
+### Cambios finales aplicados
+
+- Se reforzó Supabase con políticas RLS optimizadas, eliminación de una política antigua de creación de pedidos, permisos estructurales reducidos e índices faltantes.
+- Se limitó la lectura pública de perfiles a vendedores y se separó el acceso público/autenticado de plantillas y webs completas.
+- Las funciones internas de trigger dejaron de ser invocables desde la API pública.
+- actualizar_fecha() usa un search_path fijo.
+- La ficha de Webs completas muestra hasta siete funciones inicialmente y permite desplegar el resto.
+- La portada y la vista del panel administrativo se compactaron para reducir scroll.
+- El panel de una Web completa usa **una sola captura administrativa**, tanto en el formulario de Admin como en la restricción de base de datos.
+- Black Crown Barbería permanece publicada como la primera Web completa.
+
+### Estado de datos revisado
+
+En producción se encontraron 5 perfiles, 4 plantillas publicadas, 3 pedidos verificados, 2 retiros y 1 Web completa publicada. No se eliminaron porque no existe una señal segura que permita distinguir cuáles son datos de prueba y cuáles deben conservarse.
+
+### Avisos de Supabase que permanecen
+
+- es_admin(), es_vendedor() y tembora_admin_cambiar_rol(...) siguen apareciendo como funciones SECURITY DEFINER ejecutables por usuarios autenticados. Se conservan porque forman parte de las comprobaciones internas de autorización; la función de cambio de rol valida además que el actor sea administrador.
+- tembora_private.archivos_retirados tiene RLS sin políticas públicas. Es una tabla interna y no se abrió acceso.
+- La protección de contraseñas filtradas de Supabase Auth sigue pendiente de activación manual desde el panel de Supabase.
+- Los índices recién creados aparecen como no usados hasta que exista tráfico suficiente; no es un fallo funcional.
+
+No se añaden nuevas funciones al producto durante este cierre.
