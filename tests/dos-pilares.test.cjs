@@ -87,6 +87,7 @@ test('dos pilares y gestión de webs completas',async t=>{
   await page.locator('#web-demo').fill('https://example.com/restaurante');await page.locator('#web-state').selectOption('publicada');
   await page.getByRole('button',{name:'Guardar modelo',exact:true}).click();await page.getByText('Para publicar agrega una portada, una demo HTTPS y al menos una función.').waitFor();
   await page.locator('#web-cover').setInputFiles({name:'cover.png',mimeType:'image/png',buffer:Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+jRZkAAAAASUVORK5CYII=','base64')});
+  await page.locator('#web-admin-images').setInputFiles({name:'admin.png',mimeType:'image/png',buffer:Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+jRZkAAAAASUVORK5CYII=','base64')});
   await page.getByRole('button',{name:'Guardar modelo',exact:true}).click();await page.locator('#webs-admin-list').getByText('Restaurante nuevo',{exact:true}).waitFor();
   await page.evaluate(()=>localStorage.removeItem('test-role'));
  });
