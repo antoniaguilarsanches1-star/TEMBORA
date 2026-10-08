@@ -30,6 +30,14 @@
     }
     document.addEventListener('DOMContentLoaded', async () => {
         const form = document.getElementById('business-request');
+        if (form && document.body.dataset.publicPage === 'pagina-personalizada') {
+            const params = new URLSearchParams(location.search);
+            const selectedModel = params.get('modelo');
+            if (selectedModel && selectedModel.length <= 160) {
+                const description = document.getElementById('request-description');
+                if (description && !description.value.trim()) description.value = 'Me interesa el modelo "' + selectedModel + '". Quiero adaptarlo a mi negocio.';
+            }
+        }
         if (form) {
             form.addEventListener('input', event => event.target.setCustomValidity?.(''));
             form.addEventListener('submit', event => {
@@ -62,13 +70,13 @@
         const status = document.getElementById('webs-status');
         const retry = document.getElementById('webs-retry');
         const select = document.getElementById('chosen-model');
-        const previous = select.value;
+        const previous = select?.value || '';
         retry.hidden = true; status.textContent = 'Cargando modelos…'; root.replaceChildren();
-        select.replaceChildren(new Option('Selecciona un modelo de la galería', ''));
+        if (select) select.replaceChildren(new Option('Selecciona un modelo de la galería', ''));
         try {
             const rows = await listModels();
             for (const model of rows) {
-                select.add(new Option(model.nombre + ' — ' + model.tipo_negocio, model.id));
+                if (select) select.add(new Option(model.nombre + ' — ' + model.tipo_negocio, model.id));
                 const card = el('article', undefined, 'pillar-card');
                 const img = el('img', undefined, 'web-cover'); img.alt = 'Vista previa de ' + model.nombre; img.loading = 'lazy';
                 const url = await cover(model.portada);
@@ -117,14 +125,12 @@
                 if (demo) {
                     const a = el('a', 'Ver demo', 'btn btn-outline'); a.href = demo; a.target = '_blank'; a.rel = 'noopener noreferrer'; actions.append(a);
                 }
-                actions.append(button('Quiero una web así', () => {
-                    select.value = model.id;
-                    document.getElementById('business-request').scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth', block: 'start' });
-                    select.focus({ preventScroll: true });
-                }));
+                const request = el('a', 'Quiero una web así', 'btn btn-primary');
+                request.href = 'pagina-personalizada.html?modelo=' + encodeURIComponent(model.nombre) + '#business-request';
+                actions.append(request);
                 card.append(actions); root.append(card);
             }
-            if ([...select.options].some(option => option.value === previous)) select.value = previous;
+            if (select && [...select.options].some(option => option.value === previous)) select.value = previous;
             status.textContent = rows.length ? '' : 'Estamos preparando los primeros modelos. Puedes contarnos tu idea en Para negocios.';
         } catch (_) {
             status.textContent = 'No pudimos cargar las webs completas. Reintenta o contáctanos desde Para negocios.'; retry.hidden = false;
