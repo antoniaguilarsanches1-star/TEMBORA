@@ -71,3 +71,6 @@
 [data-public-page="pagina-personalizada"] .business-qr .pillar-card{padding-left:7rem;position:relative}
 [data-public-page="pagina-personalizada"] .business-qr-sample{position:absolute;left:1.5rem;top:1.7rem;display:grid;place-items:center;width:68px;height:68px;border:1px solid #99f6e4;background:#ccfbf1;color:#0f766e;border-radius:14px;font-size:1.7rem}
 @media(max-width:700px){[data-public-page="pagina-personalizada"] .business-qr .pillar-card{padding-left:6.5rem}[data-public-page="pagina-personalizada"] .business-qr-sample{width:58px;height:58px;left:1.25rem}}
+
+/* Colores aprobados para la portada de esta página */
+[data-public-page="pagina-personalizada"] .hero{background:linear-gradient(115deg,#0f766e,#0d9488)!important}[data-public-page="pagina-personalizada"] .hero h1,[data-public-page="pagina-personalizada"] .hero p,[data-public-page="pagina-personalizada"] .business-eyebrow{color:#fff!important}
