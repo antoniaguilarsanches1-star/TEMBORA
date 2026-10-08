@@ -1,0 +1,38 @@
+/* Portada de TAVIKU: dos servicios principales, identidad azul y turquesa. */
+[data-public-page="index"] .taviku-home-hero{background:linear-gradient(180deg,#f8fafc 0%,#fff 100%);padding:4.5rem 0 4rem;color:#0f172a}
+.taviku-home-heading{text-align:center;max-width:790px;margin:0 auto 2.7rem}
+.taviku-home-eyebrow{font-size:.75rem;letter-spacing:.14em;font-weight:750;color:#64748b}
+.taviku-home-heading h1{color:#0f172a;font-weight:800;letter-spacing:-.045em;line-height:1.1;font-size:clamp(2.1rem,4.2vw,3.8rem);margin:1rem 0}
+.taviku-home-heading p{color:#475569;font-size:clamp(1rem,1.45vw,1.15rem);line-height:1.7}
+.taviku-home-duo{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1.5rem;align-items:stretch}
+.taviku-home-service{--service:#2563eb;--service-dark:#1d4ed8;--service-border:#bfdbfe;--service-bg:#eff6ff;display:flex;flex-direction:column;min-width:0;padding:clamp(1.5rem,3vw,2.5rem);border:1px solid var(--service-border);border-radius:22px;background:var(--service-bg);transition:transform .22s ease,box-shadow .22s ease;overflow:hidden}
+.taviku-home-service--business{--service:#0d9488;--service-dark:#0f766e;--service-border:#99f6e4;--service-bg:#f0fdfa}
+.taviku-home-service:hover{transform:translateY(-4px);box-shadow:0 22px 50px -30px #0f172a45}
+.taviku-service-top{display:flex;align-items:center;gap:.85rem;flex-wrap:wrap;margin-bottom:1.45rem}
+.taviku-service-icon{display:grid;place-items:center;background:#ffffffba;color:var(--service);font-size:1.35rem;width:51px;height:51px;border-radius:15px;border:1px solid var(--service-border)}
+.taviku-service-label{font-size:.75rem;font-weight:800;letter-spacing:.085em;color:var(--service-dark)}
+.taviku-home-service h2{font-size:clamp(1.55rem,2.3vw,2.25rem);line-height:1.18;letter-spacing:-.03em;color:#0f172a;margin:0 0 .9rem}
+.taviku-home-service p{color:#475569;font-size:1rem;line-height:1.7;max-width:480px;margin:0}
+.taviku-service-preview{height:100px;background:#ffffff9e;border:1px solid var(--service-border);border-radius:12px;margin:1.6rem 0;overflow:hidden;position:relative}
+.taviku-preview-window{display:flex;gap:5px;padding:12px 14px;border-bottom:1px solid var(--service-border)}
+.taviku-preview-window span{background:var(--service-border);width:7px;height:7px;border-radius:50%}
+.taviku-preview-layout{padding:13px 16px;display:grid;grid-template-columns:1.5fr 1fr 1fr;gap:12px;height:66px}
+.taviku-preview-layout div{border-radius:6px;background:linear-gradient(145deg,var(--service-border),#fff);border:1px solid var(--service-border)}
+.taviku-preview-layout div:first-child{background:var(--service);opacity:.75}
+.taviku-service-actions{display:flex;flex-wrap:wrap;align-items:center;gap:1rem 1.3rem;margin-top:auto}
+.taviku-service-button{background:var(--service);color:#fff!important;padding:.86rem 1.3rem;border-radius:9px;font-weight:700;display:inline-flex;align-items:center;justify-content:center;gap:.65rem;text-decoration:none;transition:background .2s ease,transform .2s ease}
+.taviku-service-button:hover{background:var(--service-dark);transform:translateY(-1px)}
+.taviku-service-link{font-size:.93rem;font-weight:650;color:var(--service-dark)!important;text-decoration:none}
+.taviku-service-link:hover{text-decoration:underline}
+[data-public-page="index"] .search-btn{background:#2563eb;border-color:#2563eb}
+[data-public-page="index"] .search-btn:hover{background:#1d4ed8}
+[data-public-page="index"] .pillar-tint:has(.pillar-chips){background:#f0fdfa}
+[data-public-page="index"] .pillar-tint:has(.pillar-chips) .pillar-chips li{color:#0f766e;border-color:#99f6e4;background:#fff}
+[data-public-page="index"] .pillar-tint:has(.pillar-chips) .btn-primary{background:#0d9488;border-color:#0d9488}
+[data-public-page="index"] .pillar-tint:has(.pillar-chips) .btn-primary:hover{background:#0f766e}
+[data-public-page="index"] .pillar-grid.pillar-pair .pillar-card:last-child{background:#f0fdfa;border-color:#99f6e4}
+[data-public-page="index"] .pillar-grid.pillar-pair .pillar-card:last-child h3{color:#115e59}
+[data-public-page="index"] .pillar-grid.pillar-pair .pillar-card:last-child .btn-primary{background:#0d9488;border-color:#0d9488}
+@media(max-width:760px){[data-public-page="index"] .taviku-home-hero{padding:2.7rem 0}.taviku-home-heading{margin-bottom:1.7rem}.taviku-home-duo{grid-template-columns:1fr;gap:1rem}.taviku-home-service{padding:1.5rem}.taviku-service-preview{height:78px;margin:1.25rem 0}}
+@media(max-width:420px){.taviku-service-actions{align-items:stretch;flex-direction:column}.taviku-service-button{width:100%}.taviku-service-link{text-align:center}.taviku-home-eyebrow{font-size:.66rem}}
+@media(prefers-reduced-motion:reduce){.taviku-home-service,.taviku-service-button{transition:none}.taviku-home-service:hover,.taviku-service-button:hover{transform:none}}
