@@ -25,3 +25,6 @@
 
 /* Portada de vendedores: azul de marketplace más presente */
 [data-public-page="vender-publico"] .seller-hero{background:linear-gradient(112deg,#c9ddff 0%,#e6efff 55%,#d6e7ff 100%)!important;border-bottom:1px solid #b7d1ff}
+
+/* Colores aprobados para la portada de esta página */
+[data-public-page="vender-publico"] .seller-hero{background:linear-gradient(115deg,#1d4ed8,#2563eb)!important}[data-public-page="vender-publico"] .seller-hero h1,[data-public-page="vender-publico"] .seller-hero p,[data-public-page="vender-publico"] .seller-eyebrow{color:#fff!important}
