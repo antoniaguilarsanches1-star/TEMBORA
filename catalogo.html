@@ -24,6 +24,7 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <link rel="stylesheet" href="css/public.css?v=20261001">
     <link rel="stylesheet" href="css/pillars.css?v=20261003">
+    <link rel="stylesheet" href="css/catalogo-redisenio.css?v=20261008">
 </head>
 <body data-public-page="catalogo" data-market="catalogo">
     <!-- Header -->
@@ -49,18 +50,20 @@
         </div>
     </header>
 
-    <!-- Page Header -->
-    <section class="section" style="background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-light) 100%); color: var(--text-white); padding: 3rem 0;">
-        <div class="container text-center">
-            <h1 style="font-size: 2.5rem; font-weight: 700; margin-bottom: 0.5rem;">Catálogo de Plantillas</h1>
-            <p style="font-size: 1.125rem; opacity: 0.9;">Encuentra diseños listos para usar en tu próximo proyecto.</p>
-        </div>
+    <!-- Presentación del catálogo -->
+    <section class="section catalog-hero">
+      <div class="container text-center">
+        <span class="catalog-eyebrow">MARKETPLACE TAVIKU</span>
+        <h1>Encuentra la plantilla para tu próximo proyecto</h1>
+        <p>Explora diseños listos para usar, compara opciones y elige la que mejor se adapte a tu idea.</p>
+      </div>
     </section>
 
     <!-- Filtros y Búsqueda -->
-    <section class="section">
+    <section class="section catalog-main">
         <div class="container">
             <div class="filters-section">
+                <h2 class="filters-heading"><i class="fas fa-sliders-h" aria-hidden="true"></i> Encuentra tu plantilla</h2>
                 <div class="filters-grid">
                     <div class="filter-group">
                         <label for="category-filter">Categoría</label>
@@ -101,16 +104,13 @@
                         </select>
                     </div>
                     
-                    <div class="filter-group">
-                        <label>&nbsp;</label>
-                        <button id="apply-filters" class="btn btn-primary">
-                            <i class="fas fa-filter"></i> Aplicar filtros
-                        </button>
-                        <button id="clear-filters" type="button" class="btn btn-outline btn-sm">Limpiar filtros</button>
-                    </div>
+                </div>
+                <div class="catalog-filter-actions">
+                    <button id="clear-filters" type="button" class="btn btn-outline btn-sm">Limpiar filtros</button>
+                    <button id="apply-filters" type="button" class="btn btn-primary"><i class="fas fa-filter" aria-hidden="true"></i> Aplicar filtros</button>
                 </div>
                 
-                <div class="filter-group mt-3">
+                <div class="filter-group catalog-search">
                     <label for="search-catalog">Buscar</label>
                     <input type="text" id="search-catalog" class="search-input" placeholder="Buscar plantillas por nombre...">
                 </div>
