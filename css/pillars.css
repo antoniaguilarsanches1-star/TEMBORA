@@ -1,7 +1,10 @@
 /* Navegación compartida y presentación de los dos pilares. */
 .header-content { gap: 1rem; }
-.header .nav-menu { gap: 1rem; }
-.header .nav-link { font-size: .875rem; white-space: nowrap; }
+.header .nav-menu { gap: .95rem; }
+[data-public-page] .header .logo-symbol { height: 46px; width: auto; }
+[data-public-page] .header .logo-text { font-size: 1.55rem; }
+[data-public-page] .header .header-content { padding-top: 1.05rem; padding-bottom: 1.05rem; }
+.header .nav-link { font-size: .96rem; white-space: nowrap; }
 .header .auth-buttons { flex-shrink: 0; }
 .footer-content { grid-template-columns: 1.6fr repeat(4, 1fr); }
 [data-public-page] .hero { padding: 2.75rem 0; }
@@ -51,13 +54,15 @@
 .webs-admin { border-top: 1px solid #dce5f3; }
 .webs-admin .pillar-form { margin: 1.5rem 0; }
 [data-public-page="index"] .search-container { margin: 0 auto 1.5rem; }
-@media(max-width:1250px) {
+@media(max-width:1360px) {
  .header .nav-menu { display: none; position: absolute; top: 100%; left: 0; right: 0; flex-direction: column; background: white; padding: 1rem; box-shadow: var(--shadow-lg); gap: .5rem; }
  .header .nav-menu.active { display: flex; }
  .header .hamburger { display: flex; }
  .footer-content { grid-template-columns: repeat(3,minmax(0,1fr)); }
 }
 @media(max-width:700px) {
+ [data-public-page] .header .logo-symbol { height: 41px; }
+ [data-public-page] .header .logo-text { font-size: 1.4rem; }
  .pillar-pair,.pillar-form .form-row { grid-template-columns: 1fr; }
  .footer-content { grid-template-columns: repeat(2,minmax(0,1fr)); }
  [data-public-page] :is(.section,.how-it-works,.hero) { padding: 2rem 0; }
