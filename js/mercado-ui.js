@@ -320,7 +320,18 @@
         if(!p) { notice('Plantilla no disponible o aún no publicada.'); area.append(link('Volver al catálogo','catalogo.html')); return; }
         const session=await verificarSesion();
         if(session.success && session.rol==='comprador')return buyerDetail(p);
-        area.append(el('h1',p.nombre),el('p',money(p.precio))); description(p,area); await preview(p,area);
+        const layout=el('div',undefined,'taviku-detail-layout');
+        const gallery=el('section',undefined,'taviku-detail-gallery');
+        const info=el('section',undefined,'taviku-detail-info');
+        layout.append(gallery,info);area.append(layout);
+        info.append(el('span','PLANTILLA WEB','taviku-detail-eyebrow'),el('h2',p.nombre,'taviku-detail-name'),el('p',money(p.precio),'taviku-detail-price'));
+        const category=cats.find(x=>String(x.id)===String(p.categoria_id))?.nombre;
+        if(category)info.append(el('span',category,'taviku-detail-category'));
+        const desc=el('p',p.descripcion || 'Consulta las imágenes y características de esta plantilla.','taviku-detail-description');
+        info.append(desc);
+        if(Array.isArray(p.tecnologias) && p.tecnologias.length)info.append(el('p',p.tecnologias.join(' · '),'taviku-detail-tech'));
+        const controls=el('div',undefined,'taviku-detail-actions');
+        info.append(controls);
         const requireSession=async reason=>{
             const session=await verificarSesion();
             if(session.session)return true;
@@ -328,9 +339,15 @@
             else notice(session.error || 'No se pudo comprobar tu sesión. Reintenta.');
             return false;
         };
-        button('Guardar en favoritos',async()=>{ if(!await requireSession('favoritos'))return;await api.favorito(p.id,true); notice('Guardada en tus favoritos.'); });
-        if(p.vendedor_id)area.append(link('Ver vendedor','vendedor.html?id='+encodeURIComponent(p.vendedor_id)));
-        button('Comprar con Yape',async()=>{if(!await requireSession('comprar'))return;const order=await pay.crear(p.id);location.href='compra.html?pedido='+encodeURIComponent(order.id);});
+        const buy=button('Comprar con Yape',async()=>{if(!await requireSession('comprar'))return;const order=await pay.crear(p.id);location.href='compra.html?pedido='+encodeURIComponent(order.id);},controls);
+        buy.className='btn btn-primary taviku-detail-buy';
+        const demo=safeURL(p.demo_url);
+        if(demo){const a=link('Ver demo',demo);a.className='btn btn-outline';a.target='_blank';a.rel='noopener noreferrer';controls.append(a);}
+        const favorite=button('Guardar en favoritos',async()=>{if(!await requireSession('favoritos'))return;await api.favorito(p.id,true);notice('Guardada en tus favoritos.');},controls);
+        favorite.className='btn btn-outline';
+        if(p.vendedor_id)controls.append(link('Ver vendedor','vendedor.html?id='+encodeURIComponent(p.vendedor_id)));
+        info.append(el('p','Pago mediante Yape · La descarga se habilita después de aprobar el pago.','taviku-detail-note'));
+        await preview(p,gallery);
         const panel=button('Ver mi panel',()=>redirigirSegunRol());
         panel.setAttribute('data-detail-panel','');
         panel.hidden=document.documentElement.getAttribute('data-session-state')!=='authenticated';
