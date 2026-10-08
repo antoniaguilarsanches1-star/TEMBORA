@@ -5,3 +5,28 @@
 [data-public-page="webs-completas"] .webs-request-panel p{color:#475569;margin:0 auto 1.5rem;max-width:580px}
 [data-public-page="webs-completas"] .webs-request-panel .btn{background:#0d9488;border-color:#0d9488}
 [data-public-page="webs-completas"] .webs-request-panel .btn:hover{background:#0f766e}
+
+/* Webs completas pertenece al servicio para negocios, no al marketplace azul */
+[data-public-page="webs-completas"] .hero{background:linear-gradient(120deg,#e6faf5 0%,#f0fdfa 55%,#f8fafc 100%);color:#0f172a;padding:4.2rem 0!important;border-bottom:1px solid #ccfbf1}
+[data-public-page="webs-completas"] .hero h1{color:#0f172a;font-size:clamp(2.25rem,4vw,3.65rem);line-height:1.15;letter-spacing:-.04em;font-weight:800}
+[data-public-page="webs-completas"] .hero p{color:#475569;font-size:1.08rem;line-height:1.7;max-width:720px;margin-inline:auto}
+[data-public-page="webs-completas"] .webs-eyebrow{display:block;font-size:.77rem;font-weight:800;letter-spacing:.13em;color:#0f766e;margin-bottom:1rem}
+[data-public-page="webs-completas"] main .section-title h2{color:#0f172a}
+[data-public-page="webs-completas"] #webs-gallery{grid-template-columns:repeat(auto-fit,minmax(min(100%,330px),1fr));gap:1.5rem;align-items:start}
+[data-public-page="webs-completas"] #webs-gallery .pillar-card{background:#fff;border:1px solid #cdece6;border-radius:17px;padding:1.4rem;box-shadow:0 12px 30px -25px #0f172a77;gap:.85rem}
+[data-public-page="webs-completas"] #webs-gallery .pillar-card h3{color:#115e59;font-size:1.4rem}
+[data-public-page="webs-completas"] #webs-gallery .web-cover{aspect-ratio:16/9;object-fit:cover;object-position:top center;border:1px solid #dbe8e6;border-radius:11px}
+[data-public-page="webs-completas"] #webs-gallery .pillar-card>span{color:#0f766e;font-weight:650;font-size:.86rem}
+[data-public-page="webs-completas"] #webs-gallery .web-features{margin:.2rem 0;padding-left:1.3rem;color:#475569}
+[data-public-page="webs-completas"] #webs-gallery .web-features li{margin-bottom:.3rem}
+[data-public-page="webs-completas"] #webs-gallery .web-features-toggle{color:#0f766e}
+[data-public-page="webs-completas"] #webs-gallery .web-admin-preview{border-top:1px solid #dbe8e6;padding-top:1.1rem}
+[data-public-page="webs-completas"] #webs-gallery .web-admin-preview h4{color:#115e59}
+[data-public-page="webs-completas"] #webs-gallery .web-admin-images{grid-template-columns:minmax(0,1fr)}
+[data-public-page="webs-completas"] #webs-gallery .web-admin-images img{width:100%;max-height:300px;object-fit:contain;object-position:top center;background:#f8fafc}
+[data-public-page="webs-completas"] #webs-gallery .pillar-actions{justify-content:flex-start}
+[data-public-page="webs-completas"] #webs-gallery .pillar-actions .btn-primary{background:#0d9488;border-color:#0d9488;color:white}
+[data-public-page="webs-completas"] #webs-gallery .pillar-actions .btn-primary:hover{background:#0f766e}
+[data-public-page="webs-completas"] #webs-gallery .pillar-actions .btn-outline{color:#0f766e;border-color:#0d9488}
+[data-public-page="webs-completas"] #webs-gallery .pillar-actions .btn-outline:hover{background:#ccfbf1}
+@media(max-width:700px){[data-public-page="webs-completas"] .hero{padding:2.8rem 0!important}[data-public-page="webs-completas"] #webs-gallery .pillar-card{padding:1.1rem}}
