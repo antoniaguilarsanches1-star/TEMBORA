@@ -30,3 +30,6 @@
 [data-public-page="webs-completas"] #webs-gallery .pillar-actions .btn-outline{color:#0f766e;border-color:#0d9488}
 [data-public-page="webs-completas"] #webs-gallery .pillar-actions .btn-outline:hover{background:#ccfbf1}
 @media(max-width:700px){[data-public-page="webs-completas"] .hero{padding:2.8rem 0!important}[data-public-page="webs-completas"] #webs-gallery .pillar-card{padding:1.1rem}}
+
+/* Colores aprobados para la portada de esta página */
+[data-public-page="webs-completas"] .hero{background:linear-gradient(115deg,#0f766e,#0d9488)!important}[data-public-page="webs-completas"] .hero h1,[data-public-page="webs-completas"] .hero p,[data-public-page="webs-completas"] .webs-eyebrow{color:#fff!important}
