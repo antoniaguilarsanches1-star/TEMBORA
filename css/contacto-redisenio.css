@@ -1,0 +1,34 @@
+/* Contacto compartido: azul de plantillas + turquesa de negocios */
+[data-public-page="contacto"] .contact-hero{background:linear-gradient(115deg,#eff6ff 0%,#fff 48%,#f0fdfa 100%);border-bottom:1px solid #e2e8f0;padding:3.7rem 0}
+[data-public-page="contacto"] .contact-hero h1{color:#0f172a;font-size:clamp(2.3rem,4vw,3.5rem);letter-spacing:-.04em;margin:0 0 .6rem;font-weight:800}
+[data-public-page="contacto"] .contact-hero p{color:#475569;font-size:1.06rem;line-height:1.65}
+[data-public-page="contacto"] .contact-main{background:#f8fafc}
+[data-public-page="contacto"] .contact-grid{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);align-items:start;gap:1.5rem}
+[data-public-page="contacto"] .contact-info,[data-public-page="contacto"] .contact-form-panel{background:#fff;border:1px solid #e2e8f0;border-radius:16px;padding:clamp(1.3rem,2.5vw,2rem);box-shadow:0 10px 24px -22px #0f172a55;min-width:0;height:auto}
+[data-public-page="contacto"] .contact-info h3,[data-public-page="contacto"] .contact-form-panel h3{color:#0f172a;font-size:1.4rem;margin:0 0 1.5rem}
+[data-public-page="contacto"] .contact-item{display:flex;align-items:flex-start;gap:.95rem;margin:1.3rem 0}
+[data-public-page="contacto"] .contact-item>i{display:grid;place-items:center;width:43px;height:43px;min-width:43px;background:#eff6ff;color:#2563eb;border-radius:12px;font-size:1.05rem}
+[data-public-page="contacto"] .contact-item:nth-of-type(even)>i{background:#f0fdfa;color:#0d9488}
+[data-public-page="contacto"] .contact-item h4{color:#0f172a;margin:0 0 .3rem}
+[data-public-page="contacto"] .contact-item p{color:#64748b;line-height:1.6;margin:0}
+[data-public-page="contacto"] .contact-direct .btn{border-color:#0d9488;color:#0f766e}
+[data-public-page="contacto"] .contact-direct .btn:hover{background:#f0fdfa}
+[data-public-page="contacto"] .contact-help-note{background:#f0fdfa;border:1px solid #bdece4;border-radius:10px;padding:1rem;margin-bottom:1.4rem}
+[data-public-page="contacto"] .contact-help-note p{color:#115e59;font-size:.9rem;line-height:1.6;margin:0}
+[data-public-page="contacto"] .contact-form-panel .form-group label{color:#334155;font-weight:650}
+[data-public-page="contacto"] .contact-form-panel :is(input,select,textarea){width:100%;border:1px solid #cbd5e1;border-radius:9px;padding:.85rem;background:#fff}
+[data-public-page="contacto"] .contact-form-panel :is(input,select,textarea):focus{border-color:#0d9488;outline:2px solid #99f6e4;outline-offset:1px}
+[data-public-page="contacto"] .contact-submit{width:100%;background:#0d9488;border-color:#0d9488;min-height:46px}
+[data-public-page="contacto"] .contact-submit:hover{background:#0f766e}
+[data-public-page="contacto"] .contact-faq{background:#fff}
+[data-public-page="contacto"] .contact-faq .faq-item{border:1px solid #e2e8f0;border-radius:12px;background:#fff;overflow:hidden;margin-bottom:.7rem}
+[data-public-page="contacto"] .contact-faq .faq-question{padding:1.1rem 1.3rem}
+[data-public-page="contacto"] .contact-faq .faq-question:hover{background:#f8fafc}
+[data-public-page="contacto"] .contact-faq .faq-answer{padding:0 1.3rem 1.1rem;color:#475569}
+[data-public-page="contacto"] .contact-routes{background:linear-gradient(115deg,#eff6ff,#f0fdfa)}
+[data-public-page="contacto"] .contact-routes .pillar-actions{display:flex;justify-content:center;gap:.8rem;flex-wrap:wrap}
+[data-public-page="contacto"] .contact-routes .btn{min-width:170px;border-radius:9px}
+[data-public-page="contacto"] .contact-routes .route-business{background:#0d9488;border-color:#0d9488;color:#fff}
+[data-public-page="contacto"] .contact-routes .route-business:hover{background:#0f766e}
+@media(max-width:780px){[data-public-page="contacto"] .contact-grid{grid-template-columns:1fr}}
+@media(max-width:560px){[data-public-page="contacto"] .contact-hero{padding:2.7rem 0}[data-public-page="contacto"] .contact-routes .btn{width:100%}}
