@@ -40,3 +40,7 @@
 
 /* Círculos numerados de tamaño fijo: evita óvalos por estilos heredados. */
 [data-public-page="como-funciona"] .how-business .pillar-steps li::before{box-sizing:border-box;position:static!important;display:flex!important;align-items:center;justify-content:center;flex:0 0 42px;width:42px!important;height:42px!important;min-width:42px;min-height:42px;padding:0!important;margin:0 auto .25rem!important;border-radius:50%!important;background:#ccfbf1!important;color:#0f766e!important;font-size:1rem;font-weight:800;line-height:1!important;transform:none!important}
+
+/* Portada compartida con azul petróleo visible y unión de ambas ramas */
+[data-public-page="como-funciona"] .hero{background:linear-gradient(112deg,#c8dfe9 0%,#e2edf2 43%,#c6e7e2 100%)!important;border-bottom:1px solid #aeced6}
+[data-public-page="como-funciona"] .how-eyebrow{color:#386f83}
