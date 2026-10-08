@@ -36,3 +36,6 @@
 @media(max-width:760px){[data-public-page="index"] .taviku-home-hero{padding:2.7rem 0}.taviku-home-heading{margin-bottom:1.7rem}.taviku-home-duo{grid-template-columns:1fr;gap:1rem}.taviku-home-service{padding:1.5rem}.taviku-service-preview{height:78px;margin:1.25rem 0}}
 @media(max-width:420px){.taviku-service-actions{align-items:stretch;flex-direction:column}.taviku-service-button{width:100%}.taviku-service-link{text-align:center}.taviku-home-eyebrow{font-size:.66rem}}
 @media(prefers-reduced-motion:reduce){.taviku-home-service,.taviku-service-button{transition:none}.taviku-home-service:hover,.taviku-service-button:hover{transform:none}}
+
+/* Colores aprobados para la portada de esta página */
+[data-public-page="index"] .taviku-home-hero{background:linear-gradient(125deg,#14536b,#197e88)!important}[data-public-page="index"] .taviku-home-heading h1,[data-public-page="index"] .taviku-home-eyebrow,[data-public-page="index"] .taviku-home-heading p{color:#fff!important}
