@@ -24,6 +24,7 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <link rel="stylesheet" href="css/public.css?v=20261001">
     <link rel="stylesheet" href="css/pillars.css?v=20261003">
+    <link rel="stylesheet" href="css/contacto-redisenio.css?v=20261008">
 </head>
 <body data-public-page="contacto">
     <!-- Header -->
@@ -50,7 +51,7 @@
     </header>
 
     <!-- Page Header -->
-    <section class="section" style="background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-light) 100%); color: var(--text-white); padding: 4rem 0;">
+    <section class="section contact-hero">
         <div class="container text-center">
             <h1 style="font-size: 2.5rem; font-weight: 700; margin-bottom: 1rem;">Contacto</h1>
             <p style="font-size: 1.25rem; opacity: 0.9;">Estamos aquí para ayudarte</p>
@@ -58,7 +59,7 @@
     </section>
 
     <!-- Contact Section -->
-    <section class="section">
+    <section class="section contact-main">
         <div class="container">
             <div class="contact-grid">
                 <!-- Información de contacto -->
@@ -90,7 +91,7 @@
                         </div>
                     </div>
                     
-                    <div style="margin-top: 2rem;">
+                    <div class="contact-direct" style="margin-top: 2rem;">
                         <h4 style="margin-bottom: 1rem;">Contáctanos directamente</h4>
                         <div style="display: flex; gap: 1rem;">
                             <a href="https://wa.me/51993498739" target="_blank" rel="noopener noreferrer" class="btn btn-outline btn-sm">
@@ -101,11 +102,11 @@
                 </div>
                 
                 <!-- Formulario de contacto -->
-                <div class="form-container">
+                <div class="form-container contact-form-panel">
                     <h3 style="font-size: 1.5rem; font-weight: 700; margin-bottom: 1.5rem;">Envíanos un mensaje</h3>
                     
-                    <div style="background-color: #fef3c7; padding: 1rem; border-radius: var(--radius-md); margin-bottom: 1.5rem; border-left: 4px solid var(--accent-color);">
-                        <p style="color: #92400e; font-size: 0.875rem;">
+                    <div class="contact-help-note">
+                        <p>
                             <i class="fas fa-info-circle"></i> 
                             <strong>Importante:</strong> Este formulario te permitirá enviar tu mensaje directamente a nuestro WhatsApp para una respuesta más rápida.
                         </p>
@@ -132,7 +133,7 @@
                             <textarea id="message" name="message" required placeholder="Escribe tu mensaje aquí..." rows="5"></textarea>
                         </div>
                         
-                        <button type="submit" class="btn btn-primary" style="width: 100%;">
+                        <button type="submit" class="btn btn-primary contact-submit">
                             <i class="fab fa-whatsapp"></i> Enviar por WhatsApp
                         </button>
                     </form>
@@ -150,7 +151,7 @@
         </div>
     </section>
 
-<section class="section pillar-section ">
+<section class="section pillar-section contact-faq">
 <div class="container">
 <div class="section-title">
 <h2>Preguntas frecuentes</h2>
@@ -199,15 +200,15 @@
 </div>
 </div>
 </section>
-<section class="section pillar-section pillar-tint">
+<section class="section pillar-section pillar-tint contact-routes">
 <div class="container">
 <div class="section-title">
 <h2>Encuentra lo que necesitas</h2>
 </div>
 <div class="pillar-actions">
 <a href="catalogo.html" class="btn btn-primary">Ver plantillas</a>
-<a href="pagina-personalizada.html" class="btn btn-primary">Para negocios</a>
-<a href="webs-completas.html" class="btn btn-primary">Webs completas</a>
+<a href="pagina-personalizada.html" class="btn btn-primary route-business">Para negocios</a>
+<a href="webs-completas.html" class="btn btn-primary route-business">Webs completas</a>
 </div>
 </div>
 </section>
