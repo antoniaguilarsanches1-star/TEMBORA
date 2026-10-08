@@ -24,6 +24,7 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <link rel="stylesheet" href="css/public.css?v=20261001">
     <link rel="stylesheet" href="css/pillars.css?v=20261003">
+    <link rel="stylesheet" href="css/webs-redisenio.css?v=20261008">
 </head>
 <body data-public-page="webs-completas">
     <!-- Header -->
@@ -68,59 +69,14 @@
 </div>
 </div>
 </section>
-<section class="section pillar-section ">
+<section class="section pillar-section webs-request-cta">
 <div class="container">
-<div class="section-title">
-<h2>Cuéntanos qué necesitas</h2>
+<div class="webs-request-panel">
+<span class="webs-request-eyebrow">¿ENCONTRASTE UN MODELO QUE TE GUSTA?</span>
+<h2>Hagamos una página para tu negocio</h2>
+<p>Elige un ejemplo o cuéntanos qué necesitas. Te ayudaremos a adaptar la página a tu negocio.</p>
+<a href="pagina-personalizada.html#business-request" class="btn btn-primary">Solicitar mi página <i class="fas fa-arrow-right" aria-hidden="true"></i></a>
 </div>
-<form id="business-request" class="form-container pillar-form">
-<p>Preparamos tu solicitud para enviarla por WhatsApp. Revisa el mensaje y confirma el envío allí.</p>
-<div class="form-group">
-<label for="chosen-model">Web elegida</label>
-<select id="chosen-model" name="Web elegida" required>
-<option value="">Selecciona un modelo de la galería</option>
-</select>
-</div>
-<div class="form-row">
-<div class="form-group">
-<label for="request-name">Nombre</label>
-<input id="request-name" name="Nombre" type="text" required maxlength="160" >
-</div>
-<div class="form-group">
-<label for="business-name">Nombre del negocio</label>
-<input id="business-name" name="Nombre del negocio" type="text" required maxlength="160" >
-</div>
-<div class="form-group">
-<label for="request-phone">WhatsApp</label>
-<input id="request-phone" name="WhatsApp" type="tel" required maxlength="160" autocomplete="tel" pattern="[+0-9 \(\)\-]{7,20}">
-</div>
-</div>
-<div class="form-group">
-<label for="request-description">¿Qué quieres cambiar o agregar?</label>
-<textarea id="request-description" name="Cambios o adicionales" rows="4" required maxlength="3000">
-</textarea>
-</div>
-<div class="form-row">
-<div class="form-group">
-<label for="request-mode">Modalidad</label>
-<select id="request-mode" name="Modalidad" required>
-<option>No estoy seguro</option>
-<option>Pago único</option>
-<option>Mantenimiento mensual</option>
-</select>
-</div>
-<div class="form-group">
-<label for="request-budget">Presupuesto aproximado (opcional)</label>
-<input id="request-budget" name="Presupuesto aproximado (opcional)" type="text"  maxlength="160" >
-</div>
-</div>
-<div class="pillar-actions">
-<button type="submit" class="btn btn-primary">Enviar solicitud</button>
-<a href="https://wa.me/51993498739" class="btn btn-outline">Hablar por WhatsApp</a>
-</div>
-<p id="request-status" role="status" aria-live="polite">
-</p>
-</form>
 </div>
 </section>
 </main>
@@ -188,6 +144,6 @@
         });
     </script>
     <script src="js/public.js?v=20261003-pillars"></script>
-<script src="js/business.js?v=20261003"></script>
+<script src="js/business.js?v=20261008-unificado"></script>
 </body>
 </html>
