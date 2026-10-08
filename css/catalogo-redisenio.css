@@ -34,3 +34,15 @@
 @media(max-width:1000px){[data-public-page="catalogo"] .filters-grid{grid-template-columns:repeat(2,minmax(0,1fr))}[data-public-page="catalogo"] #market-content{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:650px){[data-public-page="catalogo"] .catalog-hero{padding:2.2rem 0!important}[data-public-page="catalogo"] .filters-section{padding:1.05rem}[data-public-page="catalogo"] .filters-grid{grid-template-columns:1fr}[data-public-page="catalogo"] .catalog-filter-actions .btn{flex:1 1 130px}[data-public-page="catalogo"] #market-content{grid-template-columns:1fr;gap:1rem}}
 @media(prefers-reduced-motion:reduce){[data-public-page="catalogo"] #market-content .public-template{transition:none}[data-public-page="catalogo"] #market-content .public-template:hover{transform:none}}
+
+/* Último pulido de tarjetas: textos y acciones alineadas */
+[data-public-page="catalogo"] .catalog-filter-actions{margin-top:.75rem}
+[data-public-page="catalogo"] .catalog-search{margin-top:.7rem}
+[data-public-page="catalogo"] #market-content .public-template .template-content{display:flex;flex-direction:column;align-items:flex-start;flex:1}
+[data-public-page="catalogo"] #market-content .catalog-card-description{color:#64748b;font-size:.89rem;line-height:1.55;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;min-height:2.75rem;max-width:100%;white-space:normal}
+[data-public-page="catalogo"] #market-content .public-template .template-price{margin-top:auto}
+[data-public-page="catalogo"] #market-content .catalog-card-actions{display:flex;gap:.65rem;width:100%;align-items:stretch;position:relative;z-index:2;flex-wrap:wrap}
+[data-public-page="catalogo"] #market-content .catalog-card-actions .public-detail-link{flex:1 1 125px;position:relative}
+[data-public-page="catalogo"] #market-content .catalog-card-actions .public-detail-link::after{display:none}
+[data-public-page="catalogo"] #market-content .catalog-demo-link{flex:1 1 110px;display:grid;place-items:center;border-color:#bfdbfe;border-radius:9px;color:#1d4ed8;background:#eff6ff;font-weight:700;min-height:43px}
+[data-public-page="catalogo"] #market-content .catalog-demo-link:hover{background:#dbeafe}
