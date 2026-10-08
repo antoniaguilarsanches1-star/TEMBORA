@@ -37,3 +37,6 @@
 @media(max-width:1100px){[data-public-page="como-funciona"] .steps-container,[data-public-page="como-funciona"] .how-business .pillar-steps{grid-template-columns:repeat(3,minmax(0,1fr))}}
 @media(max-width:700px){[data-public-page="como-funciona"] .hero{padding:2.8rem 0!important}[data-public-page="como-funciona"] .steps-container,[data-public-page="como-funciona"] .how-business .pillar-steps{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:460px){[data-public-page="como-funciona"] .steps-container,[data-public-page="como-funciona"] .how-business .pillar-steps{grid-template-columns:1fr}[data-public-page="como-funciona"] .how-business .pillar-steps li{min-height:0}}
+
+/* Círculos numerados de tamaño fijo: evita óvalos por estilos heredados. */
+[data-public-page="como-funciona"] .how-business .pillar-steps li::before{box-sizing:border-box;position:static!important;display:flex!important;align-items:center;justify-content:center;flex:0 0 42px;width:42px!important;height:42px!important;min-width:42px;min-height:42px;padding:0!important;margin:0 auto .25rem!important;border-radius:50%!important;background:#ccfbf1!important;color:#0f766e!important;font-size:1rem;font-weight:800;line-height:1!important;transform:none!important}
