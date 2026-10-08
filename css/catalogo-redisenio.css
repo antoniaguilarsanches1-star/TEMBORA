@@ -46,3 +46,6 @@
 [data-public-page="catalogo"] #market-content .catalog-card-actions .public-detail-link::after{display:none}
 [data-public-page="catalogo"] #market-content .catalog-demo-link{flex:1 1 110px;display:grid;place-items:center;border-color:#bfdbfe;border-radius:9px;color:#1d4ed8;background:#eff6ff;font-weight:700;min-height:43px}
 [data-public-page="catalogo"] #market-content .catalog-demo-link:hover{background:#dbeafe}
+
+/* Colores aprobados para la portada de esta página */
+[data-public-page="catalogo"] .catalog-hero{background:linear-gradient(115deg,#1d4ed8,#2563eb)!important}[data-public-page="catalogo"] .catalog-hero h1,[data-public-page="catalogo"] .catalog-hero p,[data-public-page="catalogo"] .catalog-eyebrow{color:#fff!important}
