@@ -44,3 +44,6 @@
 /* Portada compartida con azul petróleo visible y unión de ambas ramas */
 [data-public-page="como-funciona"] .hero{background:linear-gradient(112deg,#c8dfe9 0%,#e2edf2 43%,#c6e7e2 100%)!important;border-bottom:1px solid #aeced6}
 [data-public-page="como-funciona"] .how-eyebrow{color:#386f83}
+
+/* Colores aprobados para la portada de esta página */
+[data-public-page="como-funciona"] .hero{background:linear-gradient(115deg,#14536b,#197e88)!important}[data-public-page="como-funciona"] .hero h1,[data-public-page="como-funciona"] .hero p,[data-public-page="como-funciona"] .how-eyebrow{color:#fff!important}
