@@ -239,7 +239,23 @@
                 const c=el('article',undefined,'template-card public-template'), image=el('div',undefined,'template-image');
                 const content=el('div',undefined,'template-content'), detail=link('Ver detalles','plantilla.html?id='+encodeURIComponent(p.id));
                 detail.className+=' public-detail-link';
-                content.append(el('h3',p.nombre,'template-title'),el('span',cats.find(x=>String(x.id)===String(p.categoria_id))?.nombre || 'Sin categoría','template-category'),el('p',money(p.precio),'template-price'),detail);
+                content.append(el('h3',p.nombre,'template-title'),el('span',cats.find(x=>String(x.id)===String(p.categoria_id))?.nombre || 'Sin categoría','template-category'));
+                if(mode==='catalogo' && typeof p.descripcion==='string' && p.descripcion.trim()) {
+                    content.append(el('p',p.descripcion.trim(),'catalog-card-description'));
+                }
+                content.append(el('p',money(p.precio),'template-price'));
+                if(mode==='catalogo') {
+                    const actions=el('div',undefined,'catalog-card-actions');
+                    const demo=safeURL(p.demo_url);
+                    if(demo) {
+                        const previewLink=link('Ver demo',demo);
+                        previewLink.className='btn btn-outline btn-sm catalog-demo-link';
+                        previewLink.target='_blank'; previewLink.rel='noopener noreferrer';
+                        actions.append(previewLink);
+                    }
+                    actions.append(detail);
+                    content.append(actions);
+                } else content.append(detail);
                 c.append(image,content);area.append(c);
                 if(p.imagen_principal)photo(p.imagen_principal,image);else image.append(el('span','Sin imagen'));
             }
