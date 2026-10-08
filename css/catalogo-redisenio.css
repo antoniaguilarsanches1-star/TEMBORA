@@ -1,0 +1,36 @@
+/* TAVIKU / Catálogo: apariencia del marketplace sin alterar lógica */
+[data-public-page="catalogo"]{background:#f8fafc;color:#0f172a}
+[data-public-page="catalogo"] .catalog-hero{background:linear-gradient(120deg,#eff6ff 0%,#f8fafc 55%,#fff 100%);border-bottom:1px solid #dbeafe;padding:3.35rem 0 3.1rem!important}
+[data-public-page="catalogo"] .catalog-eyebrow{display:block;font-size:.76rem;font-weight:800;letter-spacing:.12em;color:#2563eb;margin-bottom:.65rem}
+[data-public-page="catalogo"] .catalog-hero h1{color:#0f172a;font-weight:800;font-size:clamp(2.15rem,3.5vw,3.2rem);letter-spacing:-.04em;line-height:1.14;margin:0 0 .8rem}
+[data-public-page="catalogo"] .catalog-hero p{color:#475569;font-size:1.05rem;line-height:1.7}
+[data-public-page="catalogo"] .catalog-main{padding-top:2.3rem}
+[data-public-page="catalogo"] .filters-section{padding:1.5rem;border:1px solid #e2e8f0;border-radius:16px;box-shadow:0 8px 26px -22px #0f172a50;margin-bottom:1.65rem}
+[data-public-page="catalogo"] .filters-heading{display:flex;align-items:center;gap:.6rem;font-size:1.12rem;font-weight:750;color:#0f172a;margin-bottom:1.15rem}
+[data-public-page="catalogo"] .filters-heading i{color:#2563eb}
+[data-public-page="catalogo"] .filters-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:1rem}
+[data-public-page="catalogo"] .filter-group{min-width:0}
+[data-public-page="catalogo"] .filter-group label{font-size:.84rem;color:#334155;font-weight:650}
+[data-public-page="catalogo"] .filter-group select,[data-public-page="catalogo"] .filter-group input{width:100%;min-width:0;background:#fff;border:1px solid #cbd5e1;border-radius:9px;padding:.78rem .8rem;color:#0f172a}
+[data-public-page="catalogo"] .catalog-filter-actions{display:flex;gap:.7rem;align-items:center;justify-content:flex-end;margin-top:1.15rem;flex-wrap:wrap}
+[data-public-page="catalogo"] .catalog-filter-actions .btn{min-height:42px;padding:.65rem 1.05rem}
+[data-public-page="catalogo"] .catalog-search{margin-top:1.2rem}
+[data-public-page="catalogo"] #search-catalog{box-shadow:none}
+[data-public-page="catalogo"] #search-catalog:focus{box-shadow:0 0 0 3px #bfdbfe}
+[data-public-page="catalogo"] #market-root{display:flex;gap:.9rem;align-items:center;justify-content:space-between;flex-wrap:wrap;margin:0 0 1.25rem;min-height:42px}
+[data-public-page="catalogo"] #market-status{font-size:.95rem;color:#475569;margin:0}
+[data-public-page="catalogo"] #market-reload{margin:0}
+[data-public-page="catalogo"] #market-content{grid-template-columns:repeat(3,minmax(0,1fr));gap:1.4rem}
+[data-public-page="catalogo"] #market-content .public-template{border:1px solid #e2e8f0;border-radius:15px;overflow:hidden;background:#fff;box-shadow:0 5px 15px -12px #0f172a65;transition:transform .2s,box-shadow .2s,border-color .2s}
+[data-public-page="catalogo"] #market-content .public-template:hover{transform:translateY(-4px);border-color:#bfdbfe;box-shadow:0 20px 36px -25px #0f172a70}
+[data-public-page="catalogo"] #market-content .public-template .template-image{height:auto;aspect-ratio:16/9;overflow:hidden;background:#edf2f7}
+[data-public-page="catalogo"] #market-content .public-template .template-image img{object-fit:cover;object-position:top center}
+[data-public-page="catalogo"] #market-content .public-template .template-content{padding:1.3rem;gap:.7rem}
+[data-public-page="catalogo"] #market-content .public-template h3{font-size:1.19rem;line-height:1.3;color:#0f172a;margin:0}
+[data-public-page="catalogo"] #market-content .public-template .template-category{color:#1d4ed8;background:#eff6ff;border:1px solid #dbeafe;border-radius:6px;padding:.25rem .65rem}
+[data-public-page="catalogo"] #market-content .public-template .template-price{font-size:1.55rem;color:#2563eb;font-weight:800}
+[data-public-page="catalogo"] #market-content .public-detail-link{font-weight:700;border-radius:9px;min-height:43px;display:grid;place-items:center}
+[data-public-page="catalogo"] #market-content .public-template:hover .public-detail-link{background:#2563eb;color:white}
+@media(max-width:1000px){[data-public-page="catalogo"] .filters-grid{grid-template-columns:repeat(2,minmax(0,1fr))}[data-public-page="catalogo"] #market-content{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:650px){[data-public-page="catalogo"] .catalog-hero{padding:2.2rem 0!important}[data-public-page="catalogo"] .filters-section{padding:1.05rem}[data-public-page="catalogo"] .filters-grid{grid-template-columns:1fr}[data-public-page="catalogo"] .catalog-filter-actions .btn{flex:1 1 130px}[data-public-page="catalogo"] #market-content{grid-template-columns:1fr;gap:1rem}}
+@media(prefers-reduced-motion:reduce){[data-public-page="catalogo"] #market-content .public-template{transition:none}[data-public-page="catalogo"] #market-content .public-template:hover{transform:none}}
