@@ -32,3 +32,6 @@
 [data-public-page="contacto"] .contact-routes .route-business:hover{background:#0f766e}
 @media(max-width:780px){[data-public-page="contacto"] .contact-grid{grid-template-columns:1fr}}
 @media(max-width:560px){[data-public-page="contacto"] .contact-hero{padding:2.7rem 0}[data-public-page="contacto"] .contact-routes .btn{width:100%}}
+
+/* Portada compartida: azul petróleo entre azul y turquesa */
+[data-public-page="contacto"] .contact-hero{background:linear-gradient(112deg,#c8dfe9 0%,#e3edf1 52%,#c6e7e2 100%)!important;border-bottom:1px solid #aeced6}
