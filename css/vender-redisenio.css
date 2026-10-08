@@ -22,3 +22,6 @@
 [data-public-page="vender-publico"] #seller-session{text-align:center;color:#64748b;margin:1.25rem auto}
 @media(max-width:800px){[data-public-page="vender-publico"] .seller-facts{grid-template-columns:1fr}[data-public-page="vender-publico"] .seller-steps{grid-template-columns:1fr;max-width:560px}}
 @media(max-width:520px){[data-public-page="vender-publico"] .seller-hero{padding:2.6rem 0!important}[data-public-page="vender-publico"] .seller-main{padding:2rem 0}[data-public-page="vender-publico"] .seller-facts{gap:.7rem;margin-bottom:2rem}[data-public-page="vender-publico"] .seller-actions .btn{width:100%}}
+
+/* Portada de vendedores: azul de marketplace más presente */
+[data-public-page="vender-publico"] .seller-hero{background:linear-gradient(112deg,#c9ddff 0%,#e6efff 55%,#d6e7ff 100%)!important;border-bottom:1px solid #b7d1ff}
