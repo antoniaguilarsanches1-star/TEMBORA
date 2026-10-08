@@ -1,0 +1,39 @@
+/* Cómo funciona: dos ramas de igual importancia */
+[data-public-page="como-funciona"] .hero{background:linear-gradient(110deg,#eff6ff 0%,#f8fafc 47%,#f0fdfa 100%);border-bottom:1px solid #e2e8f0;padding:4rem 0!important}
+[data-public-page="como-funciona"] .hero h1{color:#0f172a;font-size:clamp(2.25rem,4vw,3.55rem);letter-spacing:-.04em;line-height:1.15}
+[data-public-page="como-funciona"] .hero p{color:#475569;max-width:740px;margin-inline:auto;line-height:1.7}
+[data-public-page="como-funciona"] .how-eyebrow{display:block;font-size:.76rem;font-weight:800;letter-spacing:.14em;color:#475569;margin-bottom:1rem}
+[data-public-page="como-funciona"] .how-branch-overview{display:flex;justify-content:center;gap:1rem;margin-top:1.6rem;flex-wrap:wrap}
+[data-public-page="como-funciona"] .how-branch-overview span{border:1px solid #bfdbfe;background:#eff6ff;border-radius:9px;padding:.7rem 1.1rem;color:#1d4ed8;font-weight:750}
+[data-public-page="como-funciona"] .how-branch-overview span:last-child{border-color:#99f6e4;background:#f0fdfa;color:#0f766e}
+[data-public-page="como-funciona"] .pillar-group-title{color:#1d4ed8;margin:2.8rem auto .5rem}
+[data-public-page="como-funciona"] .how-it-works{padding:2.4rem 0;background:#f8fafc}
+[data-public-page="como-funciona"] .how-it-works.how-sellers{background:white!important}
+[data-public-page="como-funciona"] .user-type-title{color:#1d4ed8;font-size:1.5rem}
+[data-public-page="como-funciona"] .steps-container{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:1rem}
+[data-public-page="como-funciona"] .step-card{height:100%;border:1px solid #dbeafe;background:#fff;border-radius:15px;padding:1.4rem 1rem;box-shadow:0 9px 22px -21px #0f172a77}
+[data-public-page="como-funciona"] .step-card h3{color:#0f172a;font-size:1rem;line-height:1.4}
+[data-public-page="como-funciona"] .step-card p{color:#475569;line-height:1.6}
+[data-public-page="como-funciona"] .step-number{background:#2563eb;color:#fff}
+[data-public-page="como-funciona"] .how-sellers .btn-accent{background:#2563eb;border-color:#2563eb;color:#fff}
+[data-public-page="como-funciona"] .how-sellers .btn-accent:hover{background:#1d4ed8}
+[data-public-page="como-funciona"] .how-business{background:#f0fdfa}
+[data-public-page="como-funciona"] .how-business .section-title h2{color:#115e59}
+[data-public-page="como-funciona"] .how-business .pillar-steps{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:1rem;max-width:none;counter-reset:howstep;padding:0;margin:1.8rem 0}
+[data-public-page="como-funciona"] .how-business .pillar-steps li{display:flex;flex-direction:column;align-items:center;justify-content:flex-start;gap:.85rem;text-align:center;margin:0;padding:1.6rem 1rem;min-height:168px;background:white;border:1px solid #bdece4;border-radius:15px;color:#115e59;font-weight:650;line-height:1.5;box-shadow:0 9px 22px -21px #0f172a77}
+[data-public-page="como-funciona"] .how-business .pillar-steps li::before{position:static;margin:0;background:#ccfbf1;color:#0f766e}
+[data-public-page="como-funciona"] .how-business .btn-primary{background:#0d9488;border-color:#0d9488}
+[data-public-page="como-funciona"] .how-business .btn-primary:hover{background:#0f766e}
+[data-public-page="como-funciona"] .how-business .btn-outline{border-color:#0d9488;color:#0f766e}
+[data-public-page="como-funciona"] .how-faq-blue{background:#f8fafc}
+[data-public-page="como-funciona"] .how-faq-green{background:#f0fdfa}
+[data-public-page="como-funciona"] .how-faq-blue .section-title h2{color:#1d4ed8}
+[data-public-page="como-funciona"] .how-faq-green .section-title h2{color:#0f766e}
+[data-public-page="como-funciona"] .faq-item{border:1px solid #e2e8f0;border-radius:12px;overflow:hidden;background:white;margin-bottom:.65rem}
+[data-public-page="como-funciona"] .faq-question{padding:1.1rem 1.3rem}
+[data-public-page="como-funciona"] .how-faq-blue .faq-question:hover{background:#eff6ff}
+[data-public-page="como-funciona"] .how-faq-green .faq-question:hover{background:#f0fdfa}
+[data-public-page="como-funciona"] .faq-answer{padding:0 1.3rem 1.1rem;color:#475569}
+@media(max-width:1100px){[data-public-page="como-funciona"] .steps-container,[data-public-page="como-funciona"] .how-business .pillar-steps{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:700px){[data-public-page="como-funciona"] .hero{padding:2.8rem 0!important}[data-public-page="como-funciona"] .steps-container,[data-public-page="como-funciona"] .how-business .pillar-steps{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:460px){[data-public-page="como-funciona"] .steps-container,[data-public-page="como-funciona"] .how-business .pillar-steps{grid-template-columns:1fr}[data-public-page="como-funciona"] .how-business .pillar-steps li{min-height:0}}
