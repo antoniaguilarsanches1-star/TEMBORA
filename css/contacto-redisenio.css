@@ -35,3 +35,6 @@
 
 /* Portada compartida: azul petróleo entre azul y turquesa */
 [data-public-page="contacto"] .contact-hero{background:linear-gradient(112deg,#c8dfe9 0%,#e3edf1 52%,#c6e7e2 100%)!important;border-bottom:1px solid #aeced6}
+
+/* Colores aprobados para la portada de esta página */
+[data-public-page="contacto"] .contact-hero{background:linear-gradient(115deg,#14536b,#197e88)!important}[data-public-page="contacto"] .contact-hero h1,[data-public-page="contacto"] .contact-hero p{color:#fff!important}
