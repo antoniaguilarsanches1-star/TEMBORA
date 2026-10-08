@@ -63,3 +63,11 @@
 @media(max-width:850px){[data-public-page="pagina-personalizada"] .business-plans .pillar-grid,[data-public-page="pagina-personalizada"] .business-showcase-grid{grid-template-columns:1fr 1fr}}
 @media(max-width:700px){[data-public-page="pagina-personalizada"] .hero{padding:3rem 0!important}[data-public-page="pagina-personalizada"] .pillar-section{padding:2.6rem 0}[data-public-page="pagina-personalizada"] .business-plans .pillar-grid,[data-public-page="pagina-personalizada"] .business-showcase-grid{grid-template-columns:1fr}[data-public-page="pagina-personalizada"] .business-qr .pillar-card{padding-left:6.5rem}[data-public-page="pagina-personalizada"] #business-request{padding:1.2rem}}
 @media(prefers-reduced-motion:reduce){[data-public-page="pagina-personalizada"] .pillar-card{transition:none}[data-public-page="pagina-personalizada"] .pillar-card:hover{transform:none}}
+
+/* La marca conserva sus botones generales azules; las acciones de negocio siguen turquesa. */
+[data-public-page="pagina-personalizada"] .header .auth-buttons .btn-primary{background:#2563eb;border-color:#2563eb;color:#fff}
+[data-public-page="pagina-personalizada"] .header .auth-buttons .btn-primary:hover{background:#1d4ed8;border-color:#1d4ed8}
+[data-public-page="pagina-personalizada"] .business-qr .pillar-card:before{content:none;display:none}
+[data-public-page="pagina-personalizada"] .business-qr .pillar-card{padding-left:7rem;position:relative}
+[data-public-page="pagina-personalizada"] .business-qr-sample{position:absolute;left:1.5rem;top:1.7rem;display:grid;place-items:center;width:68px;height:68px;border:1px solid #99f6e4;background:#ccfbf1;color:#0f766e;border-radius:14px;font-size:1.7rem}
+@media(max-width:700px){[data-public-page="pagina-personalizada"] .business-qr .pillar-card{padding-left:6.5rem}[data-public-page="pagina-personalizada"] .business-qr-sample{width:58px;height:58px;left:1.25rem}}
