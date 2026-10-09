@@ -1,0 +1,27 @@
+/* Panel comprador: estilos visuales aislados, sin alterar lógica ni permisos */
+[data-market="comprador"]{background:#f5f8fd;color:#0f172a}
+[data-market="comprador"] #market-root{padding:38px 0 62px}
+[data-market="comprador"] #market-root>.container>h1{background:linear-gradient(110deg,#1d4ed8,#2563eb);color:#fff;border-radius:18px 18px 0 0;padding:25px 28px 4px;margin:0;font-size:clamp(1.7rem,3vw,2.25rem)}
+[data-market="comprador"] #market-status{background:#2563eb;color:#dbeafe;padding:3px 28px 24px;margin:0;border-radius:0 0 18px 18px}
+[data-market="comprador"] #market-reload{margin:16px 0!important}
+[data-market="comprador"] #market-content>h2{font-size:1.45rem;line-height:1.35;margin:28px 0 16px;color:#0f172a}
+[data-market="comprador"] .account-grid{grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr));gap:20px;align-items:stretch;margin-top:16px}
+[data-market="comprador"] .account-card{border:1px solid #dae5f2;border-radius:16px;box-shadow:0 5px 16px rgba(15,23,42,.045);padding:18px;min-width:0}
+[data-market="comprador"] .account-card:hover{box-shadow:0 9px 24px rgba(15,23,42,.085)}
+[data-market="comprador"] .account-card .account-image{border-radius:12px;background:#eaf1fc;aspect-ratio:16/9;margin-bottom:16px}
+[data-market="comprador"] .account-card .account-image img{width:100%;height:100%;object-fit:cover;object-position:top center}
+[data-market="comprador"] .account-card .account-price{font-size:1.35rem}
+[data-market="comprador"] .account-actions{gap:9px;margin:14px 0 4px}
+[data-market="comprador"] .account-actions .btn{border-radius:9px}
+[data-market="comprador"] .buyer-favorites-grid{grid-template-columns:repeat(auto-fill,minmax(min(100%,250px),1fr));align-items:start}
+[data-market="comprador"] .buyer-favorites-grid .account-card{display:flex;flex-direction:column;gap:8px}
+[data-market="comprador"] .buyer-favorites-grid .account-image{aspect-ratio:16/9;height:auto;margin:0 0 8px;width:100%}
+[data-market="comprador"] .buyer-favorites-grid .account-image img{height:100%;width:100%;object-fit:cover;object-position:top center}
+[data-market="comprador"] .buyer-favorites-grid .account-card h3{font-size:1.1rem;margin:0}
+[data-market="comprador"] .buyer-favorites-grid .account-card p{margin:0}
+[data-market="comprador"] .buyer-favorites-grid .account-actions{margin-top:12px;display:flex;align-items:stretch}
+[data-market="comprador"] .buyer-favorites-grid .account-actions .btn{flex:1 1 auto}
+[data-market="comprador"] #market-content>.account-actions{margin:16px 0 26px}
+[data-market="comprador"] #market-content>.account-actions .btn{border-radius:9px}
+[data-market="comprador"] .auth-buttons a[href="panel-comprador.html"]{box-shadow:0 3px 0 #93c5fd}
+@media(max-width:700px){[data-market="comprador"] #market-root{padding:22px 0 44px}[data-market="comprador"] #market-root>.container>h1{padding:20px 18px 4px}[data-market="comprador"] #market-status{padding:3px 18px 20px}[data-market="comprador"] .account-grid{grid-template-columns:1fr}[data-market="comprador"] .buyer-favorites-grid{grid-template-columns:repeat(auto-fill,minmax(min(100%,240px),1fr))}}
