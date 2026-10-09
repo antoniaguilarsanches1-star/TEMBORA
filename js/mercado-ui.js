@@ -370,7 +370,7 @@
             if(signature(rows)!==previous){previous=signature(rows);await buyer();}
         };
         area.append(el('h2','Mis favoritos'));
-        const favorites=el('div',undefined,'account-grid');area.append(favorites);
+        const favorites=el('div',undefined,'account-grid buyer-favorites-grid');area.append(favorites);
         if(!favs.length) favorites.append(el('p','Todavía no guardaste favoritos. Guarda las plantillas que te interesan desde su detalle.','account-empty'));
         for(const f of favs) {
             const p=await api.detalle(f.plantilla_id),c=el('article',undefined,'account-card');favorites.append(c);
