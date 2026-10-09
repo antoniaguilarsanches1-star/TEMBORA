@@ -176,9 +176,27 @@
     function reviewNav(active='revision') {
         const nav=document.getElementById('admin-nav') || el('nav',undefined,'review-nav');nav.replaceChildren();nav.setAttribute('aria-label','Administración');
         if(!document.getElementById('admin-nav'))area.append(nav);
+        const alertButtons={};
         for(const [key,label,fn] of [['revision','Revisión de plantillas',admin],['pagos','Pagos y ventas',pagosAdmin],['retiros','Solicitudes de retiro',retirosAdmin],['yape','Configurar Yape',configurarYape],['usuarios','Usuarios',usuarios],['perfil','Mi perfil',perfil]]){
             const b=button(label,fn,nav);if(key===active)b.setAttribute('aria-current','page');
+            if(['revision','pagos','retiros'].includes(key))alertButtons[key]=b;
         }
+        // Contadores de trabajo pendiente, nunca de movimientos ya finalizados.
+        Promise.allSettled([api.pendientes(),pay.pedidosAdmin(),pay.retiros(true)]).then(results=>{
+            if(!nav.isConnected)return;
+            const counts=[
+                results[0].status==='fulfilled' ? results[0].value.length : null,
+                results[1].status==='fulfilled' ? results[1].value.filter(o=>o.estado_pago==='pendiente' && !!o.enviada_pago_at).length : null,
+                results[2].status==='fulfilled' ? results[2].value.filter(r=>['pendiente','aprobado'].includes(r.estado)).length : null
+            ];
+            ['revision','pagos','retiros'].forEach((key,i)=>{
+                const b=alertButtons[key];
+                if(!b.isConnected || counts[i]===null || counts[i]===0)return;
+                const badge=el('span',String(counts[i]),'admin-pending-count');
+                badge.setAttribute('aria-label',counts[i]+' pendiente(s)');
+                b.append(badge);
+            });
+        });
     }
     function adminView(title,section) {
         viewTitle(title);reviewNav(section);
