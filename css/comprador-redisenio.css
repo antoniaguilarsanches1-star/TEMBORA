@@ -25,3 +25,12 @@
 [data-market="comprador"] #market-content>.account-actions .btn{border-radius:9px}
 [data-market="comprador"] .auth-buttons a[href="panel-comprador.html"]{box-shadow:0 3px 0 #93c5fd}
 @media(max-width:700px){[data-market="comprador"] #market-root{padding:22px 0 44px}[data-market="comprador"] #market-root>.container>h1{padding:20px 18px 4px}[data-market="comprador"] #market-status{padding:3px 18px 20px}[data-market="comprador"] .account-grid{grid-template-columns:1fr}[data-market="comprador"] .buyer-favorites-grid{grid-template-columns:repeat(auto-fill,minmax(min(100%,240px),1fr))}}
+
+/* Historial compacto desplazable: solo comprador */
+[data-market="comprador"] #market-reload[hidden]{display:none!important}
+[data-market="comprador"] .buyer-history-scroll{max-height:min(62vh,560px);overflow-y:auto;overscroll-behavior:contain;padding:6px 10px 6px 2px;scrollbar-color:#9db9e8 #edf4ff;scrollbar-width:thin}
+[data-market="comprador"] .buyer-history-scroll .account-card{padding:16px 20px;margin:0;box-shadow:0 2px 9px rgba(15,23,42,.04)}
+[data-market="comprador"] .buyer-history-scroll .account-card h3{margin:4px 0 8px}
+[data-market="comprador"] .buyer-history-scroll .account-card p{margin:5px 0}
+[data-market="comprador"] .buyer-history-scroll:focus-visible{outline:3px solid #93c5fd;outline-offset:2px;border-radius:12px}
+@media(max-width:700px){[data-market="comprador"] .buyer-history-scroll{max-height:60vh;padding-right:5px}}
