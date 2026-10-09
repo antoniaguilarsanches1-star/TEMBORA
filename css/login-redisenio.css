@@ -14,3 +14,6 @@
 [data-public-page="login"] #forgot-password-link{color:#386f83;font-weight:600}
 [data-public-page="login"] .form-container a:hover{text-decoration:underline}
 @media(max-width:600px){[data-public-page="login"] > .section{padding:24px 12px}[data-public-page="login"] .form-container{padding:28px 20px;border-radius:16px}}
+
+/* Recuperación por correo: no mostrar las opciones de acceso social. */
+[data-public-page="login"] .form-container:has(#recover-password-form) #oauth-options{display:none!important}
