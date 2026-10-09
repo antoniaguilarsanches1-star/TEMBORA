@@ -1,0 +1,18 @@
+/* Registro TAVIKU: solo presentacion, sin alterar formularios ni autenticacion. */
+[data-public-page="registro"] > .section{background:linear-gradient(125deg,#d5e7eb 0%,#eef7f5 55%,#d7ede9 100%);min-height:calc(100vh - 90px)!important;padding:48px 16px}
+[data-public-page="registro"] .form-container{max-width:700px!important;margin-inline:auto;background:#fff;border:1px solid #d9e5e8;border-radius:20px;box-shadow:0 16px 40px rgba(15,53,70,.10);padding:36px 32px}
+[data-public-page="registro"] .form-container h2{color:#102b3a;font-weight:800}
+[data-public-page="registro"] .form-container .form-group{margin-bottom:20px}
+[data-public-page="registro"] .form-container .form-group>label{color:#142b3a;font-weight:600}
+[data-public-page="registro"] .form-container input:not([type="checkbox"]):not([type="radio"]){border:1px solid #cbd9df;border-radius:10px;min-height:45px}
+[data-public-page="registro"] .form-container input:focus{border-color:#386f83;box-shadow:0 0 0 3px rgba(56,111,131,.12)}
+[data-public-page="registro"] .form-container input:is([type="checkbox"],[type="radio"]){width:auto;accent-color:#2563eb;flex-shrink:0}
+[data-public-page="registro"] .form-container .radio-group{display:flex;align-items:center;gap:20px;flex-wrap:wrap}
+[data-public-page="registro"] .form-container .radio-item{display:inline-flex;align-items:center;gap:8px;cursor:pointer}
+[data-public-page="registro"] .form-container .choice-label{display:flex;align-items:flex-start;gap:10px;cursor:pointer;line-height:1.5}
+[data-public-page="registro"] .form-container .choice-label input{margin-top:4px}
+[data-public-page="registro"] #register-form button[type="submit"]{border-radius:10px;min-height:48px;font-weight:700}
+[data-public-page="registro"] #oauth-options>div{justify-content:center}
+[data-public-page="registro"] #oauth-options [data-oauth-provider]{border-radius:10px;min-height:44px}
+[data-public-page="registro"] #oauth-options>p:last-child{max-width:450px;margin:12px auto 0;text-align:center;color:#526579;font-size:.9rem;line-height:1.5}
+@media(max-width:600px){[data-public-page="registro"]>.section{padding:24px 12px}[data-public-page="registro"] .form-container{padding:28px 20px;border-radius:16px}[data-public-page="registro"] .form-row{grid-template-columns:1fr}}
