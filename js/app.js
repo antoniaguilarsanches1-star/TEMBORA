@@ -70,19 +70,30 @@ function openWhatsApp(message) {
 function initNavigation() {
     const hamburger = document.querySelector('.hamburger');
     const navMenu = document.querySelector('.nav-menu');
-    
-    if (hamburger && navMenu) {
-        hamburger.addEventListener('click', () => {
-            navMenu.classList.toggle('active');
-        });
-    }
-    
-    // Cerrar menú al hacer clic en un enlace
-    const navLinks = document.querySelectorAll('.nav-link');
-    navLinks.forEach(link => {
-        link.addEventListener('click', () => {
-            navMenu.classList.remove('active');
-        });
+    if (!hamburger || !navMenu) return;
+
+    const closeMenu = () => {
+        navMenu.classList.remove('active');
+        hamburger.setAttribute('aria-expanded', 'false');
+    };
+    hamburger.setAttribute('aria-expanded', 'false');
+    hamburger.addEventListener('click', () => {
+        navMenu.classList.toggle('active');
+        hamburger.setAttribute('aria-expanded', String(navMenu.classList.contains('active')));
+    });
+    navMenu.querySelectorAll('.nav-link').forEach(link =>
+        link.addEventListener('click', closeMenu));
+    document.addEventListener('click', event => {
+        if (!hamburger.contains(event.target) && !navMenu.contains(event.target)) closeMenu();
+    });
+    document.addEventListener('keydown', event => {
+        if (event.key === 'Escape' && navMenu.classList.contains('active')) {
+            closeMenu();
+            hamburger.focus();
+        }
+    });
+    window.addEventListener('resize', () => {
+        if (window.innerWidth > 1360) closeMenu();
     });
 }
 
