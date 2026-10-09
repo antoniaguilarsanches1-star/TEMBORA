@@ -1,0 +1,16 @@
+/* TAVIKU: acceso compartido, solo presentacion. Sin cambios en autenticacion. */
+[data-public-page="login"] > .section{background:linear-gradient(125deg,#d5e7eb 0%,#eef7f5 55%,#d7ede9 100%);min-height:calc(100vh - 90px)!important;padding:48px 16px}
+[data-public-page="login"] .form-container{max-width:540px;margin-inline:auto;background:#fff;border:1px solid #d9e5e8;border-radius:20px;box-shadow:0 16px 40px rgba(15,53,70,.10);padding:36px 32px}
+[data-public-page="login"] .form-container h2{color:#102b3a;font-weight:800}
+[data-public-page="login"] .form-container .form-group{margin-bottom:20px}
+[data-public-page="login"] .form-container label{color:#142b3a;font-weight:600}
+[data-public-page="login"] .form-container input:not([type="checkbox"]){border:1px solid #cbd9df;border-radius:10px;min-height:45px}
+[data-public-page="login"] .form-container input:focus{border-color:#386f83;box-shadow:0 0 0 3px rgba(56,111,131,.12)}
+[data-public-page="login"] .form-container input[type="checkbox"]{width:auto;accent-color:#2563eb}
+[data-public-page="login"] #login-form button[type="submit"]{border-radius:10px;min-height:48px;font-weight:700}
+[data-public-page="login"] #oauth-options > div{justify-content:center}
+[data-public-page="login"] #oauth-options [data-oauth-provider]{border-radius:10px;min-height:44px}
+[data-public-page="login"] #oauth-options > p:last-child{max-width:410px;margin:12px auto 0;text-align:center;color:#526579;font-size:.9rem;line-height:1.5}
+[data-public-page="login"] #forgot-password-link{color:#386f83;font-weight:600}
+[data-public-page="login"] .form-container a:hover{text-decoration:underline}
+@media(max-width:600px){[data-public-page="login"] > .section{padding:24px 12px}[data-public-page="login"] .form-container{padding:28px 20px;border-radius:16px}}
