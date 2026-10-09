@@ -271,6 +271,11 @@
     function viewTitle(text) {
         const heading=document.querySelector('#market-root h1');
         if(heading)heading.textContent=text;
+        // En el comprador, Actualizar solo se ofrece en la vista principal.
+        if(mode==='comprador') {
+            const reload=document.getElementById('market-reload');
+            if(reload)reload.hidden=text!=='Mi panel';
+        }
     }
     const shortRef=id=>String(id || '').slice(0,8).toUpperCase();
     const dateText=value=>value && Number.isFinite(new Date(value).getTime()) ? new Date(value).toLocaleString('es-PE',{timeZone:'America/Lima'}) : 'No registrada';
@@ -435,7 +440,8 @@
     async function buyerHistory() {
         const [rows,orders]=await Promise.all([pay.historial(),pay.compras()]);clear();viewTitle('Historial de movimientos');
         const labels={creado:'Pedido creado',comprobante_enviado:'Comprobante enviado',pago_verificado:'Pago verificado',pago_rechazado:'Pago rechazado'};
-        const list=el('div',undefined,'account-history');area.append(list);
+        button('Volver a Mi panel',buyer,actions(area));
+        const list=el('div',undefined,'account-history buyer-history-scroll');list.setAttribute('role','region');list.setAttribute('aria-label','Movimientos de tu cuenta');list.tabIndex=0;area.append(list);
         for(const r of [...rows].sort((a,b)=>new Date(b.created_at)-new Date(a.created_at))) {
             const o=r.entidad==='pedido'?orders.find(o=>o.id===r.entidad_id):null,c=el('article',undefined,'account-card');
             c.append(el('p',dateText(r.created_at),'account-muted'),el('h3',labels[r.accion] || 'Movimiento registrado'),el('p',o?o.plantilla_nombre+' · Pedido '+shortRef(o.id):'Pedido '+shortRef(r.entidad_id)));
@@ -444,7 +450,7 @@
             list.append(c);
         }
         if(!rows.length)list.append(el('p','Todavía no hay movimientos en tu cuenta.','account-empty'));
-        button('Volver a Mi panel',buyer,actions(area));notice('');
+        notice('');
     }
     async function configurarYape() {
         const c=await pay.config();clear();adminView('Configurar Yape','yape');area.append(el('h2','Destino de los pagos por Yape'));adminInfo('Los pedidos existentes conservan su destino original.');
