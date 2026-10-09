@@ -511,7 +511,7 @@
             if(o.motivo_rechazo)c.append(el('p','Motivo: '+o.motivo_rechazo));
             if(o.estado_pago==='verificado')c.append(el('p','Fecha de verificación: '+dateText(o.revisado_at)),el('p','Operación Yape: '+(o.operacion_yape || 'No registrada')));
             if(o.comprobante_url) button('Ver comprobante',async()=>{
-                const blob=await pay.evidencia(o.comprobante_url),url=URL.createObjectURL(blob);urls.push(url);const img=el('img');img.src=url;img.alt='Comprobante presentado';img.style.maxWidth='100%';c.append(img);notice('Compara la imagen con el abono real en Yape. La captura por sí sola no confirma el pago.');
+                const blob=await pay.evidencia(o.comprobante_url),url=URL.createObjectURL(blob);urls.push(url);const img=el('img');img.src=url;img.alt='Comprobante presentado';img.style.cssText='display:block;width:auto;max-width:min(100%,360px);max-height:300px;height:auto;object-fit:contain;object-position:left top;border-radius:10px;margin-top:12px;';c.append(img);notice('Compara la imagen con el abono real en Yape. La captura por sí sola no confirma el pago.');
             },c);
             if(o.estado_pago==='pendiente' && o.enviada_pago_at) {
                 c.append(el('p','Destino: '+o.yape_numero+' / '+o.yape_titular));
