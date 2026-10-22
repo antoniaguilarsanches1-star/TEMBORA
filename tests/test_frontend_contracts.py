@@ -9,6 +9,7 @@ class FrontendContracts(unittest.TestCase):
         cls.public=(ROOT/'js/public.js').read_text(encoding='utf-8')
         cls.auth=(ROOT/'js/supabase.js').read_text(encoding='utf-8')
         cls.business=(ROOT/'js/business.js').read_text(encoding='utf-8')
+        cls.market=(ROOT/'js/mercado-ui.js').read_text(encoding='utf-8')
     def test_menu_has_single_owner(self):
         self.assertIn("function initNavigation()",self.app)
         self.assertNotIn("menu.addEventListener('click'",self.public)
@@ -22,6 +23,11 @@ class FrontendContracts(unittest.TestCase):
         self.assertIn("if (retry) retry.hidden = true;",self.business)
         self.assertIn("if (retry) retry.hidden = false;",self.business)
         self.assertIn("?.selectedOptions?.[0]?.textContent",self.business)
+
+    def test_market_optional_controls(self):
+        self.assertIn("document.getElementById('market-reload')?.addEventListener",self.market)
+        self.assertIn("searchCatalog?.addEventListener",self.market)
+        self.assertIn("document.getElementById('apply-filters')?.addEventListener",self.market)
 
     def test_roles_remain_centralized(self):
         for role in ("comprador: 'panel-comprador.html'","vendedor: 'panel-vendedor.html'","admin: 'admin.html'"):
