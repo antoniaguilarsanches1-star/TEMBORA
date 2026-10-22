@@ -19,6 +19,8 @@ for item in ROOT.iterdir():
         shutil.copytree(item, target)
     elif item.suffix == ".html":
         data = item.read_text(encoding="utf-8")
+        if "<header" in data.lower() and MARKER not in data:
+            raise SystemExit(f"Encabezado antiguo sin migrar: {item.name}")
         if MARKER in data:
             if data.count(MARKER) != 1:
                 raise SystemExit(f"Marcador duplicado: {item.name}")
@@ -31,4 +33,6 @@ for file in files:
     data = file.read_text(encoding="utf-8")
     if MARKER in data:
         raise SystemExit(f"Marcador sin procesar: {file.name}")
+if sum("data-taviku-header" in p.read_text(encoding="utf-8") for p in files) < 19:
+    raise SystemExit("Menos de 19 paginas con encabezado generado")
 print(f"Sitio generado en dist/: {len(files)} paginas HTML")
