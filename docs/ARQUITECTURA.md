@@ -19,12 +19,12 @@ La lógica existente de `js/supabase.js` decide el destino de Mi Panel según el
 - Componente: `components/header.html`.
 - Generador: `scripts/build_site.py`.
 - Orígenes migrados (19): `index.html`, `catalogo.html`, `pagina-personalizada.html`, `webs-completas.html`, `como-funciona.html`, `login.html`, `registro.html`, `panel-comprador.html`, `panel-vendedor.html`, `admin.html`, `compra.html`, `contacto.html`, `vender-publico.html`, `vender.html`, `terminos.html`, `privacidad.html`, `licencias.html`, `plantilla.html`, `vendedor.html`.
-- Flujo automático: `.github/workflows/verificar-desarrollo.yml` ahora construye `dist/` antes de generar el ZIP.
+- Flujo automático: `.github/workflows/verificar-desarrollo.yml` construye y comprueba `dist/`, sin empaquetar un sitio que se conectaría a la base de producción.
 
 ## Pendientes antes de producción
 1. Confirmar que ninguna página adicional mantiene encabezado duplicado; el generador ahora falla ante encabezados antiguos no migrados.
 2. Centralizar y probar estilos de navegación y reservar espacio estable para acciones de sesión en escritorio y móvil.
-3. Verificar el estado real de GitHub Actions y sus archivos descargables.
+3. Verificar el estado real de GitHub Actions; no se ofrecen artefactos navegables mientras Supabase no esté aislado.
 4. Crear URL de previsualización separada: este flujo solo empaqueta HTML, no hospeda la web.
 5. Crear base Supabase de pruebas aislada antes de pruebas de compras, comprobantes y retiros.
 6. Ejecutar pruebas funcionales, responsive, accesibilidad y regresión para todas las páginas.
