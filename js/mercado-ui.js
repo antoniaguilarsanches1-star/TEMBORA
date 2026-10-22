@@ -669,7 +669,7 @@
             const auth=document.querySelector('.auth-buttons');
             if(auth){new MutationObserver(markPanel).observe(auth,{childList:true});markPanel();}
         }
-        document.getElementById('market-reload').addEventListener('click',()=>{if(!busy) location.reload();});
+        document.getElementById('market-reload')?.addEventListener('click',()=>{if(!busy) location.reload();});
         try {
             if(['vendedor','admin','comprador','compra'].includes(mode) && !await window.accesoPagina) return;
             if(mode==='admin')reviewNav(new URLSearchParams(location.search).get('vista')||'revision');
@@ -685,15 +685,16 @@
                 const params=new URLSearchParams(location.search); const cat=params.get('category');
                 const categoryKey=value=>String(value || '').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/\s+/g,'-');
                 select.value=cats.find(c=>String(c.id)===cat || categoryKey(c.nombre)===categoryKey(cat))?.id || '';
-                document.getElementById('search-catalog').value=params.get('search') || '';
-                document.getElementById('apply-filters').addEventListener('click',()=>action(catalog));
+                const searchCatalog=document.getElementById('search-catalog');
+                if(searchCatalog) searchCatalog.value=params.get('search') || '';
+                document.getElementById('apply-filters')?.addEventListener('click',()=>action(catalog));
                 document.getElementById('clear-filters')?.addEventListener('click',()=>{
                     if(busy)return;
                     for(const id of ['category-filter','search-catalog','price-min','price-max'])document.getElementById(id).value='';
                     document.getElementById('sort-filter').value='featured';
                     history.replaceState(null,'',location.pathname);action(catalog);
                 });
-                document.getElementById('search-catalog').addEventListener('keydown',e=>{if(e.key==='Enter') {e.preventDefault(); action(catalog);}});
+                searchCatalog?.addEventListener('keydown',e=>{if(e.key==='Enter') {e.preventDefault(); action(catalog);}});
             }
             if(mode==='vendedor'){const view=new URLSearchParams(location.search).get('vista');await (view==='ventas'?finanzas:view==='perfil'?sellerProfile:seller)();}else if(mode==='admin'){const view=new URLSearchParams(location.search).get('vista');await ({pagos:pagosAdmin,retiros:retirosAdmin,yape:configurarYape,usuarios,perfil}[view]||admin)();}else await reload();
         } catch(e) { notice(e.message || 'No se pudo cargar. Pulsa Actualizar para reintentar.'); }
