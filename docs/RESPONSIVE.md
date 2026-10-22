@@ -22,3 +22,6 @@ Verificar visitante, comprador, vendedor y administrador; estados de carga y err
 
 ## Límite de verificación
 La comprobación automática de Python puede demostrar integridad estructural y evitar regresiones de reglas CSS/JS, pero no es equivalente a una captura o prueba de navegador en dispositivo real. Hasta realizar la matriz anterior no se puede declarar el diseño responsive validado al 100%. La web pública en `main` permanece sin cambios y la rama de desarrollo no debe conectarse a cuentas de pruebas que escriban sobre Supabase de producción.
+
+## Evidencia de CI y accesibilidad
+La ejecución `39814220074` de GitHub Actions terminó con resultado **success** en las pruebas estructurales del sitio y responsive. Se añadió `aria-controls` al botón del menú, vinculado a la navegación, y etiqueta dinámica «Abrir menú»/«Cerrar menú» con comprobación automatizada; estos cambios posteriores necesitan su propia ejecución de CI para ratificar el éxito. La inspección visual real sigue pendiente.
