@@ -24,7 +24,7 @@ jobs:
         run: python scripts/check_static.py
       - name: Comprobar que el encabezado esta generado
         run: |
-          python -c "from pathlib import Path; p=list(Path('dist').glob('*.html')); assert len(p)>=12; assert all('<!-- TAVIKU:HEADER -->' not in x.read_text(encoding='utf-8') for x in p); assert sum('data-taviku-header' in x.read_text(encoding='utf-8') for x in p)>=12; print('Encabezados generados:',len(p))"
+          python -c "from pathlib import Path; p=list(Path('dist').glob('*.html')); assert len(p) >= 19; assert all('<!-- TAVIKU:HEADER -->' not in x.read_text(encoding='utf-8') for x in p); assert sum('data-taviku-header' in x.read_text(encoding='utf-8') for x in p)>=19; print('Encabezados generados:',len(p))"
       - name: Empaquetar vista previa estatica
         run: |
           cd dist
