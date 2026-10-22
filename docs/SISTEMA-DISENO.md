@@ -25,3 +25,12 @@ Se añadió foco visible por teclado a enlaces, controles y elementos enfocados;
 
 ## Verificación
 GitHub Actions ejecuta las pruebas del generador y revisa recursos locales. El sistema de diseño necesita aún comparación visual automática o manual de vistas representativas para considerarse plenamente aprobado, especialmente con las cuentas reales sustituidas por un entorno aislado.
+
+## Resultado de revisión de paneles
+Se inspeccionaron `css/cuenta.css`, `css/admin-panel.css`, `css/comprador-redisenio.css`, `css/vendedor-revision.css` y `css/public.css`. Tienen estilos específicos de estado, panel y tarjetas que deben mantenerse hasta disponer de pruebas visuales. No es seguro fusionar sus reglas solo por compartir colores o nombres de clase.
+
+## Evidencia automática
+La ejecución GitHub Actions número 47 (ID `39812981923`) terminó en éxito: pruebas de Python, generación HTML, referencias locales y encabezado compartido. Es una validación estructural, **no** una prueba visual del navegador.
+
+## Criterio de cierre
+Fundamentos y contratos visuales compartidos comprobados automáticamente. La homologación visual completa de formularios, tarjetas y paneles permanece pendiente de pruebas de navegador con ancho de pantalla y estados de autenticación; se integra al plan de regresión de fase 4 antes de publicación. No se publican cambios en `main`.
