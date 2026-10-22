@@ -75,11 +75,13 @@ function initNavigation() {
     const closeMenu = () => {
         navMenu.classList.remove('active');
         hamburger.setAttribute('aria-expanded', 'false');
+        hamburger.setAttribute('aria-label', 'Abrir menú');
     };
     hamburger.setAttribute('aria-expanded', 'false');
     hamburger.addEventListener('click', () => {
         navMenu.classList.toggle('active');
         hamburger.setAttribute('aria-expanded', String(navMenu.classList.contains('active')));
+        hamburger.setAttribute('aria-label', navMenu.classList.contains('active') ? 'Cerrar menú' : 'Abrir menú');
     });
     navMenu.querySelectorAll('.nav-link').forEach(link =>
         link.addEventListener('click', closeMenu));
