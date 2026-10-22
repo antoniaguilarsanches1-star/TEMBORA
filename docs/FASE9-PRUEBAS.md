@@ -17,3 +17,12 @@ Fecha: 22 octubre 2026. Solo desarrollo y Supabase Staging.
 - Lighthouse y revisión visual final.
 
 **Estado: en curso; no declarar fase 9 terminada ni permitir publicar todavía.** Producción y dinero real intactos.
+
+## Pruebas adicionales y discrepancia detectada (22-10-2026)
+- Prueba de publicación en Staging: el trigger rechazó correctamente archivos fuera del directorio autorizado del vendedor. Posteriormente rechazó el envío de una plantilla sin categoría/archivos presentes en Storage; **ambos son controles esperados**, no pruebas de compra aprobadas.
+- Se detectó diferencia entre los privilegios de esquema de producción y Staging: producción permitía `USAGE` en `tembora_private` para `anon` y `authenticated`, Staging no. Se aplicó el mismo permiso en Staging y la consulta de verificación confirmó `has_schema_privilege('authenticated','tembora_private','USAGE') = true`. Las funciones internas conservan las restricciones de `EXECUTE` y RLS específicas.
+- Intento de repetir el flujo de pedido idempotente bajo `ROLLBACK` fue **bloqueado por controles de la herramienta**, así que no hubo resultado verificable para la compra positiva. No declarar este escenario aprobado.
+- No se realizaron comprobantes auténticos ni transferencia Yape. Siguen pendientes ensayos HTTP reales y descarga de un archivo ZIP de prueba.
+- CI de las seis pruebas Node y pruebas financieras: ejecución `39843413022` aprobada.
+
+**Decisión de entrega:** los tests locales y negativos están aprobados; el ciclo positivo integral aún no está certificado. Mantener la rama sin publicar. No hay base suficiente para afirmar un cierre integral de la fase 9.
