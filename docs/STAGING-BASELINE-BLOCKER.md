@@ -1,3 +1,5 @@
+> **RESUELTO (22-10-2026):** este archivo conserva el historial del bloqueo. La reconstrucción técnica de Staging se completó y verificó; consultar [FASE6-CIERRE.md](FASE6-CIERRE.md) para el estado actual. Las pruebas end-to-end corresponden a la fase 9.
+
 # Bloqueador reproducible de restauración de staging
 
 Proyecto de pruebas creado: `fetoxbjzbteeuzppvxik` (TAVIKU Staging), activo e independiente. Proyecto original: `fhowcuxyokkrbttgyrwy`.
