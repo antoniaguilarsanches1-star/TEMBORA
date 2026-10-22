@@ -23,6 +23,17 @@
     --radius-md: 0.5rem;
     --radius-lg: 0.75rem;
     --transition: all 0.3s ease;
+    --brand-marketplace: #2563eb;
+    --brand-negocios: #0d9488;
+    --font-ui: 'Inter', 'Segoe UI', system-ui, sans-serif;
+    --content-width: 1200px;
+    --header-content-width: 1480px;
+    --space-1: .25rem;
+    --space-2: .5rem;
+    --space-3: .75rem;
+    --space-4: 1rem;
+    --space-6: 1.5rem;
+    --space-8: 2rem;
 }
 
 /* Reset y Estilos Base */
@@ -41,7 +52,7 @@ html {
 }
 
 body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-family: var(--font-ui);
     line-height: 1.6;
     color: var(--text-dark);
     background-color: var(--bg-light);
@@ -64,7 +75,7 @@ img {
 
 /* Contenedor principal */
 .container {
-    max-width: 1200px;
+    max-width: var(--content-width);
     margin: 0 auto;
     padding: 0 1rem;
 }
@@ -1414,3 +1425,7 @@ img {
         transform: translateY(0);
     }
 }
+
+/* Accesibilidad compartida. */
+:where(a,button,input,select,textarea,[tabindex]):focus-visible { outline: 2px solid var(--brand-marketplace); outline-offset: 3px; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; } }
