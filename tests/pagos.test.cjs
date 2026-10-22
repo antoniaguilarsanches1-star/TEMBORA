@@ -7,7 +7,7 @@ const api = factory({cliente:()=>{throw Error('No se debe conectar')}, sesion:()
   memoria:{getItem:()=>null,setItem:()=>{},removeItem:()=>{}},
   imagen:()=>{throw Error('No se debe subir archivo')}});
 
-test('20% comisión: dos ventas verificadas', () => {
+test('suma ingresos del vendedor en ventas verificadas', () => {
   const result=api.balance([
     {estado_pago:'verificado',ingreso_vendedor:80},
     {estado_pago:'verificado',ingreso_vendedor:40},
