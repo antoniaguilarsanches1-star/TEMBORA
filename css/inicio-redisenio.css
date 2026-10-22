@@ -39,3 +39,25 @@
 
 /* Colores aprobados para la portada de esta página */
 [data-public-page="index"] .taviku-home-hero{background:linear-gradient(125deg,#14536b,#197e88)!important}[data-public-page="index"] .taviku-home-heading h1,[data-public-page="index"] .taviku-home-eyebrow,[data-public-page="index"] .taviku-home-heading p{color:#fff!important}
+
+
+/* Legibilidad de la portada exclusivamente en escritorio. Móvil sin cambios. */
+@media (min-width: 1024px) {
+  [data-public-page="index"] .taviku-home-eyebrow { font-size: .9rem; letter-spacing: .10em; }
+  [data-public-page="index"] .taviku-home-heading h1 { font-size: clamp(2.7rem, 4vw, 4rem); }
+  [data-public-page="index"] .taviku-home-heading p { font-size: 1.25rem; }
+  [data-public-page="index"] .taviku-service-label { font-size: .9rem; letter-spacing: .055em; }
+  [data-public-page="index"] .taviku-home-service h2 { font-size: clamp(1.8rem, 2.5vw, 2.4rem); }
+  [data-public-page="index"] .taviku-home-service p { font-size: 1.125rem; }
+  [data-public-page="index"] .taviku-service-button { font-size: 1.05rem; }
+  [data-public-page="index"] .taviku-service-link { font-size: 1.05rem; }
+  [data-public-page="index"] .section-title h2 { font-size: 2.65rem; }
+  [data-public-page="index"] .section-title p { font-size: 1.2rem; }
+  [data-public-page="index"] .search-input,
+  [data-public-page="index"] .search-btn { font-size: 1.075rem; }
+  [data-public-page="index"] .template-card h3 { font-size: 1.3rem !important; }
+  [data-public-page="index"] .template-card p { font-size: 1rem !important; }
+  [data-public-page="index"] .template-title { font-size: 1.4rem; }
+  [data-public-page="index"] .template-category,
+  [data-public-page="index"] .template-seller { font-size: .95rem; }
+}
