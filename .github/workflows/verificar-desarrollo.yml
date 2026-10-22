@@ -18,13 +18,16 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: '3.12'
+      - name: Generar sitio desde componentes compartidos
+        run: python scripts/build_site.py
       - name: Verificar referencias locales
         run: python scripts/check_static.py
+      - name: Comprobar que el encabezado esta generado
+        run: |
+          python -c "from pathlib import Path; p=list(Path('dist').glob('*.html')); assert len(p)>=12; assert all('<!-- TAVIKU:HEADER -->' not in x.read_text(encoding='utf-8') for x in p); assert sum('data-taviku-header' in x.read_text(encoding='utf-8') for x in p)>=12; print('Encabezados generados:',len(p))"
       - name: Empaquetar vista previa estatica
         run: |
-          mkdir -p /tmp/taviku-preview
-          tar --exclude=.git --exclude=.github --exclude=docs --exclude=scripts -cf - . | tar -xf - -C /tmp/taviku-preview
-          cd /tmp/taviku-preview
+          cd dist
           zip -qr "$GITHUB_WORKSPACE/taviku-preview-estatico.zip" .
       - name: Conservar paquete de prueba
         uses: actions/upload-artifact@v4
