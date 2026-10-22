@@ -111,3 +111,27 @@
   body[data-public-page] .header .nav-menu.active { display: flex; }
   body[data-public-page] .header .hamburger { display: flex; }
 }
+
+/* Fase 4: una sola regla de visibilidad para navegacion y boton movil. */
+@media (max-width: 1360px) {
+  .header .nav-menu:not(.active) { display: none; }
+  .header .nav-menu.active { display: flex; }
+  .header .hamburger { display: flex; flex-shrink: 0; align-items: center; justify-content: center; }
+}
+@media (min-width: 1361px) {
+  .header .nav-menu { display: flex; position: static; box-shadow: none; }
+  .header .hamburger { display: none; }
+}
+@media (max-width: 700px) {
+  .header .header-content { min-width: 0; column-gap: .5rem; }
+  .header .logo { min-width: 0; }
+  .header .auth-buttons { gap: .5rem; min-width: 0; }
+  .header .auth-buttons .btn { white-space: nowrap; }
+  .header .nav-menu { z-index: 1001; }
+  .pillar-grid, .pillar-pair { grid-template-columns: minmax(0, 1fr); }
+  .pillar-card { min-width: 0; }
+}
+@media (max-width: 480px) {
+  .header .auth-buttons { min-width: 0; }
+  .header .auth-buttons .btn { padding: .45rem .7rem; font-size: .82rem; }
+}
