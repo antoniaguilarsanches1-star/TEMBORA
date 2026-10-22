@@ -93,7 +93,7 @@ function initNavigation() {
         }
     });
     window.addEventListener('resize', () => {
-        if (window.innerWidth > 1360) closeMenu();
+        if (window.getComputedStyle(hamburger).display === 'none') closeMenu();
     });
 }
 
