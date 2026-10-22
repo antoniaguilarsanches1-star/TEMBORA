@@ -4,7 +4,7 @@
     document.addEventListener('DOMContentLoaded', () => {
         const page = document.body.dataset.publicPage;
         if (!page) return;
-        if (page === 'contacto' && new URLSearchParams(location.search).get('asunto') === 'soporte') document.getElementById('subject').value = 'Soporte';
+        if (page === 'contacto' && new URLSearchParams(location.search).get('asunto') === 'soporte') { const subject = document.getElementById('subject'); if (subject) subject.value = 'Soporte'; }
         document.querySelectorAll('.footer a[href="contacto.html"]').forEach(link => {
             if (link.textContent.trim() === 'Soporte') link.href = 'contacto.html?asunto=soporte';
         });
@@ -14,7 +14,7 @@
             const message = Object.hasOwn(messages, params.get('motivo')) ? messages[params.get('motivo')] : null;
             if (message) {
                 const notice = document.createElement('p'); notice.id = 'login-intent'; notice.setAttribute('role', 'status'); notice.textContent = message;
-                const container = document.querySelector('.form-container'); container.prepend(notice);
+                const container = document.querySelector('.form-container'); if (container) container.prepend(notice);
                 const id = params.get('plantilla');
                 if (/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id || '')) {
                     const back = document.createElement('a'); back.href = 'plantilla.html?id=' + encodeURIComponent(id); back.textContent = 'Volver a la plantilla';
@@ -39,7 +39,7 @@
         markActive();
         if (page === 'index') {
             const status = document.getElementById('market-status'), retry = document.getElementById('market-reload');
-            new MutationObserver(() => { retry.hidden = !/No se pudo|No se pudieron|Error/i.test(status.textContent); }).observe(status, { childList: true, characterData: true, subtree: true });
+            if (status && retry) new MutationObserver(() => { retry.hidden = !/No se pudo|No se pudieron|Error/i.test(status.textContent); }).observe(status, { childList: true, characterData: true, subtree: true });
         }
         const auth = document.querySelector('.auth-buttons');
         if (auth) new MutationObserver(markActive).observe(auth, { childList: true });
@@ -56,16 +56,11 @@
                 });
             });
         });
-        const menu = document.querySelector('.hamburger');
-        if (menu) {
-            menu.setAttribute('role', 'button'); menu.setAttribute('tabindex', '0');
-            menu.setAttribute('aria-label', 'Abrir menú'); menu.setAttribute('aria-expanded', 'false');
-            menu.addEventListener('click', () => menu.setAttribute('aria-expanded', String(document.querySelector('.nav-menu').classList.contains('active'))));
-            menu.addEventListener('keydown', event => { if (['Enter', ' '].includes(event.key)) { event.preventDefault(); menu.click(); } });
-        }
+        // El encabezado compartido controla el menu desde js/app.js.
         document.querySelectorAll('[data-service]').forEach(card => card.addEventListener('click', event => {
             event.preventDefault();
             const select = document.getElementById('page-type');
+            if (!select || !document.getElementById('custom-page-form')) return;
             select.value = card.dataset.service;
             document.querySelectorAll('[data-service]').forEach(item => item.setAttribute('aria-current', String(item === card)));
             document.getElementById('custom-page-form').scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -92,15 +87,17 @@
             form.addEventListener('input', event => event.target.setCustomValidity?.(''));
             form.addEventListener('submit', event => {
                 const name = form.querySelector('#name');
+                if (!name) return;
                 name.setCustomValidity(!name.value.trim() || (id === 'contact-form' && !/^[\p{L} ]+$/u.test(name.value.normalize('NFC').trim())) ? 'Escribe tu nombre usando letras y espacios.' : '');
                 const text = form.querySelector('textarea[required]');
-                text.setCustomValidity(text.value.trim() ? '' : 'Escribe un mensaje.');
+                if (text) text.setCustomValidity(text.value.trim() ? '' : 'Escribe un mensaje.');
                 validateDate();
                 if (!form.reportValidity()) { event.preventDefault(); event.stopImmediatePropagation(); }
             }, true);
         }
         if (page === 'registro' && new URLSearchParams(location.search).get('tipo') === 'vendedor') {
-            document.querySelector('input[name="account-type"][value="seller"]').checked = true;
+            const sellerChoice = document.querySelector('input[name="account-type"][value="seller"]');
+            if (sellerChoice) sellerChoice.checked = true;
         }
         if (page === 'vender-publico') showSellerLanding();
     });

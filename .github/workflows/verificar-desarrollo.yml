@@ -1,0 +1,35 @@
+name: Verificar desarrollo TAVIKU
+on:
+  push:
+    branches:
+      - desarrollo-arquitectura-taviku
+  pull_request:
+    branches:
+      - main
+permissions:
+  contents: read
+jobs:
+  comprobar-y-empaquetar:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Obtener codigo
+        uses: actions/checkout@v4
+      - name: Configurar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Probar generador sin dependencias externas
+        run: python -m unittest discover -s tests -v
+      - name: Probar calculos financieros con simulaciones locales
+        run: node --test tests/pagos.test.cjs
+      - name: Probar permisos y saldos del marketplace
+        run: node --test tests/phase9-marketplace.test.cjs
+      - name: Generar sitio desde componentes compartidos
+        run: python scripts/build_site.py
+      - name: Verificar referencias locales
+        run: python scripts/check_static.py
+      - name: Comprobar que el encabezado esta generado
+        run: |
+          python -c "from pathlib import Path; p=list(Path('dist').glob('*.html')); assert len(p) >= 19; assert all('<!-- TAVIKU:HEADER -->' not in x.read_text(encoding='utf-8') for x in p); assert sum('data-taviku-header' in x.read_text(encoding='utf-8') for x in p)>=19; print('Encabezados generados:',len(p))"
+      # La vista previa descargable queda suspendida hasta aislar Supabase.
+      # Este flujo solo compila y valida; nunca publica ni entrega una app conectada a producción.

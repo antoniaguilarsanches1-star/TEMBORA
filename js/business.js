@@ -45,11 +45,12 @@
                 form.querySelectorAll('[required]').forEach(input => input.setCustomValidity(input.value.trim() ? '' : 'Completa este campo.'));
                 if (!form.reportValidity()) return;
                 const values = [...new FormData(form)].map(([name, value]) => {
-                    if (name === 'Web elegida') value = form.querySelector('#chosen-model').selectedOptions[0].textContent;
+                    if (name === 'Web elegida') value = form.querySelector('#chosen-model')?.selectedOptions?.[0]?.textContent || 'Por coordinar';
                     return name + ': ' + (value.trim() || 'Por coordinar');
                 });
                 openWhatsApp(['Solicitud de página para negocio', ...values].join('\n'));
                 const status = document.getElementById('request-status');
+                if (!status) return;
                 status.replaceChildren(el('span', 'Solicitud preparada. Confirma el envío en WhatsApp. Si no se abrió, '));
                 const retry = el('a', 'abre tu solicitud aquí');
                 retry.href = generateWhatsAppMessage(['Solicitud de página para negocio', ...values].join('\n'));
@@ -57,7 +58,7 @@
             });
         }
         if (document.getElementById('webs-gallery')) {
-            document.getElementById('webs-retry').addEventListener('click', loadGallery);
+            document.getElementById('webs-retry')?.addEventListener('click', loadGallery);
             await loadGallery();
         }
         if (document.getElementById('webs-admin')) {
@@ -71,7 +72,9 @@
         const retry = document.getElementById('webs-retry');
         const select = document.getElementById('chosen-model');
         const previous = select?.value || '';
-        retry.hidden = true; status.textContent = 'Cargando modelos…'; root.replaceChildren();
+        if (!root || !status) return;
+        if (retry) retry.hidden = true;
+        status.textContent = 'Cargando modelos…'; root.replaceChildren();
         if (select) select.replaceChildren(new Option('Selecciona un modelo de la galería', ''));
         try {
             const rows = await listModels();
@@ -133,7 +136,7 @@
             if (select && [...select.options].some(option => option.value === previous)) select.value = previous;
             status.textContent = rows.length ? '' : 'Estamos preparando los primeros modelos. Puedes contarnos tu idea en Para negocios.';
         } catch (_) {
-            status.textContent = 'No pudimos cargar las webs completas. Reintenta o contáctanos desde Para negocios.'; retry.hidden = false;
+            status.textContent = 'No pudimos cargar las webs completas. Reintenta o contáctanos desde Para negocios.'; if (retry) retry.hidden = false;
         }
     }
     async function initAdmin() {
