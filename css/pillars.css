@@ -1,9 +1,9 @@
 /* Navegación compartida y presentación de los dos pilares. */
 .header-content { gap: 1rem; }
 .header .nav-menu { gap: .7rem; }
-[data-public-page] .header .logo-symbol { height: 64px; width: auto; }
-[data-public-page] .header .logo-text { font-size: 2rem; }
-[data-public-page] .header .header-content { padding-top: 1.05rem; padding-bottom: 1.05rem; }
+:is(body[data-public-page], body[data-market]) .header .logo-symbol { height: 64px; width: auto; }
+:is(body[data-public-page], body[data-market]) .header .logo-text { font-size: 2rem; }
+:is(body[data-public-page], body[data-market]) .header .header-content { padding-top: 1.05rem; padding-bottom: 1.05rem; }
 .header .nav-link { font-size: 1.15rem; font-weight: 600; white-space: nowrap; }
 .header .auth-buttons { flex-shrink: 0; min-height: 2.65rem; align-items: center; justify-content: flex-end; }
 @media (min-width: 701px) { .header .auth-buttons { min-width: 15rem; } }
@@ -62,8 +62,8 @@
  .footer-content { grid-template-columns: repeat(3,minmax(0,1fr)); }
 }
 @media(max-width:700px) {
- [data-public-page] .header .logo-symbol { height: 49px; }
- [data-public-page] .header .logo-text { font-size: 1.65rem; }
+ :is(body[data-public-page], body[data-market]) .header .logo-symbol { height: 49px; }
+ :is(body[data-public-page], body[data-market]) .header .logo-text { font-size: 1.65rem; }
  .pillar-pair,.pillar-form .form-row { grid-template-columns: 1fr; }
  .footer-content { grid-template-columns: repeat(2,minmax(0,1fr)); }
  [data-public-page] :is(.section,.how-it-works,.hero) { padding: 2rem 0; }
@@ -86,18 +86,18 @@
 /* Encabezado único y estable para todas las páginas públicas de TAVIKU.
    El ancho del contenido no depende del diseño de cada sección. */
 @media (min-width: 701px) {
-  body[data-public-page] .header .header-content {
+  :is(body[data-public-page], body[data-market]) .header .header-content {
     max-width: var(--header-content-width);
     width: calc(100% - 48px);
     margin-inline: auto;
   }
-  body[data-public-page] .header .logo { flex: 0 0 auto; }
-  body[data-public-page] .header .nav-menu { gap: .65rem; }
-  body[data-public-page] .header .nav-link { font-size: 1rem; }
-  body[data-public-page] .header .auth-buttons { flex: 0 0 auto; }
+  :is(body[data-public-page], body[data-market]) .header .logo { flex: 0 0 auto; }
+  :is(body[data-public-page], body[data-market]) .header .nav-menu { gap: .65rem; }
+  :is(body[data-public-page], body[data-market]) .header .nav-link { font-size: 1rem; }
+  :is(body[data-public-page], body[data-market]) .header .auth-buttons { flex: 0 0 auto; }
 }
 @media (min-width: 701px) and (max-width: 1450px) {
-  body[data-public-page] .header .nav-menu {
+  :is(body[data-public-page], body[data-market]) .header .nav-menu {
     display: none;
     position: absolute;
     top: 100%;
@@ -108,8 +108,8 @@
     background: #fff;
     box-shadow: var(--shadow-lg);
   }
-  body[data-public-page] .header .nav-menu.active { display: flex; }
-  body[data-public-page] .header .hamburger { display: flex; }
+  :is(body[data-public-page], body[data-market]) .header .nav-menu.active { display: flex; }
+  :is(body[data-public-page], body[data-market]) .header .hamburger { display: flex; }
 }
 
 /* Fase 4: una sola regla de visibilidad para navegacion y boton movil. */
@@ -119,8 +119,8 @@
   .header .hamburger { display: flex; flex-shrink: 0; align-items: center; justify-content: center; }
 }
 @media (min-width: 1361px) {
-  .header .nav-menu, body[data-public-page] .header .nav-menu { display: flex; position: static; box-shadow: none; }
-  body[data-public-page] .header .hamburger { display: none; }
+  .header .nav-menu, :is(body[data-public-page], body[data-market]) .header .nav-menu { display: flex; position: static; box-shadow: none; }
+  :is(body[data-public-page], body[data-market]) .header .hamburger { display: none; }
   .header .hamburger { display: none; }
 }
 @media (max-width: 700px) {
