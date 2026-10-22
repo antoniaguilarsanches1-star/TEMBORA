@@ -33,3 +33,10 @@ La lógica existente de `js/supabase.js` decide el destino de Mi Panel según el
 
 ## Regla de publicación
 La rama `main` sigue siendo producción. El contenido fuente con marcadores **no** debe publicarse allí hasta configurar la compilación y completar pruebas. El paquete generado `dist/` es el candidato a despliegue posterior, no una versión aprobada aún.
+
+## Verificaciones del cierre técnico (22-10-2026)
+- Se verificó mediante lectura del repositorio que los 19 HTML inventariados usan exactamente un marcador de encabezado.
+- El comprobador estático se ejecuta sobre `dist/` y falla si faltan archivos o recursos locales; la comprobación está configurada, pero no se ha confirmado una ejecución exitosa de GitHub Actions.
+- El HTML generado aún debe superar pruebas visuales y funcionales con roles, dispositivos y sesión.
+- No existe una URL de pruebas independientes ni un Supabase aislado confirmado. Estas son condiciones para aprobar el paso a producción; no se deben simular pagos con datos reales.
+- No se ha fusionado nada con `main`.
