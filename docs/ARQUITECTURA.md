@@ -4,7 +4,7 @@
 TAVIKU integra Marketplace y Creamos tu página con la misma importancia. Los roles son visitante, comprador, vendedor y administrador. La autorización de datos permanece en Supabase y sus políticas RLS, no en el HTML ni en la visibilidad de botones.
 
 ## Un solo encabezado
-La fuente canónica es `components/header.html`. Doce páginas fueron migradas del HTML repetido al marcador `<!-- TAVIKU:HEADER -->`. El generador `scripts/build_site.py` inserta el encabezado en `dist/`, que es el resultado estático que debe servirse. No abrir el código fuente HTML marcado directamente ni publicar la rama fuente como GitHub Pages sin compilar.
+La fuente canónica es `components/header.html`. Diecinueve páginas fueron migradas del HTML repetido al marcador `<!-- TAVIKU:HEADER -->`. El generador `scripts/build_site.py` inserta el encabezado en `dist/`, que es el resultado estático que debe servirse. No abrir el código fuente HTML marcado directamente ni publicar la rama fuente como GitHub Pages sin compilar.
 La lógica existente de `js/supabase.js` decide el destino de Mi Panel según el rol; esta fase preserva ese contrato. Quedan pendientes las pruebas visuales y de estabilidad del encabezado entre las cuatro clases de sesión.
 
 ## Dependencias actuales
@@ -18,11 +18,11 @@ La lógica existente de `js/supabase.js` decide el destino de Mi Panel según el
 ## Migración realizada
 - Componente: `components/header.html`.
 - Generador: `scripts/build_site.py`.
-- Orígenes migrados: `index.html`, `catalogo.html`, `pagina-personalizada.html`, `webs-completas.html`, `como-funciona.html`, `login.html`, `registro.html`, `panel-comprador.html`, `panel-vendedor.html`, `admin.html`, `compra.html`, `contacto.html`.
+- Orígenes migrados (19): `index.html`, `catalogo.html`, `pagina-personalizada.html`, `webs-completas.html`, `como-funciona.html`, `login.html`, `registro.html`, `panel-comprador.html`, `panel-vendedor.html`, `admin.html`, `compra.html`, `contacto.html`, `vender-publico.html`, `vender.html`, `terminos.html`, `privacidad.html`, `licencias.html`, `plantilla.html`, `vendedor.html`.
 - Flujo automático: `.github/workflows/verificar-desarrollo.yml` ahora construye `dist/` antes de generar el ZIP.
 
 ## Pendientes antes de producción
-1. Inventariar y migrar cualquier otra página con encabezado duplicado.
+1. Confirmar que ninguna página adicional mantiene encabezado duplicado; el generador ahora falla ante encabezados antiguos no migrados.
 2. Centralizar y probar estilos de navegación y reservar espacio estable para acciones de sesión en escritorio y móvil.
 3. Verificar el estado real de GitHub Actions y sus archivos descargables.
 4. Crear URL de previsualización separada: este flujo solo empaqueta HTML, no hospeda la web.
