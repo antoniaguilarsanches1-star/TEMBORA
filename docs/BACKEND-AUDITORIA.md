@@ -18,3 +18,11 @@ Proyecto `PlantillaPE` (`fhowcuxyokkrbttgyrwy`). Se comprobaron 11 tablas de `pu
 
 ## Impedimentos de aprobación
 No existe staging aislado y no se han probado operaciones reales de cuenta, pedidos, archivos, pagos ni retiros. No desplegar ni conectar navegador de pruebas al proyecto de producción. Configurar entorno aislado y ejecutar una matriz de roles y RLS antes de cambiar políticas o funciones.
+
+## Auditoría de las tres funciones privilegiadas (lectura directa de PostgreSQL)
+- `es_admin()` comprueba `perfiles.id = auth.uid()` y `rol = 'admin'`, y tiene `search_path` fijado.
+- `es_vendedor()` comprueba `perfiles.id = auth.uid()` y roles vendedor o admin; también fija `search_path`, pero se recomienda mantener el endurecimiento y calificación de objetos en el plan de seguridad.
+- `tembora_admin_cambiar_rol(uuid,text)` rechaza ausencia de sesión, exige que el llamante sea admin leyendo su fila y bloqueándola, valida el rol, impide modificar el propio rol y lanza error si no existe el destino. Usa `search_path` vacío y nombres de tablas calificados.
+- Se confirmó con consulta de privilegios de columnas que `authenticated` tiene permiso UPDATE solo en `avatar_url`, `bio` y `nombre_completo` de `public.perfiles`, y no en `rol`.
+- **Conclusión preliminar:** los tres avisos son compatibles con un diseño intencional de autorización; no se observó escalada directa por cambiar el campo `rol`. No es una prueba de imposibilidad de abuso y faltan ensayos de acceso con cuentas sintéticas.
+- No se cambiaron funciones, políticas, privilegios ni datos reales.
