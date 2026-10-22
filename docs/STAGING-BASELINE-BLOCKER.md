@@ -15,3 +15,8 @@ La barbería sigue pausada. No tocar producción ni fusionar GitHub `main`.
 - La tabla pedidos es una estructura parcial; faltan columnas del esquema original. No tiene sentido ejecutar pruebas económicas sobre esta base incompleta.
 - La creación de `perfiles` fue bloqueada por los controles de seguridad de la herramienta; tampoco quedó `tembora_private.archivos_retirados`. Aún faltan constraints, índices, funciones, triggers, grants y políticas RLS exactas. La instalación de migraciones originales completas tampoco se ha hecho.
 - **No declarar staging listo, no conectar la interfaz ni simular compras.** Se requiere un canal autorizado de restauración integral del esquema antes de pruebas de roles.
+
+## Continuación 22-10-2026
+- Se instalaron correctamente `public.perfiles`, `tembora_private.archivos_retirados` y 11 columnas faltantes de `public.pedidos`, incluidas `comision_plataforma` e `ingreso_vendedor` generadas.
+- Confirmación de Supabase: existen **11 tablas `public` y 1 tabla `tembora_private`**, todas con RLS activado y cero registros.
+- **Pendiente:** replicación fiel de claves foráneas, índices, restricciones, disparadores, funciones RPC, permisos, políticas RLS y buckets. Las tablas creadas por sí solas NO constituyen una réplica funcional ni segura. No conectar la web ni crear usuarios hasta completar esos elementos.
