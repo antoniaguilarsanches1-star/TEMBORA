@@ -10,8 +10,8 @@
 ## Desarrollo
 - Rama: `desarrollo-arquitectura-taviku`.
 - Los cambios de arquitectura se introducen y verifican aquí, sin modificar `main`.
-- La comprobación automatizada `verificar-desarrollo.yml` comprueba archivos básicos y empaqueta el sitio en un artifact descargable llamado `taviku-preview-estatico`.
-- **Advertencia:** el paquete no es una URL de vista previa pública ni equivale a una prueba funcional completa.
+- La comprobación automatizada `verificar-desarrollo.yml` comprueba archivos básicos y verifica el HTML generado. La exportación descargable permanece suspendida hasta aislar Supabase.
+- **Advertencia:** la compilación no es una URL de vista previa pública ni equivale a una prueba funcional completa.
 
 ## Vista previa web pendiente
 GitHub Pages de este mismo repositorio NO debe reconfigurarse para servir la rama de desarrollo: podría reemplazar la web pública. La futura URL de pruebas debe usar hospedaje separado y una configuración que impida operaciones reales.
