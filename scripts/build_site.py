@@ -12,7 +12,7 @@ if DIST.exists():
     shutil.rmtree(DIST)
 DIST.mkdir()
 for item in ROOT.iterdir():
-    if item.name in {".git", ".github", "dist", "docs", "scripts", "components", "tests", "node_modules"}:
+    if item.name in {".git", ".github", "dist", "dist-staging", "docs", "scripts", "components", "tests", "node_modules"}:
         continue
     target = DIST / item.name
     if item.is_dir():
