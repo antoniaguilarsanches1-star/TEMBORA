@@ -119,7 +119,8 @@
   .header .hamburger { display: flex; flex-shrink: 0; align-items: center; justify-content: center; }
 }
 @media (min-width: 1361px) {
-  .header .nav-menu { display: flex; position: static; box-shadow: none; }
+  .header .nav-menu, body[data-public-page] .header .nav-menu { display: flex; position: static; box-shadow: none; }
+  body[data-public-page] .header .hamburger { display: none; }
   .header .hamburger { display: none; }
 }
 @media (max-width: 700px) {
