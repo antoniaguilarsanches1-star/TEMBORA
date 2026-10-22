@@ -22,6 +22,9 @@ class ResponsiveTests(unittest.TestCase):
     def test_menu_is_keyboard_operable(self):
         self.assertIn('<button class="hamburger"', self.header)
         self.assertIn('aria-expanded="false"', self.header)
+        self.assertIn('aria-controls="taviku-nav"', self.header)
+        self.assertIn('id="taviku-nav"', self.header)
+        self.assertIn("'Cerrar menú' : 'Abrir menú'", self.app)
         self.assertIn("event.key === 'Escape'", self.app)
 
 if __name__ == '__main__':
