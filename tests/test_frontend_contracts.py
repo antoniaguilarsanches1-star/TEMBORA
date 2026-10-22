@@ -8,6 +8,7 @@ class FrontendContracts(unittest.TestCase):
         cls.app=(ROOT/'js/app.js').read_text(encoding='utf-8')
         cls.public=(ROOT/'js/public.js').read_text(encoding='utf-8')
         cls.auth=(ROOT/'js/supabase.js').read_text(encoding='utf-8')
+        cls.business=(ROOT/'js/business.js').read_text(encoding='utf-8')
     def test_menu_has_single_owner(self):
         self.assertIn("function initNavigation()",self.app)
         self.assertNotIn("menu.addEventListener('click'",self.public)
@@ -16,6 +17,12 @@ class FrontendContracts(unittest.TestCase):
         self.assertIn("if (status && retry)",self.public)
         self.assertIn("if (sellerChoice)",self.public)
         self.assertIn("if (!select ||",self.public)
+    def test_business_optional_ui_guards(self):
+        self.assertIn("if (!root || !status) return;",self.business)
+        self.assertIn("if (retry) retry.hidden = true;",self.business)
+        self.assertIn("if (retry) retry.hidden = false;",self.business)
+        self.assertIn("?.selectedOptions?.[0]?.textContent",self.business)
+
     def test_roles_remain_centralized(self):
         for role in ("comprador: 'panel-comprador.html'","vendedor: 'panel-vendedor.html'","admin: 'admin.html'"):
             self.assertIn(role,self.auth)
