@@ -1,19 +1,31 @@
-# Fase 6 — Cierre de auditoría técnica (22-10-2026)
+# TAVIKU — Fase 6: réplica técnica de backend verificada
+Fecha: 22 octubre 2026. Producción: `fhowcuxyokkrbttgyrwy`. Pruebas aisladas: `fetoxbjzbteeuzppvxik`.
 
-## Verificado directamente (solo lectura)
-- Supabase de TAVIKU: `PlantillaPE` (`fhowcuxyokkrbttgyrwy`).
-- Se consultaron 13 migraciones aplicadas y 5 buckets, incluyendo sus tipos y límites de tamaño. Los buckets de comprobantes, imágenes de plantillas, ZIP y webs completas están configurados como privados; el de avatares es público.
-- 11 tablas públicas mantienen RLS. Roles de perfiles no son modificables directamente por el rol `authenticated`.
-- La política `archivos_no_reutilizar` es **restrictiva**.
-- Funciones `es_admin`, `es_vendedor` y `tembora_admin_cambiar_rol` inspeccionadas en su implementación; requieren pruebas negativas por rol antes de dar garantías.
-- Ocho verificaciones SQL estructurales dieron `ok=true`: ver `tests/backend_security_readonly.sql`. Estas pruebas **no** prueban solicitudes HTTP ni simulan identidades.
-- GitHub Actions ejecución `39820301791` completada con éxito, incluidos los tests de balance en Node sin servicio real.
+## Trabajo completado y validado
+Se reconstruyeron los objetos de TAVIKU sobre Supabase Staging sin copiar datos personales ni pedidos. Comparaciones directas producción ↔ Staging:
+- 12 tablas (11 públicas y 1 privada), 108 columnas con **huella de esquema idéntica**.
+- 62 restricciones con definición y huella **idénticas**.
+- 36 índices con definición y huella **idénticas**.
+- 35 funciones con código y huella **idénticos**.
+- 32 políticas RLS públicas y 16 de Storage con definición y huella **idénticas**.
+- 8 disparadores personalizados (incluido el de creación de perfiles al registrar usuarios).
+- 5 buckets con configuración copiada; ningún fichero o comprobante real.
+- Privilegios de tablas y ejecución de funciones ajustados para usuarios anónimos/autenticados; UPDATE del perfil solo en campos autorizados.
+- Revisión con el asesor de seguridad de Supabase realizada. Conserva avisos conocidos de funciones SECURITY DEFINER intencionales y tabla privada sin política, como producción.
 
-## Pendiente indispensable para aprobar el backend completo
-- La organización accesible `antoniaguilarsanches1-star's Org` está en plan `free`; no hay ramas de desarrollo Supabase existentes.
-- Se requiere selección explícita de organización del propietario antes de crear staging y aceptación de cualquier coste que indique Supabase. No se ha creado una nueva base.
-- Una vez aislada, ejecutar matriz con roles ficticios para SELECT, INSERT, UPDATE, DELETE, Storage y RPC; pruebas de compras, comprobantes, retiros y rechazo de acceso cruzado; guardar evidencia y verificar rollback.
-- Sigue el aviso del asesor sobre protección contra contraseñas filtradas desactivada.
-- No se ejecutó DDL ni se modificaron cuentas, pagos, tablas, políticas o archivos de producción.
+## Pruebas ejecutadas
+- En una transacción que termina en `ROLLBACK` se crearon 3 usuarios ficticios y se verificó la creación automática de perfiles.
+- Mediante `SET LOCAL ROLE authenticated` se simuló el JWT de comprador y administrador: comprador no obtuvo permisos de admin/vendedor, no pudo leer perfiles privados de terceros ni cambiar el rol de otro usuario; administrador sí pudo leer los 3 perfiles.
+- El SQL reproducible está en `tests/staging_role_smoke.sql`. Las identidades de prueba se eliminaron al revertir la transacción.
+- Los tests previos de balance monetario sin servicios reales y build frontend en GitHub Actions completaron satisfactoriamente (ejecución 39820301791).
 
-**Estado honesto:** auditoría técnica de solo lectura completada; aprobación integral de la fase 6 **bloqueada por staging/pruebas funcionales**. No fusionar a `main`.
+## Separación y seguridad
+No se cambió producción ni el repositorio `main`. `barberia-black-crown` sigue pausada mientras se usa su espacio gratuito. Staging no contiene usuarios ni datos reales; no se conectó el frontend público.
+
+## Lo que se comprobará en la fase 9
+Las pruebas integrales HTTP/Storage con cuentas autenticadas, compras simuladas, cargas de comprobantes, aprobaciones y retiros, más regresión de navegación y diseño en equipos, **aún no se han ejecutado**. Los resultados de pruebas RLS vía SQL no equivalen a una batería end-to-end.
+
+## Importante: historial de migraciones
+Staging se reconstruyó desde las definiciones actuales del catálogo de PostgreSQL y migraciones pequeñas, **no** reproduciendo las 13 migraciones originales de producción. Aunque las huellas actuales coinciden, los historiales de migraciones son distintos. **No fusionar ni aplicar las migraciones de staging a producción**. Antes de modificar producción, crear migraciones de cambio revisadas y compatibles con su historial original, con backup y autorización.
+
+**Resultado de fase 6:** réplica técnica y pruebas estructurales/roles mínimas completadas; los flujos funcionales de negocio quedan explícitamente reservados a la fase 9.
