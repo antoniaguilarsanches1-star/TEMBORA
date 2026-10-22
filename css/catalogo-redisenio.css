@@ -49,3 +49,33 @@
 
 /* Colores aprobados para la portada de esta página */
 [data-public-page="catalogo"] .catalog-hero{background:linear-gradient(115deg,#1d4ed8,#2563eb)!important}[data-public-page="catalogo"] .catalog-hero h1,[data-public-page="catalogo"] .catalog-hero p,[data-public-page="catalogo"] .catalog-eyebrow{color:#fff!important}
+
+
+/* Catálogo más amplio y legible solo en PC: móvil conserva sus estilos. */
+@media (min-width: 1024px) {
+  [data-public-page="catalogo"] .catalog-hero .container,
+  [data-public-page="catalogo"] .catalog-main > .container {
+    max-width: 1480px;
+    width: calc(100% - 64px);
+  }
+  [data-public-page="catalogo"] .catalog-hero h1 {
+    font-size: clamp(2.5rem, 3.25vw, 3.55rem);
+    line-height: 1.2;
+  }
+  [data-public-page="catalogo"] .catalog-hero p {font-size:1.23rem;}
+  [data-public-page="catalogo"] .catalog-eyebrow {font-size:.9rem;}
+  [data-public-page="catalogo"] .filters-section {padding:2rem 2.1rem;}
+  [data-public-page="catalogo"] .filters-heading {font-size:1.48rem;}
+  [data-public-page="catalogo"] .filter-group label {font-size:1rem;}
+  [data-public-page="catalogo"] .filter-group select,
+  [data-public-page="catalogo"] .filter-group input {font-size:1.08rem; padding:.95rem 1rem;}
+  [data-public-page="catalogo"] .catalog-filter-actions .btn {font-size:1.05rem;}
+  [data-public-page="catalogo"] #market-status {font-size:1.1rem;}
+  [data-public-page="catalogo"] #market-content {gap:1.75rem;}
+  [data-public-page="catalogo"] #market-content .public-template .template-content {padding:1.55rem;}
+  [data-public-page="catalogo"] #market-content .public-template h3 {font-size:1.55rem;}
+  [data-public-page="catalogo"] #market-content .catalog-card-description {font-size:1.06rem;}
+  [data-public-page="catalogo"] #market-content .public-template .template-category {font-size:.95rem;}
+  [data-public-page="catalogo"] #market-content .public-template .template-price {font-size:1.85rem;}
+  [data-public-page="catalogo"] #market-content .catalog-card-actions a {font-size:1.05rem;}
+}
