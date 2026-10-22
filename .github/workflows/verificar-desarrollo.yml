@@ -25,13 +25,4 @@ jobs:
       - name: Comprobar que el encabezado esta generado
         run: |
           python -c "from pathlib import Path; p=list(Path('dist').glob('*.html')); assert len(p) >= 19; assert all('<!-- TAVIKU:HEADER -->' not in x.read_text(encoding='utf-8') for x in p); assert sum('data-taviku-header' in x.read_text(encoding='utf-8') for x in p)>=19; print('Encabezados generados:',len(p))"
-      - name: Empaquetar vista previa estatica
-        run: |
-          cd dist
-          zip -qr "$GITHUB_WORKSPACE/taviku-preview-estatico.zip" .
-      - name: Conservar paquete de prueba
-        uses: actions/upload-artifact@v4
-        with:
-          name: taviku-preview-estatico
-          path: taviku-preview-estatico.zip
-          retention-days: 7
+      # La vista previa descargable queda suspendida hasta aislar Supabase.\n      # Este flujo solo compila y valida; nunca publica ni entrega una app conectada a producción.\n
