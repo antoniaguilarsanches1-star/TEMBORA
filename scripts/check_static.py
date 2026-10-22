@@ -5,7 +5,7 @@ from urllib.parse import unquote, urlsplit
 import re
 import sys
 
-root = Path(__file__).resolve().parents[1]
+root = Path(__file__).resolve().parents[1] / "dist"
 required = ["index.html", "catalogo.html", "login.html", "registro.html",
             "panel-comprador.html", "panel-vendedor.html", "admin.html",
             "css/styles.css", "js/app.js", "js/supabase.js"]
@@ -16,7 +16,11 @@ for p in missing:
 warnings = []
 total = 0
 pattern = re.compile(r'<(?:script|link)\b[^>]*\b(?:src|href)\s*=\s*["\']([^"\']+)["\']', re.I)
-for page in root.glob("*.html"):
+pages = list(root.glob("*.html"))
+if len(pages) < 19:
+    print("ERROR: hay menos de 19 paginas construidas")
+    missing.append("paginas construidas")
+for page in pages:
     for ref in pattern.findall(page.read_text(encoding="utf-8")):
         target = urlsplit(ref)
         if target.scheme or target.netloc or not target.path or target.path.startswith(("data:", "#", "//")):
@@ -29,4 +33,4 @@ for item in warnings:
     print("AVISO:", item)
 print(f"Revisadas {total} referencias locales; {len(warnings)} avisos; {len(missing)} archivos fundamentales faltantes.")
 print("La validación de permisos, pagos, UX y responsive requiere pruebas adicionales.")
-sys.exit(1 if missing else 0)
+sys.exit(1 if missing or warnings else 0)
