@@ -18,3 +18,9 @@ No se ha creado un proyecto de staging, ni una URL de pruebas aislada; no afirma
 `node --test tests/pagos.test.cjs` verifica la lógica de balance en memoria (ingresos, retiros reservados y pagados y precisión de centavos). No llama a Supabase, no crea pedidos y no confirma operaciones financieras reales.
 
 La publicación continúa bloqueada hasta completar la matriz funcional y las pruebas visuales acordadas.
+
+## Actualización del 22-10-2026
+- Proyecto de staging **creado y activo**: `TAVIKU Staging` (`fetoxbjzbteeuzppvxik`), en `sa-east-1`, organización autorizada. Coste cotizado: US$0/mes.
+- `barberia-black-crown` fue pausado y quedó `INACTIVE`; **restaurarlo cuando ya no se necesite staging**, liberando antes el espacio correspondiente.
+- Staging fue comprobado: **0 tablas públicas y 0 migraciones** al crearlo. No es todavía funcional, falta reconstruir las 13 migraciones del proyecto original en staging, revisar compatibilidad y sembrar datos sintéticos. No conectar formularios reales al staging vacío.
+- Proyecto principal `fhowcuxyokkrbttgyrwy` continúa independiente; no hubo copias de cuentas ni pagos reales.
