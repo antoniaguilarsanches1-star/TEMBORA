@@ -49,36 +49,3 @@
     [data-public-page] .form-container { padding: 1.25rem; min-width: 0; }
     [data-public-page] .container { min-width: 0; }
 }
-
-
-/* TAVIKU 22-10-2026: escala de lectura y ancho en páginas públicas de escritorio.
-   No modifica móviles, ni portada, ni catálogo (ajustados por separado). */
-@media (min-width: 1024px) {
-  body[data-public-page]:not([data-public-page="index"]):not([data-public-page="catalogo"])
-  :is(.section, .hero, .how-it-works, .pillar-section, .pillar-tint, main, footer) > .container {
-    max-width: 1480px;
-    width: calc(100% - 64px);
-  }
-  body[data-public-page]:not([data-public-page="index"]):not([data-public-page="catalogo"])
-  :is(.section-title h2, .pillar-group-title) { font-size: clamp(2rem, 2.7vw, 2.7rem); line-height: 1.22; }
-  body[data-public-page]:not([data-public-page="index"]):not([data-public-page="catalogo"])
-  :is(.section-title p, .pillar-intro, .pillar-card p, .service-card p, .step-card p, .category-card p, .contact-info p, .contact-item p) {
-    font-size: 1.125rem; line-height: 1.7;
-  }
-  body[data-public-page]:not([data-public-page="index"]):not([data-public-page="catalogo"])
-  :is(.pillar-card h3, .service-card h3, .step-card h3, .category-card h3) { font-size: 1.5rem; line-height: 1.3; }
-  body[data-public-page]:not([data-public-page="index"]):not([data-public-page="catalogo"])
-  :is(.pillar-card, .service-card, .step-card, .category-card) { padding: 2rem; }
-  body[data-public-page]:not([data-public-page="index"]):not([data-public-page="catalogo"])
-  :is(.btn, .pillar-actions .btn, .pillar-chips li, .footer-links a) { font-size: 1.05rem; }
-  body[data-public-page]:not([data-public-page="index"]):not([data-public-page="catalogo"])
-  :is(.pillar-form, .form-container) { width: 100%; max-width: 860px; }
-  body[data-public-page]:not([data-public-page="index"]):not([data-public-page="catalogo"])
-  :is(.pillar-form label, .form-group label) { font-size: 1.06rem; }
-  body[data-public-page]:not([data-public-page="index"]):not([data-public-page="catalogo"])
-  :is(.pillar-form input, .pillar-form select, .pillar-form textarea, .form-container input, .form-container select, .form-container textarea) {
-    font-size: 1.05rem;
-  }
-  body[data-public-page]:not([data-public-page="index"]):not([data-public-page="catalogo"])
-  :is(.faq-question, .faq-answer, .pillar-steps li, .web-features li, .footer-section p) { font-size: 1.075rem; }
-}
