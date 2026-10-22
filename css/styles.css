@@ -224,6 +224,11 @@ img {
     flex-direction: column;
     cursor: pointer;
     gap: 0.25rem;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: inherit;
+    font: inherit;
 }
 
 .hamburger span {
