@@ -14,3 +14,6 @@ Flujos de invitado, comprador, vendedor y administrador; favoritos, búsquedas, 
 
 ## Seguridad de despliegue
 El código permanece en la rama `desarrollo-arquitectura-taviku`; no fusionar con `main` hasta pruebas de regresión y revisión final.
+
+## Revisión adicional
+En `js/business.js` se protegieron controles opcionales de la galería y el formulario de solicitud: botón de reintento, etiqueta de estado y lista de selección de modelos. Evita errores de JavaScript si una plantilla HTML no incluye alguno de esos nodos. Se añadieron contratos de regresión en `tests/test_frontend_contracts.py`. La revisión no escribe en Supabase.
