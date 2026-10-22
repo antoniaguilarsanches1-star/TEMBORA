@@ -87,7 +87,7 @@
    El ancho del contenido no depende del diseño de cada sección. */
 @media (min-width: 701px) {
   body[data-public-page] .header .header-content {
-    max-width: 1480px;
+    max-width: var(--header-content-width);
     width: calc(100% - 48px);
     margin-inline: auto;
   }
