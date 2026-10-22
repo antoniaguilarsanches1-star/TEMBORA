@@ -17,3 +17,9 @@ El código permanece en la rama `desarrollo-arquitectura-taviku`; no fusionar co
 
 ## Revisión adicional
 En `js/business.js` se protegieron controles opcionales de la galería y el formulario de solicitud: botón de reintento, etiqueta de estado y lista de selección de modelos. Evita errores de JavaScript si una plantilla HTML no incluye alguno de esos nodos. Se añadieron contratos de regresión en `tests/test_frontend_contracts.py`. La revisión no escribe en Supabase.
+
+## Revisión de Marketplace, pagos y retiros (22-10-2026)
+- Se inspeccionaron `js/pagos-api.js`, `js/mercado-api.js` y el controlador `js/mercado-ui.js`, sin emitir pedidos, subir comprobantes ni solicitar retiros.
+- Pagos y retiros mantienen sus verificaciones de sesión, llamadas RPC y recuperación de solicitudes; su corrección en base de datos aún debe verificarse en un entorno Supabase aislado.
+- Se protegieron los controles opcionales de recarga, filtros y búsqueda del Marketplace para impedir que elementos HTML ausentes interrumpan la inicialización; se ampliaron las pruebas estáticas.
+- No se considera verificado el flujo económico integral ni la disponibilidad de archivos descargados. Se necesita un ambiente de pruebas con usuarios ficticios y pagos simulados.
