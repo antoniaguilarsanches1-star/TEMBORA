@@ -1,12 +1,19 @@
-# TAVIKU — Fase 9: pruebas funcionales (en curso)
-Fecha: 22 octubre 2026. Sin cambios en la rama de producción ni operaciones monetarias reales.
+# TAVIKU — Fase 9: pruebas funcionales (avance validado)
+Fecha: 22 octubre 2026. Solo desarrollo y Supabase Staging.
 
-## Avance
-- Añadido `tests/phase9-marketplace.test.cjs` con 6 pruebas aisladas usando la función de inyección de dependencias ya presente en `js/mercado-api.js` y `js/pagos-api.js`.
-- Pruebas previstas: comprador rechazado en sección de vendedor y listado de usuarios, administrador impedido de modificar su propio rol o asignar roles inesperados, vendedor rechazado en listado de pedidos de administrador, y balance financiero con retiros pendientes/aprobados/pagados.
-- Ejecutar con `node --test tests/phase9-marketplace.test.cjs`. Este archivo se ha guardado, pero **no debe considerarse aprobado hasta que se ejecute y el resultado confirme éxito**.
-- Supabase Staging existe con réplica técnica verificada en fase 6, pero en esta sesión las consultas de inspección mediante el conector fueron bloqueadas por controles de seguridad; no se han podido ejecutar nuevos flujos de RPC, Storage ni Auth.
-- La ejecución previa de pruebas de tres perfiles con rollback se documenta en `docs/FASE6-CIERRE.md`.
+## Pruebas automatizadas aprobadas
+- Incorporada al workflow `.github/workflows/verificar-desarrollo.yml` la ejecución `node --test tests/phase9-marketplace.test.cjs`.
+- GitHub Actions ejecución [39843413022](https://github.com/antoniaguilarsanches1-star/TEMBORA/actions/runs/39843413022) (commit `6cd51a02be915a5e35a9d6735aa550d95c407e0d`): **completed/success**. El paso «Probar permisos y saldos del marketplace» terminó correctamente, al igual que las pruebas financieras previas, build y validación estática.
+- Se comprobaron con mocks restricciones de roles de comprador, vendedor y administrador, junto al cálculo de saldo monetario.
 
-## Falta para cerrar fase 9
-Ejecutar tests Node en CI; crear y probar identidades reales solo en Staging con OAuth/Auth real; pruebas de compra, comprobantes, revisión, entrega ZIP y retiro S/50; pruebas de búsqueda, venta, solicitud de web y regresión visual en navegador móvil y escritorio. No afirmar que son funcionales sin ejecutarlas.
+## Pruebas de Supabase Staging
+- La conexión SQL volvió a funcionar.
+- En una transacción `ROLLBACK`, comprador ficticio no logró comprar un identificador de plantilla inexistente ni solicitar un retiro Yape sin rol/saldo apropiado; tampoco vio pedidos ajenos. Tras la transacción no quedaron operaciones.
+- Pruebas de control de acceso previas de fase 6-7 continúan documentadas.
+
+## Pendiente para declarar cierre integral
+- Pruebas end-to-end con autenticación real (no solo roles JWT simulados), pedidos sobre plantillas ficticias publicadas, confirmación del pago, descarga de ZIP, almacenamiento de comprobantes, retiro de vendedor con al menos S/50 y sus estados.
+- Recorrido en navegador de compra, venta, administración y «Creamos tu página» en PC y móvil.
+- Lighthouse y revisión visual final.
+
+**Estado: en curso; no declarar fase 9 terminada ni permitir publicar todavía.** Producción y dinero real intactos.
