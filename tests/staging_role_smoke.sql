@@ -20,7 +20,7 @@ DO $test$ BEGIN
 END $test$;
 SELECT set_config('request.jwt.claim.sub','00000000-0000-4000-8000-000000000022',true);
 DO $test$ BEGIN
- IF NOT public.es_admin() OR (SELECT count(*) FROM public.perfiles)<>3
+ IF NOT public.es_admin() OR (SELECT count(*) FROM public.perfiles WHERE id IN ('00000000-0000-4000-8000-000000000021'::uuid,'00000000-0000-4000-8000-000000000022'::uuid,'00000000-0000-4000-8000-000000000023'::uuid))<>3
  THEN RAISE EXCEPTION 'Admin RLS denied authorized access'; END IF;
 END $test$;
 ROLLBACK;
