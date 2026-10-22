@@ -81,3 +81,16 @@
  .header .nav-menu .nav-link{display:block;width:100%;text-align:center;padding:.5rem .4rem!important;line-height:1.3;font-size:1.06rem}
  .header .nav-menu .nav-link::after{bottom:2px}
 }
+
+/* Header sin superposiciones: amplio en escritorio, menú plegable si no cabe. */
+@media(min-width:1500px){
+ [data-public-page] .header .header-content {max-width:1480px;width:calc(100% - 48px);}
+ [data-public-page] .header .logo {flex-shrink:0;}
+ [data-public-page] .header .nav-menu {min-width:0;gap:.8rem;}
+ [data-public-page] .header .nav-link {font-size:1.05rem;}
+}
+@media(min-width:1361px) and (max-width:1499px){
+ [data-public-page] .header .nav-menu {display:none;position:absolute;top:100%;left:0;right:0;flex-direction:column;background:white;padding:1rem;box-shadow:var(--shadow-lg);gap:.5rem;}
+ [data-public-page] .header .nav-menu.active {display:flex;}
+ [data-public-page] .header .hamburger {display:flex;}
+}
