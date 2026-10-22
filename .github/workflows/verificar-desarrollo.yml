@@ -1,0 +1,34 @@
+name: Verificar desarrollo TAVIKU
+on:
+  push:
+    branches:
+      - desarrollo-arquitectura-taviku
+  pull_request:
+    branches:
+      - main
+permissions:
+  contents: read
+jobs:
+  comprobar-y-empaquetar:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Obtener codigo
+        uses: actions/checkout@v4
+      - name: Configurar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Verificar referencias locales
+        run: python scripts/check_static.py
+      - name: Empaquetar vista previa estatica
+        run: |
+          mkdir -p /tmp/taviku-preview
+          tar --exclude=.git --exclude=.github --exclude=docs --exclude=scripts -cf - . | tar -xf - -C /tmp/taviku-preview
+          cd /tmp/taviku-preview
+          zip -qr "$GITHUB_WORKSPACE/taviku-preview-estatico.zip" .
+      - name: Conservar paquete de prueba
+        uses: actions/upload-artifact@v4
+        with:
+          name: taviku-preview-estatico
+          path: taviku-preview-estatico.zip
+          retention-days: 7
