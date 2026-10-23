@@ -678,6 +678,13 @@ function actualizarUIAutenticacion() {
     const authButtons = document.querySelector('.auth-buttons');
     if (!authButtons) return;
     if (!sesion.session) {
+        // Una falla de red o comprobación no significa que el usuario cerró sesión.
+        // Nunca presentar "Iniciar sesión" como si hubiéramos verificado que está fuera.
+        if (sesion.code && sesion.code !== 'NO_SESSION') {
+            authButtons.innerHTML = '<button type="button" class="btn btn-outline btn-sm" id="retry-account-status">Reintentar sesión</button>';
+            document.getElementById('retry-account-status')?.addEventListener('click', () => verificarSesion());
+            return;
+        }
         authButtons.innerHTML = '<a href="login.html" class="btn btn-outline btn-sm">Iniciar sesión</a><a href="registro.html" class="btn btn-primary btn-sm">Registrarse</a>';
         return;
     }
