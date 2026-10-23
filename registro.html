@@ -62,7 +62,31 @@
 <body data-public-page="registro">
     <p id="auth-loading" role="status" aria-live="polite">Cargando…</p>
     <!-- Header -->
-    <!-- TAVIKU:HEADER -->
+    <header class="header" data-taviku-header>
+    <div class="container header-content">
+        <a href="index.html" class="logo">
+            <img src="img/logo-simbolo-taviku.png" alt="TAVIKU" class="logo-symbol">
+            <span class="logo-text">TAVIKU</span>
+        </a>
+        <nav id="taviku-nav" class="nav-menu" aria-label="Navegación principal">
+            <a href="index.html" class="nav-link">Inicio</a>
+            <a href="catalogo.html" class="nav-link">Plantillas</a>
+            <a href="vender-publico.html" class="nav-link">Vender</a>
+            <a href="pagina-personalizada.html" class="nav-link">Para negocios</a>
+            <a href="webs-completas.html" class="nav-link">Webs completas</a>
+            <a href="como-funciona.html" class="nav-link">Cómo funciona</a>
+            <a href="contacto.html" class="nav-link">Contacto</a>
+        </nav>
+        <div class="auth-buttons">
+            <a href="login.html" class="btn btn-outline btn-sm">Iniciar sesión</a>
+            <a href="registro.html" class="btn btn-primary btn-sm">Registrarse</a>
+        </div>
+        <button class="hamburger" type="button" aria-label="Abrir menú" aria-expanded="false" aria-controls="taviku-nav">
+            <span></span><span></span><span></span>
+        </button>
+    </div>
+</header>
+
 
     <!-- Register Section -->
     <section class="section" style="min-height: calc(100vh - 200px); display: flex; align-items: center;">
