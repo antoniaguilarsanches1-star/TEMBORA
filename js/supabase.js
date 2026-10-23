@@ -90,6 +90,18 @@ async function consultarSesion() {
         const { data, error } = await conLimite(supabaseClient.auth.getSession());
         if (error) throw new Error('No se pudo comprobar la sesión. Reintenta.');
         const session = data?.session;
+        // La UI del encabezado depende de la sesión, no de la lectura del perfil.
+        // La autorización del panel seguirá esperando a getUser y RLS.
+        if (session?.user?.id && session.access_token) {
+            document.documentElement.setAttribute('data-session-state', 'authenticated');
+            const buttons = document.querySelector('.auth-buttons');
+            if (buttons && document.documentElement.dataset.sessionUser !== session.user.id) {
+                document.documentElement.dataset.sessionUser = session.user.id;
+                buttons.innerHTML = '<a href="#" id="user-panel-btn" class="btn btn-primary btn-sm"><i class="fas fa-user"></i> Mi Panel</a>' +
+                    '<a href="#" data-auth-logout class="btn btn-outline btn-sm"><i class="fas fa-sign-out-alt"></i> Salir</a>';
+                document.getElementById('user-panel-btn')?.addEventListener('click', e => { e.preventDefault(); redirigirSegunRol(); });
+            }
+        }
         if (!session?.user?.id || !session.access_token) return { success: false, code: 'NO_SESSION', session: null, error: 'Inicia sesión para continuar.' };
         // Verificar la identidad con Auth; no confiar solo en la sesión almacenada.
         const { data: identidad, error: errorUsuario } = await conLimite(supabaseClient.auth.getUser());
@@ -283,6 +295,18 @@ document.addEventListener('click', async function(event) {
 });
 
 if (supabaseClient) supabaseClient.auth.onAuthStateChange((event, session) => {
+    // El encabezado responde de inmediato al estado que notifica Supabase.
+    // No realizar llamadas Auth dentro de este callback.
+    if (event === 'INITIAL_SESSION' || event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') {
+        if (session?.user?.id) {
+            document.documentElement.dataset.sessionUser = session.user.id;
+            document.documentElement.setAttribute('data-session-state', 'authenticated');
+            estadoSesion = { ...estadoSesion, session, user: session.user };
+            actualizarUIAutenticacion();
+        }
+    } else if (event === 'SIGNED_OUT') {
+        delete document.documentElement.dataset.sessionUser;
+    }
     // INITIAL_SESSION y TOKEN_REFRESHED no deben invalidar la comprobación
     // que se está realizando ni provocar carreras entre páginas.
     if (event === 'INITIAL_SESSION' || event === 'TOKEN_REFRESHED') {
