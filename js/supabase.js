@@ -94,10 +94,12 @@ async function consultarSesion() {
         // Verificar la identidad con Auth; no confiar solo en la sesión almacenada.
         const { data: identidad, error: errorUsuario } = await conLimite(supabaseClient.auth.getUser());
         if (errorUsuario || !identidad?.user) {
-            return { success: false, code: 'SESSION_ERROR', error: 'No se pudo validar tu sesión. Reintenta o vuelve a iniciar sesión.' };
+            // La sesión existe, pero falló su validación: no simular un cierre de sesión.
+            // El acceso protegido seguirá exigiendo la validación completa.
+            return { success: false, code: 'SESSION_ERROR', session, error: 'No se pudo validar tu sesión. Reintenta.' };
         }
         if (identidad.user.id !== session.user.id) {
-            return { success: false, code: 'SESSION_ERROR', error: 'La sesión cambió. Vuelve a intentarlo.' };
+            return { success: false, code: 'SESSION_ERROR', session, error: 'La sesión cambió. Vuelve a intentarlo.' };
         }
         const perfil = await consultarRol(identidad.user.id);
         if (perfil.code === 'MISSING_PROFILE' && ['google', 'facebook'].includes(identidad.user.app_metadata?.provider)) {
@@ -281,9 +283,16 @@ document.addEventListener('click', async function(event) {
 });
 
 if (supabaseClient) supabaseClient.auth.onAuthStateChange((event, session) => {
-    // No llamar a Auth dentro del callback (el SDK mantiene su bloqueo).
-    invalidarSesion();
-    setTimeout(() => verificarSesion(), 0);
+    // INITIAL_SESSION y TOKEN_REFRESHED no deben invalidar la comprobación
+    // que se está realizando ni provocar carreras entre páginas.
+    if (event === 'INITIAL_SESSION' || event === 'TOKEN_REFRESHED') {
+        if (event === 'TOKEN_REFRESHED' && paginaInicializada && !consultaSesion) {
+            setTimeout(() => verificarSesion(), 0);
+        }
+    } else {
+        invalidarSesion();
+        setTimeout(() => verificarSesion(), 0);
+    }
     if (event === 'SIGNED_OUT') {
         ++revisionAcceso;
         if (!rolesDePagina) return;
@@ -688,8 +697,9 @@ function actualizarUIAutenticacion() {
         authButtons.innerHTML = '<a href="login.html" class="btn btn-outline btn-sm">Iniciar sesión</a><a href="registro.html" class="btn btn-primary btn-sm">Registrarse</a>';
         return;
     }
-    authButtons.innerHTML = (sesion.success
-        ? '<a href="#" id="user-panel-btn" class="btn btn-primary btn-sm"><i class="fas fa-user"></i> Mi Panel</a>' : '') +
+    // Mostrar controles de una cuenta cuando hay sesión; validar el rol al entrar al panel.
+    // Una demora en getUser/perfiles no debe convertir el encabezado en "Iniciar sesión".
+    authButtons.innerHTML = '<a href="#" id="user-panel-btn" class="btn btn-primary btn-sm"><i class="fas fa-user"></i> Mi Panel</a>' +
         '<a href="#" data-auth-logout class="btn btn-outline btn-sm"><i class="fas fa-sign-out-alt"></i> Salir</a>';
     document.getElementById('user-panel-btn')?.addEventListener('click', e => {
         e.preventDefault();
