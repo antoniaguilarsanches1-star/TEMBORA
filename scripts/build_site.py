@@ -19,7 +19,7 @@ for item in ROOT.iterdir():
         shutil.copytree(item, target)
     elif item.suffix == ".html":
         data = item.read_text(encoding="utf-8")
-        if "<header" in data.lower() and MARKER not in data:
+        if "<header" in data.lower() and MARKER not in data and "data-taviku-header" not in data:
             raise SystemExit(f"Encabezado antiguo sin migrar: {item.name}")
         if MARKER in data:
             if data.count(MARKER) != 1:
