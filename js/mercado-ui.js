@@ -549,6 +549,15 @@
         const amount=field(group,'Monto total a retirar (S/)','retiro-monto',b.disponible.toFixed(2),'number'),number=field(group,'Tu número Yape','retiro-numero',''),name=field(group,'Titular','retiro-titular','');
         amount.readOnly=true;amount.step='0.01';number.pattern='[0-9]{9}';number.inputMode='numeric';number.maxLength=9;number.minLength=9;number.required=true;
         name.pattern='[\\p{L} ]+';name.minLength=2;name.required=true;
+        // Filtrar al escribir o pegar: únicamente dígitos en Yape y letras/espacios en titular.
+        number.addEventListener('input', () => {
+            const clean=number.value.replace(/[^0-9]/g,'').slice(0,9);
+            if(number.value!==clean) number.value=clean;
+        });
+        name.addEventListener('input', () => {
+            const clean=name.value.replace(/[^\\p{L} ]/gu,'');
+            if(name.value!==clean) name.value=clean;
+        });
         const send=el('button','Solicitar retiro','btn btn-primary');send.type='submit';send.disabled=bloqueado;group.append(send);area.append(form);
         form.addEventListener('submit',e=>{e.preventDefault();if(bloqueado || busy || !form.reportValidity())return;const n=number.value,t=name.value.normalize('NFC').trim();
             if(!/^[0-9]{9}$/.test(n) || t.length<2 || !/^[\p{L} ]+$/u.test(t)){notice('Ingresa un Yape de 9 dígitos y un titular de al menos 2 caracteres, solo letras y espacios.');return;}
