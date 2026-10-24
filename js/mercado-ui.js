@@ -202,7 +202,7 @@
         const nav=document.getElementById('admin-nav') || el('nav',undefined,'review-nav');
         nav.replaceChildren();nav.setAttribute('aria-label','Administración');
         if(!document.getElementById('admin-nav'))area.append(nav);
-        for(const [key,label,fn] of [['revision','Revisión de plantillas',admin],['pagos','Pagos y ventas',pagosAdmin],['retiros','Solicitudes de retiro',retirosAdmin],['yape','Configurar Yape',configurarYape],['usuarios','Usuarios',usuarios],['perfil','Mi perfil',perfil]]){
+        for(const [key,label,fn] of [['revision','Revisión de plantillas',admin],['pagos','Pedidos y pagos',pagosAdmin],['retiros','Solicitudes de retiro',retirosAdmin],['yape','Configurar Yape',configurarYape],['usuarios','Usuarios',usuarios],['perfil','Mi perfil',perfil]]){
             const b=button(label,fn,nav);
             b.setAttribute('data-admin-section',key);
             if(key===active)b.setAttribute('aria-current','page');
@@ -493,7 +493,7 @@
     }
 
     async function pagosAdmin() {
-        const rows=await pay.pedidosAdmin();clear();adminView('Pagos y ventas','pagos');
+        const rows=await pay.pedidosAdmin();clear();adminView('Pedidos y pagos','pagos');
         const names=await adminNames();
         const fechaPeru=()=>new Intl.DateTimeFormat('es-PE',{timeZone:'America/Lima',day:'2-digit',month:'2-digit',year:'numeric'}).format(new Date());
         const prefijos=[],revision=generation;
