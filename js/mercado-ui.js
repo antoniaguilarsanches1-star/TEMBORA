@@ -555,7 +555,7 @@
             if(number.value!==clean) number.value=clean;
         });
         name.addEventListener('input', () => {
-            const clean=name.value.replace(/[^\p{L} ]/gu,'');
+            const clean=name.value.replace(/[^A-Za-zÁÉÍÓÚÜÑáéíóúüñ ]/g,'');
             if(name.value!==clean) name.value=clean;
         });
         const send=el('button','Solicitar retiro','btn btn-primary');send.type='submit';send.disabled=bloqueado;group.append(send);area.append(form);
