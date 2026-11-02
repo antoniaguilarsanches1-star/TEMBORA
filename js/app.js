@@ -2,6 +2,15 @@
    TAVIKU - Marketplace Peruano de Plantillas Web
    JavaScript Principal
    ============================================ */
+// Migración del enlace público antiguo de GitHub Pages a Cloudflare Pages.
+// Afecta exclusivamente a la antigua dirección; preserva ruta, búsqueda y ancla.
+if (window.location.hostname === 'antoniaguilarsanches1-star.github.io'
+    && /^\/TEMBORA(?:\/|$)/i.test(window.location.pathname)) {
+    const ruta = window.location.pathname.replace(/^\/TEMBORA(?=\/|$)/i, '') || '/';
+    window.location.replace('https://taviku.pages.dev' + ruta
+        + window.location.search + window.location.hash);
+}
+
 
 // Configuración global
 const CONFIG = {
