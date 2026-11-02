@@ -20,7 +20,10 @@ const ROLES_POR_PAGINA = Object.freeze({
     'admin.html': ['admin'],
     'vender.html': ['vendedor', 'admin']
 });
-const paginaActual = window.location.pathname.split('/').pop();
+// Cloudflare Pages publica /admin.html como /admin; GitHub Pages conserva .html.
+// Normalizar ambas rutas para aplicar siempre la misma autorización por rol.
+const segmentoPagina = window.location.pathname.replace(/\/+$/, '').split('/').pop() || 'index';
+const paginaActual = /\.[a-z0-9]+$/i.test(segmentoPagina) ? segmentoPagina : `${segmentoPagina}.html`;
 const rolesDePagina = ROLES_POR_PAGINA[paginaActual];
 let revisionAcceso = 0;
 let usuarioVisible = null;
